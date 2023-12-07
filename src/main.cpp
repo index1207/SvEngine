@@ -1,20 +1,16 @@
-#include <net/netcpp.hpp>
 #include <iostream>
 
-int main() {
-    net::Socket sock(net::Protocol::Tcp);
-    if (!sock.isOpen()) {
-        return -1;
-    }
-    if(!sock.bind(net::Endpoint(net::IpAddress::Loopback, 8085))) {
-        return -1;
-    }
-    if(!sock.listen()) {
-        return -1;
-    }
+#include "Listener.hpp"
 
-    while(true) {
-        auto client = sock.accept();
-        std::cout << "Connected\n";
+using namespace net;
+
+int main() {
+    try {
+        Listener listener;
+        listener.run(Endpoint(IpAddress::Loopback, 9999), 1);
     }
+    catch (std::exception& e) {
+        std::cout << e.what() << '\n';
+    }
+    while(true) {}
 }
