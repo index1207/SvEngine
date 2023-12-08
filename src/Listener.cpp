@@ -14,6 +14,8 @@ using namespace std;
 
 Listener::Listener() {
     m_listenSock.create(Protocol::Tcp);
+
+    m_acceptContexts.reserve(128);
 }
 
 void Listener::OnAcceptCompleted(net::Context* acceptContext) {
@@ -40,6 +42,7 @@ void Listener::run(Endpoint endpoint, int count) {
 }
 
 Listener::~Listener() {
-
+    for(auto& acceptContext : m_acceptContexts)
+        delete acceptContext;
 }
 

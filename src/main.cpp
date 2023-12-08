@@ -8,9 +8,10 @@ int main() {
     try {
         Listener listener;
         listener.run(Endpoint(IpAddress::Loopback, 9999), 1);
+
+        getchar();
     }
     catch (std::exception& e) {
         std::cout << e.what() << '\n';
     }
-    while(true) {}
 }
