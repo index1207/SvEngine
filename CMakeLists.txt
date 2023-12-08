@@ -1,20 +1,16 @@
-cmake_minimum_required(VERSION 3.26)
+cmake_minimum_required(VERSION 3.9)
 project(SvEngine)
 
+set(CMAKE_CXX_STANDARD 20)
 
 include_directories(include)
 include_directories(netcpp/include)
 
 link_directories(netcpp/cmake-build-${CMAKE_BUILD_TYPE})
-link_libraries(netcpp wsock32 ws2_32)
-
-set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /MTd /Zi /RTC1")
-set(CMAKE_EXE_LINKER_FLAGS_DEBUG "${CMAKE_EXE_LINKER_FLAGS_DEBUG} /DEBUG")
-
-set(CMAKE_CXX_STANDARD 20)
+link_libraries(netcpp ws2_32)
 
 add_executable(SvEngine src/main.cpp)
 
-target_sources(SvEngine PUBLIC
+target_sources(SvEngine PRIVATE
         src/Listener.cpp
 )
