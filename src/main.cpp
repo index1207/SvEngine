@@ -7,7 +7,7 @@ using namespace net;
 int main() {
     try {
         Listener listener;
-        listener.run(Endpoint(IpAddress::Loopback, 9999), 1);
+        listener.run(Endpoint(IpAddress::Loopback, 9999));
 
         getchar();
     }
