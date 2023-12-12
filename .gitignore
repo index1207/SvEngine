@@ -4,3 +4,5 @@ cmake-build-*
 
 lib/.idea
 lib/*/*
+
+out/
