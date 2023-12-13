@@ -8,7 +8,7 @@
 
 using namespace sv;
 
-Client::Client() {
+Client::Client() : m_buffer(1024, '\0') {
 }
 
 void Client::run(std::unique_ptr<Socket>& sock) {
@@ -16,9 +16,8 @@ void Client::run(std::unique_ptr<Socket>& sock) {
     onConnected();
 
     auto recvContext = new Context();
-    std::vector<char> v(128);
     recvContext->completed = bind(&Client::onRecvCompleted, this, std::placeholders::_1);
-    recvContext->buffer = v;
+    recvContext->buffer = m_buffer;
     m_sock->receive(recvContext);
     m_ref = shared_from_this();
 }
@@ -38,4 +37,16 @@ Client::~Client() {
 void Client::disconnect() {
     onDisconnected();
     m_ref = nullptr;
+}
+
+void Client::send(std::span<char> buffer) {
+    auto sendContext = new Context();
+    sendContext->completed = bind(&Client::onSendCompleted, this, std::placeholders::_1);
+    sendContext->buffer = buffer;
+    m_sock->send(sendContext);
+}
+
+void Client::onSendCompleted(Context* context) {
+    onSend(context->buffer, context->length);
+    delete context;
 }

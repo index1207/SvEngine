@@ -4,6 +4,7 @@
 
 #pragma once
 
+#include <vector>
 #include <net/Socket.hpp>
 
 using namespace net;
@@ -19,16 +20,19 @@ namespace sv {
         void run(std::unique_ptr<Socket>& sock);
     public:
         void disconnect();
+        void send(std::span<char> buffer);
     public:
         virtual void onConnected() {};
         virtual void onDisconnected() {};
-        virtual void onSend(std::span<char> buffer) {};
+        virtual void onSend(std::span<char> buffer, int length) {};
         virtual void onReceive(std::span<char> buffer, int length) {};
     private:
         void onRecvCompleted(Context* context);
+        void onSendCompleted(Context* context);
     private:
         std::unique_ptr<Socket> m_sock;
         std::shared_ptr<Client> m_ref;
+        std::vector<char> m_buffer;
     };
 
 }

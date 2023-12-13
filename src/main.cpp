@@ -1,4 +1,5 @@
 #include <iostream>
+#include <algorithm>
 
 #include "Server.hpp"
 
@@ -7,23 +8,24 @@ using namespace net;
 class TestClient : public sv::Client {
 public:
     TestClient() = default;
-    ~TestClient() {};
+    ~TestClient() override = default;
 public:
-    virtual void onConnected() override
+    void onConnected() override
     {
         std::cout << "Connected!" << '\n';
     }
-    virtual void onDisconnected() override
+    void onDisconnected() override
     {
-        std::cout << "Disonnected!" << '\n';
+        std::cout << "Disconnected!" << '\n';
     }
-    virtual void onReceive(std::span<char> buffer, int length) override
+    void onReceive(std::span<char> buffer, int length) override
     {
         std::cout << "Recv " << buffer.data() << '\n';
+        send({buffer.begin(), buffer.begin()+length});
     }
-    virtual void onSend(std::span<char> buffer) override
+    void onSend(std::span<char> buffer, int length) override
     {
-
+        std::cout << "send " << length << '\n';
     }
 private:
 };
