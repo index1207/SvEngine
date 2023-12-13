@@ -2,29 +2,33 @@
 // Created by han93 on 2023-12-05.
 //
 
-#include "Listener.hpp"
+#include "Server.hpp"
+#include "Client.hpp"
 
 #include "net/Exception.hpp"
 
 #include <functional>
-#include <iostream>
+#include <utility>
+
+using namespace sv;
 
 using namespace net;
 using namespace std;
 
-Listener::Listener() {
+Server::Server() {
     m_listenSock.create(Protocol::Tcp);
 
     m_acceptContexts.reserve(128);
 }
 
-void Listener::OnAcceptCompleted(net::Context* acceptContext) {
-    std::cout << "Connected!\n";
+void Server::OnAcceptCompleted(net::Context* acceptContext) {
+    auto client = m_clientFactory();
+    client->run(acceptContext->acceptSocket);
 
     m_listenSock.accept(acceptContext);
 }
 
-void Listener::run(Endpoint endpoint, int count) {
+void Server::run(Endpoint endpoint, int count) {
     if(!m_listenSock.bind(endpoint))
         throw network_error("bind()");
     if(!m_listenSock.listen())
@@ -32,7 +36,7 @@ void Listener::run(Endpoint endpoint, int count) {
 
     for(int i = 0; i < count; ++i) {
         auto acceptContext = new Context;
-        acceptContext->completed = bind(&Listener::OnAcceptCompleted, this, placeholders::_1);
+        acceptContext->completed = bind(&Server::OnAcceptCompleted, this, placeholders::_1);
 
         if(!m_listenSock.accept(acceptContext))
             throw network_error("accept()");
@@ -41,8 +45,7 @@ void Listener::run(Endpoint endpoint, int count) {
     }
 }
 
-Listener::~Listener() {
+Server::~Server() {
     for(auto& acceptContext : m_acceptContexts)
         delete acceptContext;
 }
-
