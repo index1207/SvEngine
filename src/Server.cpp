@@ -25,6 +25,7 @@ void Server::OnAcceptCompleted(net::Context* acceptContext) {
     auto client = m_clientFactory();
     client->run(acceptContext->acceptSocket);
 
+    acceptContext->acceptSocket = make_unique<Socket>();
     m_listenSock.accept(acceptContext);
 }
 

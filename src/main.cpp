@@ -7,6 +7,7 @@ using namespace net;
 class TestClient : public sv::Client {
 public:
     TestClient() = default;
+    ~TestClient() {};
 public:
     virtual void onConnected() override
     {
@@ -14,11 +15,11 @@ public:
     }
     virtual void onDisconnected() override
     {
-
+        std::cout << "Disonnected!" << '\n';
     }
-    virtual void onReceive(std::span<char> buffer) override
+    virtual void onReceive(std::span<char> buffer, int length) override
     {
-
+        std::cout << "Recv " << buffer.data() << '\n';
     }
     virtual void onSend(std::span<char> buffer) override
     {
