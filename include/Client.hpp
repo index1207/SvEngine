@@ -18,6 +18,7 @@ namespace sv {
         virtual ~Client();
     public:
         void run(std::unique_ptr<Socket>& sock);
+        Socket getHandle();
     public:
         void disconnect();
         void send(std::span<char> buffer);
@@ -31,7 +32,7 @@ namespace sv {
         void onSendCompleted(Context* context);
     private:
         std::unique_ptr<Socket> m_sock;
-        std::shared_ptr<Client> m_ref;
+        std::shared_ptr<Client> m_ref; // TEMP
         std::vector<char> m_buffer;
     };
 

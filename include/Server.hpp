@@ -22,13 +22,10 @@ namespace sv {
         static inline Server open()
         {
             Server server;
-            server.m_clientFactory = makeClient<T>;
+            server.m_clientFactory = []{
+                return std::make_shared<T>();
+            };
             return server;
-        }
-    private:
-        template<class T = Client>
-        static inline std::shared_ptr<T> makeClient() {
-            return std::make_shared<T>();
         }
     private:
         void OnAcceptCompleted(net::Context *acceptContext);

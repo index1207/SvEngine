@@ -27,7 +27,7 @@ void Client::onRecvCompleted(Context* context) {
         disconnect();
         return;
     }
-    onReceive(context->buffer, context->length);
+    onReceive({context->buffer.begin(), context->buffer.begin()+context->length}, context->length);
     m_sock->receive(context);
 }
 
@@ -49,4 +49,8 @@ void Client::send(std::span<char> buffer) {
 void Client::onSendCompleted(Context* context) {
     onSend(context->buffer, context->length);
     delete context;
+}
+
+Socket Client::getHandle() {
+    return *m_sock;
 }
