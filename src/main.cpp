@@ -22,19 +22,19 @@ public:
     }
     void onReceive(std::span<char> buffer, int length) override
     {
-        std::cout << "Recv " << buffer.data() << '\n';
-        send({buffer.begin(), buffer.begin()+length});
+        std::cout << "Recv " << std::string(buffer.begin(), buffer.end()) << '\n';
+        send(buffer);
     }
     void onSend(std::span<char> buffer, int length) override
     {
-        std::cout << "send " << buffer.data() << '\n';
+        std::cout << "Send " << std::string(buffer.begin(), buffer.end()) << '\n';
     }
 private:
 };
 
 int main() {
     auto server = sv::Server::open<TestClient>();
-    auto endpoint = Endpoint(IpAddress::parse("192.168.1.23"),9999);
+    auto endpoint = Endpoint(IpAddress::Loopback,9999);
     try {
         server.run(endpoint);
         std::cout << "Server is running on " << endpoint.toString() << '\n';

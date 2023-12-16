@@ -5,6 +5,7 @@
 #include "Client.hpp"
 
 #include <net/Context.hpp>
+#include <iostream>
 
 using namespace sv;
 
@@ -27,7 +28,7 @@ void Client::onRecvCompleted(Context* context) {
         disconnect();
         return;
     }
-    onReceive({context->buffer.begin(), context->buffer.begin()+context->length}, context->length);
+    onReceive(context->buffer.subspan(0, context->length), context->length);
     m_sock->receive(context);
 }
 
