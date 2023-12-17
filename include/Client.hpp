@@ -11,6 +11,8 @@ using namespace net;
 
 namespace sv {
 
+    class Packet;
+
     class Client : public std::enable_shared_from_this<Client>
     {
     public:
@@ -18,10 +20,11 @@ namespace sv {
         virtual ~Client();
     public:
         void run(std::unique_ptr<Socket>& sock);
-        Socket getHandle();
+        Socket getSocket();
     public:
         void disconnect();
         void send(std::span<char> buffer);
+        void send(Packet packet);
     public:
         virtual void onConnected() {};
         virtual void onDisconnected() {};

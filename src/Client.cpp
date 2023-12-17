@@ -3,6 +3,7 @@
 //
 
 #include "Client.hpp"
+#include "Packet.hpp"
 
 #include <net/Context.hpp>
 #include <iostream>
@@ -52,6 +53,10 @@ void Client::onSendCompleted(Context* context) {
     delete context;
 }
 
-Socket Client::getHandle() {
+Socket Client::getSocket() {
     return *m_sock;
+}
+
+void Client::send(Packet packet) {
+
 }

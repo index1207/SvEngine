@@ -1,5 +1,5 @@
 #include <iostream>
-#include <algorithm>
+#include <string>
 
 #include "Server.hpp"
 #include "net/Dns.hpp"
@@ -22,17 +22,21 @@ public:
     }
     void onReceive(std::span<char> buffer, int length) override
     {
-        std::cout << "Recv " << std::string(buffer.begin(), buffer.end()) << '\n';
-        send(buffer);
+        std::string str = std::string(buffer.begin(), buffer.end());
+        std::cout << "Recv " << str << '\n';
+        send(str);
     }
     void onSend(std::span<char> buffer, int length) override
     {
-        std::cout << "Send " << std::string(buffer.begin(), buffer.end()) << '\n';
+        std::cout << "Send " << length << '\n';
     }
 private:
 };
 
 int main() {
+#ifdef WIN32
+    SetConsoleOutputCP(CP_UTF8);
+#endif
     auto server = sv::Server::open<TestClient>();
     auto endpoint = Endpoint(IpAddress::Loopback,9999);
     try {
