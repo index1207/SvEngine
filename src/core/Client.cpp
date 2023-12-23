@@ -3,6 +3,7 @@
 //
 
 #include "core/Client.hpp"
+#include "net/Exception.hpp"
 
 #include <net/Context.hpp>
 
@@ -24,7 +25,10 @@ void sv::Client::run(net::Endpoint endpoint) {
 }
 
 void sv::Client::onConnectCompleted(Context* context) {
-    auto client = m_serverFactory();
-    auto sock = std::make_unique<Socket>(m_sock);
-    client->run(sock);
+    if(context->isSuccess) {
+        auto client = m_serverFactory();
+        auto sock = std::make_unique<Socket>(m_sock);
+        client->run(sock);
+    }
+    else throw net::network_error("connect()");
 }

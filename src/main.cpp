@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include <mutex>
 
 #include "core/Server.hpp"
 #include "net/Dns.hpp"
@@ -27,21 +28,11 @@ public:
     {
         std::string str = std::string(buffer.begin(), buffer.end());
         std::cout << "Recv " << str << '\n';
-        Chat pk;
-        pk.str = str;
-        send(&pk);
+        send(str);
     }
     void onSend(std::span<char> buffer, int length) override
     {
-        Packet p(0);
-        p.parse(buffer);
-        switch (p.getId()) {
-            case PacketId::CHAT:
-                Chat c;
-                c.parse(buffer);
-                std::cout << "data " << c.str << '\n';
-                break;
-        }
+        std::cout << "Sent " << length << '\n';
     }
 private:
 };
