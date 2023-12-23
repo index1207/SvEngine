@@ -2,11 +2,10 @@
 // Created by han93 on 2023-12-13.
 //
 
-#include "Client.hpp"
-#include "Packet.hpp"
+#include "core/Client.hpp"
+#include "core/Packet.hpp"
 
-#include <net/Context.hpp>
-#include <iostream>
+#include "net/Context.hpp"
 
 using namespace sv;
 
@@ -42,9 +41,11 @@ void Client::disconnect() {
 }
 
 void Client::send(std::span<char> buffer) {
+    m_buffer = std::vector<char>(buffer.begin(), buffer.end());
+
     auto sendContext = new Context();
     sendContext->completed = bind(&Client::onSendCompleted, this, std::placeholders::_1);
-    sendContext->buffer = buffer;
+    sendContext->buffer = m_buffer;
     m_sock->send(sendContext);
 }
 
@@ -57,6 +58,8 @@ Socket Client::getSocket() {
     return *m_sock;
 }
 
-void Client::send(Packet packet) {
-
+void Client::send(Packet* packet) {
+    packet->write();
+    packet->finish();
+    send(packet->data());
 }

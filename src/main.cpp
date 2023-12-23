@@ -1,8 +1,9 @@
 #include <iostream>
 #include <string>
 
-#include "Server.hpp"
+#include "core/Server.hpp"
 #include "net/Dns.hpp"
+#include "packet.hpp"
 
 using namespace net;
 
@@ -24,7 +25,9 @@ public:
     {
         std::string str = std::string(buffer.begin(), buffer.end());
         std::cout << "Recv " << str << '\n';
-        send(str);
+        Chat pk;
+        pk.str = str;
+        send(&pk);
     }
     void onSend(std::span<char> buffer, int length) override
     {
@@ -34,9 +37,7 @@ private:
 };
 
 int main() {
-#ifdef WIN32
     SetConsoleOutputCP(CP_UTF8);
-#endif
     auto server = sv::Server::open<TestClient>();
     auto endpoint = Endpoint(IpAddress::Loopback,9999);
     try {

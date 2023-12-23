@@ -5,12 +5,11 @@
 #pragma once
 
 #include <vector>
-#include <net/Socket.hpp>
+#include "net/Socket.hpp"
 
 using namespace net;
 
 namespace sv {
-
     class Packet;
 
     class Client : public std::enable_shared_from_this<Client>
@@ -24,7 +23,7 @@ namespace sv {
     public:
         void disconnect();
         void send(std::span<char> buffer);
-        void send(Packet packet);
+        void send(Packet* packet);
     public:
         virtual void onConnected() {};
         virtual void onDisconnected() {};

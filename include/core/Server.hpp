@@ -5,15 +5,15 @@
 #pragma once
 #include <vector>
 
-#include <net/Socket.hpp>
-#include <net/Context.hpp>
+#include "net/Socket.hpp"
+#include "net/Context.hpp"
 #include "Client.hpp"
 
 namespace sv {
     class Server {
         using clientFactory = std::function<std::shared_ptr<Client>()>;
-    public:
         Server();
+    public:
         ~Server();
     public:
         void run(net::Endpoint endpoint, int count = 1);

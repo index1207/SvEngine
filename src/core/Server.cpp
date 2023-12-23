@@ -2,8 +2,8 @@
 // Created by han93 on 2023-12-05.
 //
 
-#include "Server.hpp"
-#include "Client.hpp"
+#include "core/Server.hpp"
+#include "core/Client.hpp"
 
 #include "net/Exception.hpp"
 

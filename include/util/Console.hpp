@@ -6,13 +6,23 @@
 
 #include <string>
 
-enum class LogType {
-    Display, // white
-    Debug,   // green
-    Error    // red
-};
+namespace sv {
+    enum class LogType {
+        Display, // white
+        Debug,   // green
+        Error    // red
+    };
 
-class Console {
-public:
-    static void Log(std::string message, LogType type = LogType::Display);
-};
+    enum class EncodingType {
+        ANSI,
+        UTF8,
+    };
+
+    class Console {
+        friend class Engine;
+        static void Initialize();
+    public:
+        static void SetOutputEncoding();
+        static void Log(std::string message, LogType type = LogType::Display);
+    };
+}

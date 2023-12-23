@@ -1,0 +1,13 @@
+{
+    "packet": [
+        {
+            "id": "chat",
+            "element": [
+                {
+                    "name": "str",
+                    "type": "string"
+                }
+            ]
+        }
+    ]
+}
