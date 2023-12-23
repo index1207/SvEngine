@@ -17,11 +17,13 @@ public:
 public:
     void read() override
     {
+        Packet::read();
         *this >> str;
     }
     void write() override
     {
         *this << str;
+        finish();
     }
 public:
     std::string str;

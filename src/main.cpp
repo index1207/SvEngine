@@ -6,6 +6,7 @@
 #include "packet.hpp"
 
 using namespace net;
+using namespace sv;
 
 class TestClient : public sv::Client
 {
@@ -31,7 +32,15 @@ public:
     }
     void onSend(std::span<char> buffer, int length) override
     {
-        std::cout << "Send " << length << '\n';
+        Packet p(0);
+        p.parse(buffer);
+        switch (p.getId()) {
+            case PacketId::CHAT:
+                Chat c;
+                c.parse(buffer);
+                std::cout << "data " << c.str << '\n';
+                break;
+        }
     }
 private:
 };

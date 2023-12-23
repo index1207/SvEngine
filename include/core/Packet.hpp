@@ -6,6 +6,7 @@
 
 #include <vector>
 #include <string_view>
+#include <span>
 
 namespace sv {
     class Packet {
@@ -64,12 +65,18 @@ namespace sv {
             return *this;
         }
     public:
-        void virtual write() = 0;
-        void virtual read() = 0;
+        void virtual write() {};
+        void virtual read();
+        void virtual parse(std::span<char> buffer);
+    public:
+        unsigned short getId() { return m_id; }
+        unsigned short getSize() { return m_size; }
     public:
         void finish();
         std::vector<char>& data();
     private:
         std::vector<char> m_buffer;
+        unsigned short m_id;
+        unsigned short m_size;
     };
 }

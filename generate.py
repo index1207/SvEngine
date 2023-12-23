@@ -32,12 +32,13 @@ public:
 public:
     void read() override
     {{
+        Packet::read();
         {2}
     }}
     void write() override
     {{
         {3}
-        finish()
+        finish();
     }}
 public:
     {4}

@@ -10,7 +10,6 @@ sv::Packet::Packet(unsigned short id, int reserve) : m_buffer(4, 0) {
     m_buffer.reserve(reserve);
     for (int i = sizeof(unsigned short) - 1; i >= 0; --i)
         m_buffer[sizeof(unsigned short) - i - 1] = id >> 8 * i & 0xFF;
-
 }
 
 std::vector<char>& sv::Packet::data() {
@@ -102,4 +101,13 @@ void sv::Packet::finish() {
     auto size = static_cast<unsigned short>(m_buffer.size()-2);
     for (int i = sizeof(size) - 1; i >= 0; --i)
         m_buffer[sizeof(unsigned short) - i + 1] = size >> 8 * i & 0xFF;
+}
+
+void sv::Packet::parse(std::span<char> buffer) {
+    m_buffer = std::vector(buffer.begin(), buffer.end());
+    read();
+}
+
+void sv::Packet::read() {
+    *this >> m_id >> m_size;
 }
