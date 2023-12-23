@@ -1,41 +1,36 @@
 //
-// Created by han93 on 2023-12-13.
+// Created by han93 on 2023-12-23.
 //
 
 #pragma once
 
-#include <vector>
-#include "net/Socket.hpp"
+#include <net/Endpoint.hpp>
 
-using namespace net;
+#include "Session.hpp"
 
 namespace sv {
-    class Packet;
-
-    class Client : public std::enable_shared_from_this<Client>
-    {
-    public:
+    class Client {
+        using serverFactory = std::function<std::shared_ptr<Session>()>;
         Client();
-        virtual ~Client();
     public:
-        void run(std::unique_ptr<Socket>& sock);
-        Socket getSocket();
+        ~Client();
     public:
-        void disconnect();
-        void send(std::span<char> buffer);
-        void send(Packet* packet);
+        void run(net::Endpoint endpoint);
     public:
-        virtual void onConnected() {};
-        virtual void onDisconnected() {};
-        virtual void onSend(std::span<char> buffer, int length) {};
-        virtual void onReceive(std::span<char> buffer, int length) {};
+        template<class T = sv::Session>
+        static inline Client open()
+        {
+            Client client;
+            client.m_serverFactory = []{
+                return std::make_shared<T>();
+            };
+            return client;
+        }
     private:
-        void onRecvCompleted(Context* context);
-        void onSendCompleted(Context* context);
+        void onConnectCompleted(Context* context);
     private:
-        std::unique_ptr<Socket> m_sock;
-        std::shared_ptr<Client> m_ref; // TEMP
-        std::vector<char> m_buffer;
+        Socket m_sock;
+        serverFactory m_serverFactory;
     };
-
 }
+

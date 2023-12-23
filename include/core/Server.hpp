@@ -7,18 +7,19 @@
 
 #include "net/Socket.hpp"
 #include "net/Context.hpp"
-#include "Client.hpp"
+#include "Session.hpp"
 
 namespace sv {
     class Server {
-        using clientFactory = std::function<std::shared_ptr<Client>()>;
+        friend class Session;
+        using clientFactory = std::function<std::shared_ptr<Session>()>;
         Server();
     public:
         ~Server();
     public:
         void run(net::Endpoint endpoint, int count = 1);
     public:
-        template<class T = sv::Client>
+        template<class T = sv::Session>
         static inline Server open()
         {
             Server server;

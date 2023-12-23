@@ -3,7 +3,7 @@
 //
 
 #include "core/Server.hpp"
-#include "core/Client.hpp"
+#include "core/Session.hpp"
 
 #include "net/Exception.hpp"
 
@@ -18,7 +18,7 @@ using namespace std;
 Server::Server() {
     m_listenSock.create(Protocol::Tcp);
 
-    m_acceptContexts.reserve(128);
+    m_acceptContexts.reserve(32);
 }
 
 void Server::OnAcceptCompleted(net::Context* acceptContext) {

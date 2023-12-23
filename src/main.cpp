@@ -7,8 +7,9 @@
 
 using namespace net;
 using namespace sv;
+using namespace gen;
 
-class TestClient : public sv::Client
+class TestClient : public sv::Session
 {
 public:
     TestClient() = default;

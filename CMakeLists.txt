@@ -6,19 +6,25 @@ add_compile_options("$<$<CXX_COMPILER_ID:MSVC>:/utf-8>")
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /MT")
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /MTd")
 
+set(SRC src/core/Engine.cpp
+        src/core/Server.cpp
+        src/core/Client.cpp
+        src/core/Session.cpp
+        src/core/Packet.cpp
+        src/util/Console.cpp)
+
 include_directories(include)
 include_directories(netcpp/include)
 
-link_directories(netcpp/cmake-build-${CMAKE_BUILD_TYPE})
-link_directories(netcpp/out)
+link_directories(lib/${CMAKE_BUILD_TYPE})
 link_libraries(netcpp ws2_32)
 
 add_executable(SvEngine src/main.cpp)
 
-target_sources(SvEngine PRIVATE
-        src/core/Engine.cpp
-        src/core/Server.cpp
-        src/core/Client.cpp
-        src/core/Packet.cpp
-        src/util/Console.cpp
-)
+target_sources(SvEngine PRIVATE ${SRC})
+
+project(DummyClient)
+
+add_executable(DummyClient src/dummyClient.cpp)
+
+target_sources(DummyClient PRIVATE ${SRC})

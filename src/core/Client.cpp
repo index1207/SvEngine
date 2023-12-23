@@ -1,65 +1,30 @@
 //
-// Created by han93 on 2023-12-13.
+// Created by han93 on 2023-12-23.
 //
 
 #include "core/Client.hpp"
-#include "core/Packet.hpp"
 
-#include "net/Context.hpp"
+#include <net/Context.hpp>
 
-using namespace sv;
-
-Client::Client() : m_buffer(1024, '\0') {
+sv::Client::Client() {
+    m_sock.create(Protocol::Tcp);
 }
 
-void Client::run(std::unique_ptr<Socket>& sock) {
-    m_sock = std::move(sock);
-    onConnected();
-
-    auto recvContext = new Context();
-    recvContext->completed = bind(&Client::onRecvCompleted, this, std::placeholders::_1);
-    recvContext->buffer = m_buffer;
-    m_sock->receive(recvContext);
-    m_ref = shared_from_this();
+sv::Client::~Client() {
+    m_sock.close();
 }
 
-void Client::onRecvCompleted(Context* context) {
-    if(context->length == 0) {
-        disconnect();
-        return;
-    }
-    onReceive(context->buffer.subspan(0, context->length), context->length);
-    m_sock->receive(context);
+void sv::Client::run(net::Endpoint endpoint) {
+    m_sock.setLocalEndpoint(endpoint);
+
+    auto connectContext = new Context;
+    connectContext->endpoint = std::make_unique<Endpoint>(endpoint);
+    connectContext->completed = bind(&Client::onConnectCompleted, this, std::placeholders::_1);
+    m_sock.connect(connectContext);
 }
 
-Client::~Client() {
-}
-
-void Client::disconnect() {
-    onDisconnected();
-    m_ref = nullptr;
-}
-
-void Client::send(std::span<char> buffer) {
-    m_buffer = std::vector<char>(buffer.begin(), buffer.end());
-
-    auto sendContext = new Context();
-    sendContext->completed = bind(&Client::onSendCompleted, this, std::placeholders::_1);
-    sendContext->buffer = m_buffer;
-    m_sock->send(sendContext);
-}
-
-void Client::onSendCompleted(Context* context) {
-    onSend(context->buffer, context->length);
-    delete context;
-}
-
-Socket Client::getSocket() {
-    return *m_sock;
-}
-
-void Client::send(Packet* packet) {
-    packet->write();
-    packet->finish();
-    send(packet->data());
+void sv::Client::onConnectCompleted(Context* context) {
+    auto client = m_serverFactory();
+    auto sock = std::make_unique<Socket>(m_sock);
+    client->run(sock);
 }
