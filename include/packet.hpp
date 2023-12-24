@@ -13,7 +13,7 @@ using uint64 = unsigned long long;
 
 namespace gen {
     enum PacketId {
-        CHAT
+        CHAT = 1
     };
     
     class Chat

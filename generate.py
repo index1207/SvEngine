@@ -98,7 +98,7 @@ def getLangTypename(typename):
     return typename
 
 
-with open('packet.json') as jsonFile:
+with open('PacketDefine.json') as jsonFile:
     data = json.load(jsonFile)
 
     packetList = data['packet']
@@ -125,7 +125,7 @@ with open('packet.json') as jsonFile:
     if args.lang == 'cpp':
         output = cppFormat.file.format(
             args.namespace,
-            ',\n'.join(str('    ' + value) for value in packetIdList),
+            ',\n'.join(str('    ' + value + f' = {packetIdList.index(value)+1}') for value in packetIdList),
             ''.join(classList)
         )
         ext = 'hpp'

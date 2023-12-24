@@ -14,7 +14,7 @@ set(SRC src/core/Engine.cpp
         src/util/Console.cpp)
 
 include_directories(include)
-include_directories(netcpp/include)
+include_directories (netcpp/include)
 
 link_directories(lib/${CMAKE_BUILD_TYPE})
 link_libraries(netcpp ws2_32)
