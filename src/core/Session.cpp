@@ -5,9 +5,13 @@
 #include "core/Session.hpp"
 #include "core/Packet.hpp"
 
+#include <mutex>
+
 #include "net/Context.hpp"
 
 using namespace sv;
+
+std::mutex mtx;
 
 Session::Session() : m_buffer(1024, '\0') {
 }
@@ -40,10 +44,11 @@ void Session::disconnect() {
 }
 
 void Session::send(std::span<char> buffer) {
-    m_buffer = std::vector<char>(buffer.begin(), buffer.end());
-
     auto sendContext = new Context();
     sendContext->completed = bind(&Session::onSendCompleted, this, std::placeholders::_1);
+
+    std::lock_guard lock(mtx);
+    m_buffer = std::vector<char>(buffer.begin(), buffer.end());
     sendContext->buffer = m_buffer;
     m_sock->send(sendContext);
 }
