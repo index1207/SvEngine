@@ -40,14 +40,14 @@ sv::Packet &sv::Packet::operator<<(unsigned int data) {
 }
 
 sv::Packet &sv::Packet::operator<<(unsigned long long int data) {
-    auto t = htonll(data);
+    auto t = data;
     for(int i = sizeof(t)-1; i >= 0; --i)
         m_buffer.push_back((t>>8*i)&0xFF);
     return *this;
 }
 
 sv::Packet &sv::Packet::operator<<(short data) {
-    auto t = htons(static_cast<unsigned short>(data));
+    auto t = static_cast<unsigned short>(data);
     for(int i = sizeof(t)-1; i >= 0; --i)
         m_buffer.push_back((t>>8*i)&0xFF);
     return *this;

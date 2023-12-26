@@ -22,10 +22,14 @@ Server::Server() {
 }
 
 void Server::OnAcceptCompleted(net::Context* acceptContext) {
-    auto client = m_clientFactory();
-    client->run(acceptContext->acceptSocket);
+    if(acceptContext->isSuccess)
+    {
+        auto client = m_clientFactory();
+        client->run(acceptContext->acceptSocket);
+        client->onConnected();
 
-    acceptContext->acceptSocket = make_unique<Socket>();
+        acceptContext->acceptSocket = make_unique<Socket>();
+    }
     m_listenSock.accept(acceptContext);
 }
 

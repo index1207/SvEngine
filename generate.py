@@ -14,18 +14,18 @@ cppFormat.file = '''#pragma once
 #include <core/Packet.hpp>
 #include <vector>
 
-using int8 = char;
-using int16 = short;
-using int32 = int;
-using int64 = long long;
-using uint8 = unsigned char;
-using uint16 = unsigned short;
-using uint32 = unsigned int;
-using uint64 = unsigned long long;
+using Int8 = char;
+using Int16 = short;
+using Int32 = int;
+using Int64 = long long;
+using Uint8 = unsigned char;
+using Uint16 = unsigned short;
+using Uint32 = unsigned int;
+using Uint64 = unsigned long long;
 
 namespace {0} {{
     enum PacketId {{
-    {1}
+{1}
     }};
     
     {2}
@@ -54,6 +54,16 @@ cppFormat.classFormat = '''class {0}
     public:
         {4}
     }};
+    
+    sv::Packet& operator>>(sv::Packet& pk, {5}) {{
+        {6}
+        return pk;
+    }}
+
+    sv::Packet& operator<<(sv::Packet& pk, const {5}) {{
+        {7}
+        return pk;
+    }}
 '''
 
 
@@ -64,19 +74,28 @@ class Element:
 
 
 def readCppClass():
-    read_line = ' >> '.join(value.name for value in elementList) + ';'
-    write_line = ' << '.join(value.name for value in elementList) + ';'
-    if read_line != '':
-        read_line = '*this >> ' + read_line
-    if write_line != '':
-        write_line = '*this << ' + write_line
+    read_class = ' >> '.join(value.name for value in elementList)
+    write_line = ' << '.join(value.name for value in elementList)
+    if read_class == '' or write_line == '':
+        raise Exception("Packet element can't be null.")
+
+    read_class = '*this >> ' + read_class + ';'
+    write_line = '*this << ' + write_line + ';'
+
+    read_op = ' >> '.join(f'{packetId}.{value.name}' for value in elementList)
+    write_op = ' << '.join(f'{packetId}.{value.name}' for value in elementList)
+    read_op = f'pk >> {read_op};'
+    write_op = f'pk << {write_op};'
 
     return cppFormat.classFormat.format(
         packetId.title(),
         packetId.upper(),
-        read_line,
+        read_class,
         write_line,
-        '\n    '.join('{} {};'.format(value.type, value.name) for value in elementList),
+        '\n\t'.join('{} {};'.format(value.type, value.name) for value in elementList),
+        f'{packetId.title()}& {packetId.lower()}',
+        read_op,
+        write_op
     )
 
 
@@ -95,7 +114,7 @@ def getLangTypename(typename):
         if args.lang == 'cpp':
             tmp = typename.split('|')
             return f'std::vector<{getLangTypename(tmp[1])}>'
-    return typename
+    return typename.title()
 
 
 with open('PacketDefine.json') as jsonFile:
@@ -125,8 +144,8 @@ with open('PacketDefine.json') as jsonFile:
     if args.lang == 'cpp':
         output = cppFormat.file.format(
             args.namespace,
-            ',\n'.join(str('    ' + value + f' = {packetIdList.index(value)+1}') for value in packetIdList),
-            ''.join(classList)
+            ',\n'.join(str(f'\t\t{value} = {packetIdList.index(value)+1}') for value in packetIdList),
+            '\n\t'.join(classList)
         )
         ext = 'hpp'
 

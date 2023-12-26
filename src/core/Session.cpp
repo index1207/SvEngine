@@ -14,7 +14,6 @@ Session::Session() : m_buffer(1024, '\0') {
 
 void Session::run(std::unique_ptr<Socket>& sock) {
     m_sock = std::move(sock);
-    onConnected();
 
     auto recvContext = new Context();
     recvContext->completed = bind(&Session::onRecvCompleted, this, std::placeholders::_1);

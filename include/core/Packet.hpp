@@ -68,8 +68,8 @@ namespace sv {
         void virtual write() {};
         void virtual read();
     public:
-        unsigned short getId() { return m_id; }
-        unsigned short getSize() { return m_size; }
+        unsigned short getId() const { return m_id; }
+        unsigned short getSize() const { return m_size; }
     public:
         void parse(std::span<char> buffer);
         void finish();

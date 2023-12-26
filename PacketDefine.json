@@ -1,11 +1,20 @@
 {
     "packet": [
         {
+            "id": "test",
+            "element": [
+                {
+                    "name": "data",
+                    "type": "int16"
+                }
+            ]
+        },
+        {
             "id": "chat",
             "element": [
                 {
-                    "name": "str",
-                    "type": "string"
+                    "name": "val",
+                    "type": "list|test"
                 }
             ]
         }
