@@ -29,7 +29,7 @@ namespace sv {
             return server;
         }
     private:
-        void OnAcceptCompleted(net::Context *acceptContext);
+        void onAcceptCompleted(net::Context *acceptContext, bool isSuccess);
     private:
         net::Socket m_listenSock;
         std::vector<net::Context*> m_acceptContexts;

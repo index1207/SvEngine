@@ -27,7 +27,7 @@ namespace sv {
             return client;
         }
     private:
-        void onConnectCompleted(Context* context);
+        void onConnectCompleted(Context *context, bool isSuccess);
     private:
         Socket m_sock;
         serverFactory m_serverFactory;

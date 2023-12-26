@@ -21,8 +21,8 @@ Server::Server() {
     m_acceptContexts.reserve(32);
 }
 
-void Server::OnAcceptCompleted(net::Context* acceptContext) {
-    if(acceptContext->isSuccess)
+void Server::onAcceptCompleted(net::Context *acceptContext, bool isSuccess) {
+    if(isSuccess)
     {
         auto client = m_clientFactory();
         client->run(acceptContext->acceptSocket);
@@ -41,7 +41,7 @@ void Server::run(Endpoint endpoint, int count) {
 
     for(int i = 0; i < count; ++i) {
         auto acceptContext = new Context;
-        acceptContext->completed = bind(&Server::OnAcceptCompleted, this, placeholders::_1);
+        acceptContext->completed = bind(&Server::onAcceptCompleted, this, placeholders::_1, placeholders::_2);
 
         if(!m_listenSock.accept(acceptContext))
             throw network_error("accept()");
