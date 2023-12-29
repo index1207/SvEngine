@@ -8,8 +8,8 @@
 #include "net/Context.hpp"
 #include "util/Console.hpp"
 
-#include "DefinedPacket.hpp"
-#include <PacketHandler.hpp>
+#include "generated/cpp/Packet.hpp"
+#include "generated/cpp/PacketHandler.hpp"
 
 using namespace sv;
 

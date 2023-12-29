@@ -1,7 +1,7 @@
 #pragma once
 #include <core/Packet.hpp>
 
-#include "DefinedPacket.hpp"
+#include "generated/cpp/Packet.hpp"
 
 namespace gen
 {

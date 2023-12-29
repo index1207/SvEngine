@@ -202,5 +202,5 @@ with open('PacketDefine.json') as jsonFile:
         )
 
     # write file
-    outputFile = open(f'{args.output}/{args.lang}/DefinedPacket.{ext}', 'w')
+    outputFile = open(f'{args.output}/{args.lang}/Packet.{ext}', 'w')
     outputFile.write(output)
