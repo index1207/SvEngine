@@ -1,0 +1,21 @@
+{
+	"packet": [
+		{
+			"id": "test",
+			"element": [
+				{
+					"name": "data1",
+					"type": "int"
+				},
+				{
+					"name": "data2",
+					"type": "string"
+				},
+				{
+					"name": "data3",
+					"type": "list|string"
+				}
+			]
+		}
+	]
+}
