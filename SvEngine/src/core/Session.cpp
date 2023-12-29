@@ -9,6 +9,7 @@
 #include "util/Console.hpp"
 
 #include "DefinedPacket.hpp"
+#include <PacketHandler.hpp>
 
 using namespace sv;
 
@@ -28,15 +29,7 @@ void Session::run(std::unique_ptr<Socket>& sock) {
 void sv::Session::onReceive(char* buffer, int length)
 {
     auto pk = Packet::parseFrom(std::span<char>(buffer, length));
-    switch (pk.getId())
-    {
-    case gen::PacketId::TEST:
-        auto testPacket = static_cast<gen::Test*>(&pk);
-        testPacket->onReceive();
-        break;
-    default:
-        break;
-    }
+    gen::PacketHandler::onReceivePacket(static_cast<gen::PacketId>(pk->getId()), pk);
 }
 
 void Session::onRecvCompleted(Context *context, bool isSuccess) {

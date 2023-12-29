@@ -106,10 +106,11 @@ void sv::Packet::parse(std::span<char> buffer) {
     read();
 }
 
-sv::Packet& sv::Packet::parseFrom(std::span<char> buffer)
+sv::Packet* sv::Packet::parseFrom(std::span<char> buffer)
 {
     Packet pk(0);
     pk.parse(buffer);
+    return &pk;
 }
 
 void sv::Packet::read() {
