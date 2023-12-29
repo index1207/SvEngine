@@ -36,10 +36,6 @@ namespace gen {
             *this << data1 << data2 << data3;
             finish();
         }
-        void onReceive() override
-        {
-            PacketHandler::onReceivePacket(TEST, this);
-        }
     public:
         Int32 data1;
 		std::string data2;
@@ -47,12 +43,12 @@ namespace gen {
 	
     };
     
-    sv::Packet& operator>>(sv::Packet& pk, Test& test) {
+    inline sv::Packet& operator>>(sv::Packet& pk, Test& test) {
         pk >> test.data1 >> test.data2 >> test.data3;
         return pk;
     }
 
-    sv::Packet& operator<<(sv::Packet& pk, const Test& test) {
+    inline sv::Packet& operator<<(sv::Packet& pk, const Test& test) {
         pk << test.data1 << test.data2 << test.data3;
         return pk;
     }

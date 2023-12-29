@@ -76,20 +76,16 @@ cppFormat.classFormat = '''class {0}
             {3}
             finish();
         }}
-        void onReceive() override
-        {{
-            PacketHandler::onReceivePacket({1}, this);
-        }}
     public:
         {4}
     }};
     
-    sv::Packet& operator>>(sv::Packet& pk, {5}) {{
+    inline sv::Packet& operator>>(sv::Packet& pk, {5}) {{
         {6}
         return pk;
     }}
 
-    sv::Packet& operator<<(sv::Packet& pk, const {5}) {{
+    inline sv::Packet& operator<<(sv::Packet& pk, const {5}) {{
         {7}
         return pk;
     }}
