@@ -1,5 +1,6 @@
 #pragma once
 #include <core/Packet.hpp>
+
 #include <vector>
 
 using Int8 = char;
@@ -15,7 +16,7 @@ namespace gen {
     enum PacketId {
 		TEST = 1
     };
-    
+
     class Test
             : public sv::Packet {
     public:
@@ -34,6 +35,10 @@ namespace gen {
         {
             *this << data1 << data2 << data3;
             finish();
+        }
+        void onReceive() override
+        {
+            PacketHandler::onReceivePacket(TEST, this);
         }
     public:
         Int32 data1;

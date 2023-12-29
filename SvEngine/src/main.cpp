@@ -6,7 +6,7 @@
 #include "core/Session.hpp"
 #include "util/Console.hpp"
 
-#include "Packet.hpp"
+#include "DefinedPacket.hpp"
 
 using namespace net;
 using namespace sv;
@@ -28,21 +28,17 @@ public:
     }
     void onReceive(char* buffer, int length) override
     {
-        string str = string(buffer, length);
-        Console::Log(str.c_str());
-        send(str);
+        Session::onReceive(buffer, length);
     }
     void onSend(int length) override
     {
-        auto str = "Sent " + to_string(length);
-        Console::Log(str.c_str());
     }
 private:
 };
 
 int main() {
     auto server = Server::open<TestClient>();
-    auto endpoint = Endpoint(Dns::getHostEntry(Dns::getHostName()).addressList[1], 9999);
+    auto endpoint = Endpoint(IpAddress::Any, 9999);
     try {
         server.run(endpoint);
         Console::Log(("Server is running on " + endpoint.toString()).c_str());

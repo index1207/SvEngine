@@ -11,7 +11,7 @@ namespace DummyClient
         static void Main(string[] args)
         {
             var sock = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            sock.Connect(new IPEndPoint(Dns.GetHostEntry(Dns.GetHostName()).AddressList[1], 9999));
+            sock.Connect(new IPEndPoint(IPAddress.Loopback, 9999));
 
             string data = "HELLO";
             while(true)

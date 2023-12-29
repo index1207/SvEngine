@@ -63,8 +63,5 @@
     <ClInclude Include="include\core\Session.hpp">
       <Filter>include\core</Filter>
     </ClInclude>
-    <ClInclude Include="..\generated\cpp\Packet.hpp">
-      <Filter>generated</Filter>
-    </ClInclude>
   </ItemGroup>
 </Project>

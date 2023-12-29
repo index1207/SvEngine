@@ -67,11 +67,13 @@ namespace sv {
     public:
         void virtual write() {};
         void virtual read();
+        void virtual onReceive() {};
     public:
         unsigned short getId() const { return m_id; }
         unsigned short getSize() const { return m_size; }
     public:
         void parse(std::span<char> buffer);
+        static Packet& parseFrom(std::span<char> buffer);
         void finish();
         std::vector<char>& data();
     private:

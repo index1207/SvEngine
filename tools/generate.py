@@ -5,13 +5,15 @@ from dataclasses import dataclass
 
 @dataclass
 class Format:
-    fileFormat: str = None
+    file: str = None
+    handler: str = None
     classFormat: str = None
 
 
 cppFormat = Format()
 cppFormat.file = '''#pragma once
 #include <core/Packet.hpp>
+
 #include <vector>
 
 using Int8 = char;
@@ -27,8 +29,31 @@ namespace {0} {{
     enum PacketId {{
 {1}
     }};
-    
+
     {2}
+}}
+'''
+
+cppFormat.handler = '''#pragma once
+#include <core/Packet.hpp>
+
+#include "DefinedPacket.hpp"
+
+namespace {0}
+{{
+    class PacketHandler
+	{{
+	public:
+		static void onReceivePacket(PacketId id, sv::Packet* packet)
+        {{
+	        switch (id)
+	        {{
+	        {1}
+	        }}
+        }}
+	private:
+		{2}
+	}};
 }}
 '''
 
@@ -50,6 +75,10 @@ cppFormat.classFormat = '''class {0}
         {{
             {3}
             finish();
+        }}
+        void onReceive() override
+        {{
+            PacketHandler::onReceivePacket({1}, this);
         }}
     public:
         {4}
@@ -129,12 +158,15 @@ with open('PacketDefine.json') as jsonFile:
 
     output = ''
     ext = ''
+
+    # defined packet list
     for packet in packetList:
         packetId = packet['id']
         packetIdList.append(packetId.upper())
         elements = packet['element']
         elementList = []
 
+        # packet element
         for element in elements:
             elem = Element()
             elem.name = element['name']
@@ -142,15 +174,37 @@ with open('PacketDefine.json') as jsonFile:
 
             elementList.append(elem)
 
+        # Add class list.
         if args.lang == 'cpp':
             classList.append(readCppClass())
+
+        conditionList = []
+        handlerList = []
+        for classes in packetIdList:
+            handlerName = f'{classes.title()}PacketHandler'
+            handlerList.append(handlerName)
+            conditionList.append(f'case PacketId::{classes.upper()}:\n'
+                                    + f'\t\t\t\tauto {classes.lower()} = static_cast<{classes.title()}*>(packet);\n'
+                                    + f'\t\t\t\t{handlerName}({classes.lower()});\n'
+                                    + '\t\t\t\tbreak;'
+            )
+
+    # generate data
     if args.lang == 'cpp':
         output = cppFormat.file.format(
-            args.namespace,
-            ',\n'.join(str(f'\t\t{value} = {packetIdList.index(value)+1}') for value in packetIdList),
-            '\n\t'.join(classList)
-        )
+            args.namespace, #namespace
+            ',\n'.join(str(f'\t\t{value} = {packetIdList.index(value)+1}') for value in packetIdList), # packet enum
+            '\n\t'.join(classList), #packet classes
+            )
         ext = 'hpp'
+        handler = open(f'{args.output}/{args.lang}/PacketHandler.{ext}', 'w')
+        handler.write(cppFormat.handler.format(
+            args.namespace,
+            '\n'.join(str(value) for value in conditionList), #dispatches
+            '\n'.join(str('static void '+value+f'({packetIdList[handlerList.index(value)].title()}* packet);') for value in handlerList) #handlers
+            )
+        )
 
-    outputFile = open(f'{args.output}/{args.lang}/Packet.{ext}', 'w')
+    # write file
+    outputFile = open(f'{args.output}/{args.lang}/DefinedPacket.{ext}', 'w')
     outputFile.write(output)

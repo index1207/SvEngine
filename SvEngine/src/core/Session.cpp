@@ -8,6 +8,8 @@
 #include "net/Context.hpp"
 #include "util/Console.hpp"
 
+#include "DefinedPacket.hpp"
+
 using namespace sv;
 
 Session::Session() : m_buffer(1024, '\0') {
@@ -21,6 +23,20 @@ void Session::run(std::unique_ptr<Socket>& sock) {
 
     m_sock->receive(&m_recvCtx);
     m_ref = shared_from_this();
+}
+
+void sv::Session::onReceive(char* buffer, int length)
+{
+    auto pk = Packet::parseFrom(std::span<char>(buffer, length));
+    switch (pk.getId())
+    {
+    case gen::PacketId::TEST:
+        auto testPacket = static_cast<gen::Test*>(&pk);
+        testPacket->onReceive();
+        break;
+    default:
+        break;
+    }
 }
 
 void Session::onRecvCompleted(Context *context, bool isSuccess) {
