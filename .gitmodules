@@ -1,0 +1,3 @@
+[submodule "SvEngine/netcpp"]
+	path = SvEngine/netcpp
+	url = https://github.com/index1207/netcpp
