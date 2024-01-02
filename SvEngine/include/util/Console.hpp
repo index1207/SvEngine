@@ -6,7 +6,8 @@
 
 #include <iostream>
 #include <syncstream>
-#include <Windows.h>
+
+using HANDLE = void*;
 
 namespace sv {
     enum class LogType {

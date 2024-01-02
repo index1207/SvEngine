@@ -1,3 +1,4 @@
+import os
 import json
 import argparse
 from dataclasses import dataclass
@@ -26,7 +27,7 @@ using Uint32 = unsigned int;
 using Uint64 = unsigned long long;
 
 namespace {0} {{
-    enum PacketId {{
+    enum class PacketId {{
 {1}
     }};
 
@@ -36,23 +37,24 @@ namespace {0} {{
 
 cppFormat.handler = '''#pragma once
 #include <core/Packet.hpp>
+#include <generated/Packet.hpp>
 
-#include "DefinedPacket.hpp"
+namespace sv {{ class Session; }}
 
 namespace {0}
 {{
     class PacketHandler
 	{{
 	public:
-		static void onReceivePacket(PacketId id, sv::Packet* packet)
+		static void onReceivePacket(sv::Session* session, PacketId id, sv::Packet* packet)
         {{
 	        switch (id)
 	        {{
-	        {1}
+{1}
 	        }}
         }}
 	private:
-		{2}
+{2}
 	}};
 }}
 '''
@@ -60,7 +62,7 @@ namespace {0}
 cppFormat.classFormat = '''class {0}
             : public sv::Packet {{
     public:
-        {0}() : sv::Packet(PacketId::{1}) {{
+        {0}() : sv::Packet(static_cast<unsigned short>(PacketId::{1})) {{
         }}
         ~{0}() {{
     
@@ -90,6 +92,8 @@ cppFormat.classFormat = '''class {0}
         return pk;
     }}
 '''
+
+csharpFormat = Format()
 
 
 @dataclass
@@ -125,7 +129,6 @@ def readCppClass():
 
 
 parser = argparse.ArgumentParser()
-parser.add_argument('-o', '--output', default='generated', action='store', dest='output', help='output path')
 parser.add_argument('-l', '--language', default='cpp', action='store', dest='lang', help='generated file language')
 parser.add_argument('-n', '--namespace', default='gen', action='store', dest='namespace', help='namespace name')
 args = parser.parse_args()
@@ -152,7 +155,8 @@ with open('PacketDefine.json') as jsonFile:
     packetIdList = []
     classList = []
 
-    output = ''
+    outputPacket = ''
+    outputHandler = ''
     ext = ''
 
     # defined packet list
@@ -179,28 +183,36 @@ with open('PacketDefine.json') as jsonFile:
         for classes in packetIdList:
             handlerName = f'{classes.title()}PacketHandler'
             handlerList.append(handlerName)
-            conditionList.append(f'case PacketId::{classes.upper()}:\n'
-                                    + f'\t\t\t\tauto {classes.lower()} = static_cast<{classes.title()}*>(packet);\n'
-                                    + f'\t\t\t\t{handlerName}({classes.lower()});\n'
+            conditionList.append(f'\t\t\tcase PacketId::{classes.upper()}:\n'
+                                    + f'\t\t\t\t{handlerName}(session, static_cast<{classes.title()}*>(packet));\n'
                                     + '\t\t\t\tbreak;'
             )
 
-    # generate data
+    # formatting data
     if args.lang == 'cpp':
-        output = cppFormat.file.format(
+        outputPacket = cppFormat.file.format(
             args.namespace, #namespace
             ',\n'.join(str(f'\t\t{value} = {packetIdList.index(value)+1}') for value in packetIdList), # packet enum
             '\n\t'.join(classList), #packet classes
             )
-        ext = 'hpp'
-        handler = open(f'{args.output}/{args.lang}/PacketHandler.{ext}', 'w')
-        handler.write(cppFormat.handler.format(
+        outputHandler = cppFormat.handler.format(
             args.namespace,
             '\n'.join(str(value) for value in conditionList), #dispatches
-            '\n'.join(str('static void '+value+f'({packetIdList[handlerList.index(value)].title()}* packet);') for value in handlerList) #handlers
+            '\n'.join(str('\t\tstatic void '+value+f'(sv::Session* session, {packetIdList[handlerList.index(value)].title()}* packet);') for value in handlerList) #handlers
             )
-        )
+        ext = 'hpp'
 
-    # write file
-    outputFile = open(f'{args.output}/{args.lang}/Packet.{ext}', 'w')
-    outputFile.write(output)
+    # write packet & handler file
+    genPacket = open(f'../SvEngine/include/generated/Packet.{ext}', 'w')
+    genPacket.write(outputPacket)
+    genHandler = open(f'../SvEngine/include/generated/PacketHandler.{ext}', 'w')
+    genHandler.write(outputHandler)
+
+    if os.path.isfile(f'../SvEngine/src/generated/PacketHandler.cpp') == False:
+        if ext == 'hpp':
+            ext = 'cpp'
+        open(f'../SvEngine/src/generated/PacketHandler.{ext}', 'w').write('''#include <generated/PacketHandler.hpp>
+#include <core/Session.hpp>
+
+using namespace gen;
+''')

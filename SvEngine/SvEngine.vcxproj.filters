@@ -1,7 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\core\Client.cpp">
       <Filter>src\core</Filter>
     </ClCompile>
@@ -20,7 +19,12 @@
     <ClCompile Include="src\util\Console.cpp">
       <Filter>src\util</Filter>
     </ClCompile>
-    <ClCompile Include="src\PacketHandler.cpp" />
+    <ClCompile Include="src\main.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\generated\PacketHandler.cpp">
+      <Filter>src\generated</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">
@@ -44,6 +48,12 @@
     <Filter Include="generated">
       <UniqueIdentifier>{11f43945-bc9f-439b-b233-9f89d88f67f0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\generated">
+      <UniqueIdentifier>{76ac14aa-c4f6-437f-a56f-55759f078dd0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\generated">
+      <UniqueIdentifier>{f457185e-60e4-451f-bce0-28aecb08a551}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\util\Console.hpp">
@@ -63,6 +73,12 @@
     </ClInclude>
     <ClInclude Include="include\core\Session.hpp">
       <Filter>include\core</Filter>
+    </ClInclude>
+    <ClInclude Include="include\generated\Packet.hpp">
+      <Filter>include\generated</Filter>
+    </ClInclude>
+    <ClInclude Include="include\generated\PacketHandler.hpp">
+      <Filter>include\generated</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

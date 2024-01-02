@@ -6,8 +6,6 @@
 #include "core/Session.hpp"
 #include "util/Console.hpp"
 
-#include "generated/cpp/Packet.hpp"
-
 using namespace net;
 using namespace sv;
 using namespace std;

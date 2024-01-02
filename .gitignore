@@ -6,7 +6,10 @@ bin/
 */obj
 
 *.lib
+*.dll
 *.pdb
 
 */Debug
 */Release
+
+*/*/obj/*

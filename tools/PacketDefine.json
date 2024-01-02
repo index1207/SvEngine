@@ -1,19 +1,38 @@
 {
 	"packet": [
 		{
-			"id": "test",
+			"id": "a",
 			"element": [
 				{
-					"name": "data1",
+					"name": "var",
 					"type": "int"
-				},
+				}
+			]
+		},
+		{
+			"id": "b",
+			"element": [
 				{
-					"name": "data2",
-					"type": "string"
-				},
+					"name": "var",
+					"type": "int"
+				}
+			]
+		},
+		{
+			"id": "c",
+			"element": [
 				{
-					"name": "data3",
-					"type": "list|string"
+					"name": "var",
+					"type": "int"
+				}
+			]
+		},
+		{
+			"id": "d",
+			"element": [
+				{
+					"name": "var",
+					"type": "int"
 				}
 			]
 		}

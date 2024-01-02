@@ -3,6 +3,7 @@
 //
 
 #include "util/Console.hpp"
+#include "Windows.h"
 
 using namespace sv;
 

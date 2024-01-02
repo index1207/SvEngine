@@ -8,8 +8,8 @@
 #include "net/Context.hpp"
 #include "util/Console.hpp"
 
-#include "generated/cpp/Packet.hpp"
-#include "generated/cpp/PacketHandler.hpp"
+#include "generated/Packet.hpp"
+#include "generated/PacketHandler.hpp"
 
 using namespace sv;
 
@@ -29,7 +29,7 @@ void Session::run(std::unique_ptr<Socket>& sock) {
 void sv::Session::onReceive(char* buffer, int length)
 {
     auto pk = Packet::parseFrom(std::span<char>(buffer, length));
-    gen::PacketHandler::onReceivePacket(static_cast<gen::PacketId>(pk->getId()), pk);
+    gen::PacketHandler::onReceivePacket(this, static_cast<gen::PacketId>(pk->getId()), pk);
 }
 
 void Session::onRecvCompleted(Context *context, bool isSuccess) {

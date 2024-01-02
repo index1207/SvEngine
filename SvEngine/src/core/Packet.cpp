@@ -6,7 +6,7 @@
 
 #include "core/Packet.hpp"
 
-sv::Packet::Packet(unsigned short id, int reserve) : m_buffer(4, 0) {
+sv::Packet::Packet(unsigned short id, int reserve) : m_buffer(4, 0), m_id(0), m_size(0) {
     m_buffer.reserve(reserve);
     for (int i = sizeof(unsigned short) - 1; i >= 0; --i)
         m_buffer[sizeof(unsigned short) - i - 1] = id >> 8 * i & 0xFF;

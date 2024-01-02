@@ -7,7 +7,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SvEngine", "SvEngine\SvEngi
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{D38E0D41-FFF8-4938-AD80-3AB93233CB2B}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Packet Generator", "Packet Generator", "{E6F6BF2A-EE40-4B63-BADF-2EDD9A5EE861}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PacketGenerator", "PacketGenerator", "{E6F6BF2A-EE40-4B63-BADF-2EDD9A5EE861}"
 	ProjectSection(SolutionItems) = preProject
 		tools\generate.py = tools\generate.py
 		tools\PacketDefine.json = tools\PacketDefine.json
@@ -17,11 +17,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DummyClient", "DummyClient\
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Engine", "Engine", "{87A20E2A-BD72-441B-AE36-81CB51748EBB}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "generated", "generated", "{3187CB5D-35A9-4DCE-9147-38E7107DA1D7}"
-	ProjectSection(SolutionItems) = preProject
-		tools\generated\cpp\PacketHandler.hpp = tools\generated\cpp\PacketHandler.hpp
-		tools\generated\cpp\Packet.hpp = tools\generated\cpp\Packet.hpp
-	EndProjectSection
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Connector", "Connector", "{F2563D44-5005-4B9A-91FF-BC6799658FFB}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CSharp", "Connector\CSharp\CSharp.csproj", "{C6177784-DF3C-43A4-B78D-E69D3C1C9A75}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -57,6 +55,18 @@ Global
 		{71A88F57-BFE0-4510-B615-5525AE4DC182}.Release|x64.Build.0 = Release|Any CPU
 		{71A88F57-BFE0-4510-B615-5525AE4DC182}.Release|x86.ActiveCfg = Release|Any CPU
 		{71A88F57-BFE0-4510-B615-5525AE4DC182}.Release|x86.Build.0 = Release|Any CPU
+		{C6177784-DF3C-43A4-B78D-E69D3C1C9A75}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C6177784-DF3C-43A4-B78D-E69D3C1C9A75}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C6177784-DF3C-43A4-B78D-E69D3C1C9A75}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{C6177784-DF3C-43A4-B78D-E69D3C1C9A75}.Debug|x64.Build.0 = Debug|Any CPU
+		{C6177784-DF3C-43A4-B78D-E69D3C1C9A75}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{C6177784-DF3C-43A4-B78D-E69D3C1C9A75}.Debug|x86.Build.0 = Debug|Any CPU
+		{C6177784-DF3C-43A4-B78D-E69D3C1C9A75}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C6177784-DF3C-43A4-B78D-E69D3C1C9A75}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C6177784-DF3C-43A4-B78D-E69D3C1C9A75}.Release|x64.ActiveCfg = Release|Any CPU
+		{C6177784-DF3C-43A4-B78D-E69D3C1C9A75}.Release|x64.Build.0 = Release|Any CPU
+		{C6177784-DF3C-43A4-B78D-E69D3C1C9A75}.Release|x86.ActiveCfg = Release|Any CPU
+		{C6177784-DF3C-43A4-B78D-E69D3C1C9A75}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -65,7 +75,7 @@ Global
 		{0E19D820-B6BE-4D23-805B-AAD9EF0EEA69} = {87A20E2A-BD72-441B-AE36-81CB51748EBB}
 		{E6F6BF2A-EE40-4B63-BADF-2EDD9A5EE861} = {D38E0D41-FFF8-4938-AD80-3AB93233CB2B}
 		{71A88F57-BFE0-4510-B615-5525AE4DC182} = {87A20E2A-BD72-441B-AE36-81CB51748EBB}
-		{3187CB5D-35A9-4DCE-9147-38E7107DA1D7} = {E6F6BF2A-EE40-4B63-BADF-2EDD9A5EE861}
+		{C6177784-DF3C-43A4-B78D-E69D3C1C9A75} = {F2563D44-5005-4B9A-91FF-BC6799658FFB}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {ED68ACD2-0F2E-44A1-A1D6-5B4C5B7D2AAF}
