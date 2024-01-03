@@ -6,6 +6,8 @@
 
 #include "core/Packet.hpp"
 
+using namespace sv;
+
 sv::Packet::Packet(unsigned short id, int reserve) : m_buffer(4, 0), m_id(0), m_size(0) {
     m_buffer.reserve(reserve);
     for (int i = sizeof(unsigned short) - 1; i >= 0; --i)
@@ -27,7 +29,7 @@ sv::Packet &sv::Packet::operator<<(char data) {
 }
 
 sv::Packet &sv::Packet::operator<<(unsigned short data) {
-    auto t = static_cast<unsigned short>(data);
+    auto t = htons(data);
     for(int i = sizeof(t)-1; i >= 0; --i)
         m_buffer.push_back((t>>8*i)&0xFF);
     return *this;
@@ -40,14 +42,14 @@ sv::Packet &sv::Packet::operator<<(unsigned int data) {
 }
 
 sv::Packet &sv::Packet::operator<<(unsigned long long int data) {
-    auto t = data;
+    auto t = htonll(data);
     for(int i = sizeof(t)-1; i >= 0; --i)
         m_buffer.push_back((t>>8*i)&0xFF);
     return *this;
 }
 
 sv::Packet &sv::Packet::operator<<(short data) {
-    auto t = static_cast<unsigned short>(data);
+    auto t = static_cast<short>(htons(data));
     for(int i = sizeof(t)-1; i >= 0; --i)
         m_buffer.push_back((t>>8*i)&0xFF);
     return *this;
@@ -60,8 +62,9 @@ sv::Packet &sv::Packet::operator<<(int data) {
 }
 
 sv::Packet &sv::Packet::operator<<(long data) {
+    auto t = static_cast<long>(htonl(data));
     for(int i = sizeof(data)-1; i >= 0; --i)
-        m_buffer.push_back((data>>8*i)&0xFF);
+        m_buffer.push_back((t>>8*i)&0xFF);
     return *this;
 }
 
@@ -90,8 +93,9 @@ sv::Packet &sv::Packet::operator<<(bool data) {
 }
 
 sv::Packet &sv::Packet::operator<<(unsigned long data) {
-    for(int i = sizeof(data)-1; i >= 0; --i)
-        m_buffer.push_back((data>>8*i)&0xFF);
+    auto t = htonl(data);
+    for(int i = sizeof(t)-1; i >= 0; --i)
+        m_buffer.push_back((t>>8*i)&0xFF);
     return *this;
 }
 
@@ -106,13 +110,66 @@ void sv::Packet::parse(std::span<char> buffer) {
     read();
 }
 
-sv::Packet* sv::Packet::parseFrom(std::span<char> buffer)
+std::unique_ptr<sv::Packet> sv::Packet::parseFrom(std::span<char> buffer)
 {
-    Packet pk(0);
-    pk.parse(buffer);
-    return &pk;
+    auto pk = std::make_unique<Packet>(0);
+    pk->parse(buffer);
+    return pk;
 }
 
 void sv::Packet::read() {
     *this >> m_id >> m_size;
+}
+
+sv::Packet& sv::Packet::operator>>(std::string_view data)
+{
+    unsigned short len;
+    *this >> len;
+    data = std::string(m_buffer.begin(), m_buffer.begin() + len);
+    m_buffer.erase(m_buffer.begin(), m_buffer.begin() + len);
+    return *this;
+}
+
+Packet& sv::Packet::operator>>(unsigned short& data)
+{
+    std::memcpy(&data, m_buffer.data(), sizeof(data));
+    //data = ntohs(data);
+    return *this;
+}
+
+Packet& sv::Packet::operator>>(short& data)
+{
+    std::memcpy(&data, m_buffer.data(), sizeof(data));
+    //data = static_cast<short>(ntohs(data));
+    return *this;
+}
+
+Packet& sv::Packet::operator>>(unsigned long& data)
+{
+    return *this;
+}
+
+Packet& sv::Packet::operator>>(long& data)
+{
+    return *this;
+}
+
+Packet& sv::Packet::operator>>(unsigned long long& data)
+{
+    return *this;
+}
+
+Packet& sv::Packet::operator>>(long long& data)
+{
+    return *this;
+}
+
+Packet& sv::Packet::operator>>(unsigned int& data)
+{
+    return *this;
+}
+
+Packet& sv::Packet::operator>>(int& data)
+{
+    return *this;
 }

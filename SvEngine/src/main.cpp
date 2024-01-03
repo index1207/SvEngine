@@ -24,12 +24,13 @@ public:
     {
         Console::Log("Disconnected");
     }
-    void onReceive(char* buffer, int length) override
+    void onReceive(std::span<char> buffer, int length) override
     {
         Session::onReceive(buffer, length);
     }
     void onSend(int length) override
     {
+        Session::onSend(length);
     }
 private:
 };

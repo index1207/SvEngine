@@ -5,6 +5,7 @@
 #pragma once
 
 #include <vector>
+#include <memory>
 #include <string_view>
 #include <span>
 
@@ -36,29 +37,22 @@ namespace sv {
             return *this;
         }
     public:
+        Packet& operator>>(unsigned short& data);
+        Packet& operator>>(short& data);
+        Packet& operator>>(unsigned int& data);
+        Packet& operator>>(int& data);
+        Packet& operator>>(unsigned long& data);
+        Packet& operator>>(long& data);
+        Packet& operator>>(unsigned long long& data);
+        Packet& operator>>(long long& data);
+        Packet& operator>>(std::string_view data);
+
         template<class T>
-        Packet& operator>>(T& data) {
-            data = 0;
-            for(int i = 0; i < sizeof(T); ++i) {
-                data += (m_buffer[i] & 0xFF) << (8*(sizeof(T)-i-1));
-            }
-            m_buffer.erase(m_buffer.begin(), m_buffer.begin()+sizeof(T));
-            return *this;
-        }
-        template<>
-        Packet& operator>>(std::string& data) {
-            unsigned short len;
-            *this >> len;
-            data = std::string(m_buffer.begin(), m_buffer.begin()+len);
-            m_buffer.erase(m_buffer.begin(), m_buffer.begin()+len);
-            return *this;
-        }
-        template<class _Ty>
-        Packet& operator>>(std::vector<_Ty>& data) {
+        Packet& operator>>(std::vector<T>& data) {
             unsigned short len;
             *this >> len;
             for(unsigned short i = 0; i < len; ++i) {
-                _Ty t;
+                T t;
                 *this >> t;
                 data.push_back(t);
             }
@@ -72,7 +66,7 @@ namespace sv {
         unsigned short getSize() const { return m_size; }
     public:
         void parse(std::span<char> buffer);
-        static Packet* parseFrom(std::span<char> buffer);
+        static std::unique_ptr<Packet> parseFrom(std::span<char> buffer);
         void finish();
         std::vector<char>& data();
     private:

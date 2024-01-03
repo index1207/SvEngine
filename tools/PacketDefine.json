@@ -1,38 +1,11 @@
 {
 	"packet": [
 		{
-			"id": "a",
+			"id": "Chat",
 			"element": [
 				{
-					"name": "var",
-					"type": "int"
-				}
-			]
-		},
-		{
-			"id": "b",
-			"element": [
-				{
-					"name": "var",
-					"type": "int"
-				}
-			]
-		},
-		{
-			"id": "c",
-			"element": [
-				{
-					"name": "var",
-					"type": "int"
-				}
-			]
-		},
-		{
-			"id": "d",
-			"element": [
-				{
-					"name": "var",
-					"type": "int"
+					"name": "str",
+					"type": "string"
 				}
 			]
 		}

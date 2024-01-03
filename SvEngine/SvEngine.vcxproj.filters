@@ -54,6 +54,12 @@
     <Filter Include="include\generated">
       <UniqueIdentifier>{f457185e-60e4-451f-bce0-28aecb08a551}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\content">
+      <UniqueIdentifier>{499a2ccb-c862-42a1-874b-890d680788c7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\content">
+      <UniqueIdentifier>{0be3c9c8-e765-4eb3-a594-9e9d74744c9d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\util\Console.hpp">

@@ -13,6 +13,8 @@ class Format:
 
 cppFormat = Format()
 cppFormat.file = '''#pragma once
+#pragma warning(push)
+#pragma warning(disable: 26495)
 #include <core/Packet.hpp>
 
 #include <vector>
@@ -33,6 +35,7 @@ namespace {0} {{
 
     {2}
 }}
+#pragma warning(pop)
 '''
 
 cppFormat.handler = '''#pragma once
@@ -46,7 +49,7 @@ namespace {0}
     class PacketHandler
 	{{
 	public:
-		static void onReceivePacket(sv::Session* session, PacketId id, sv::Packet* packet)
+		static void onReceivePacket(sv::Session* session, PacketId id, std::shared_ptr<sv::Packet> packet)
         {{
 	        switch (id)
 	        {{
@@ -111,8 +114,8 @@ def readCppClass():
     read_class = '*this >> ' + read_class + ';'
     write_line = '*this << ' + write_line + ';'
 
-    read_op = ' >> '.join(f'{packetId}.{value.name}' for value in elementList)
-    write_op = ' << '.join(f'{packetId}.{value.name}' for value in elementList)
+    read_op = ' >> '.join(f'{packetId.lower()}.{value.name}' for value in elementList)
+    write_op = ' << '.join(f'{packetId.lower()}.{value.name}' for value in elementList)
     read_op = f'pk >> {read_op};'
     write_op = f'pk << {write_op};'
 
@@ -184,7 +187,7 @@ with open('PacketDefine.json') as jsonFile:
             handlerName = f'{classes.title()}PacketHandler'
             handlerList.append(handlerName)
             conditionList.append(f'\t\t\tcase PacketId::{classes.upper()}:\n'
-                                    + f'\t\t\t\t{handlerName}(session, static_cast<{classes.title()}*>(packet));\n'
+                                    + f'\t\t\t\t{handlerName}(session, std::static_pointer_cast<{classes.title()}>(packet));\n'
                                     + '\t\t\t\tbreak;'
             )
 
@@ -198,7 +201,7 @@ with open('PacketDefine.json') as jsonFile:
         outputHandler = cppFormat.handler.format(
             args.namespace,
             '\n'.join(str(value) for value in conditionList), #dispatches
-            '\n'.join(str('\t\tstatic void '+value+f'(sv::Session* session, {packetIdList[handlerList.index(value)].title()}* packet);') for value in handlerList) #handlers
+            '\n'.join(str('\t\tstatic void '+value+f'(sv::Session* session, std::shared_ptr<{packetIdList[handlerList.index(value)].title()}> packet);') for value in handlerList) #handlers
             )
         ext = 'hpp'
 

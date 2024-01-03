@@ -26,9 +26,9 @@ void Session::run(std::unique_ptr<Socket>& sock) {
     m_ref = shared_from_this();
 }
 
-void sv::Session::onReceive(char* buffer, int length)
+void sv::Session::onReceive(std::span<char> buffer, int length)
 {
-    auto pk = Packet::parseFrom(std::span<char>(buffer, length));
+    std::shared_ptr pk = move(Packet::parseFrom(buffer));
     gen::PacketHandler::onReceivePacket(this, static_cast<gen::PacketId>(pk->getId()), pk);
 }
 
@@ -38,7 +38,7 @@ void Session::onRecvCompleted(Context *context, bool isSuccess) {
         return;
     }
 
-    onReceive(context->buffer.data(), context->length);
+    onReceive(context->buffer.subspan(0, context->length), context->length);
     m_sock->receive(context);
 }
 

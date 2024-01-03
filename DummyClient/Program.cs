@@ -4,6 +4,8 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 
+using Sv;
+
 namespace DummyClient
 {
     class Program
@@ -13,11 +15,13 @@ namespace DummyClient
             var sock = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             sock.Connect(new IPEndPoint(IPAddress.Loopback, 9999));
 
-            string data = "HELLO";
-            while(true)
+            byte[] buffer = new byte[128];
+            BitConverter.TryWriteBytes(new Span<byte>(buffer, 0, 2), (ushort)1);
+            BitConverter.TryWriteBytes(new Span<byte>(buffer, 2, 4), (ushort)1);
+            while (true)
             {
-                sock.Send(Encoding.UTF8.GetBytes(data));
-                Thread.Sleep(10);
+                sock.Send(new ArraySegment<byte>(buffer, 0, 4));
+                Thread.Sleep(500);
             }
         }
     }
