@@ -29,7 +29,7 @@ void Session::run(std::unique_ptr<Socket>& sock) {
 void sv::Session::onReceive(std::span<char> buffer, int length)
 {
     std::shared_ptr pk = move(Packet::parseFrom(buffer));
-    gen::PacketHandler::onReceivePacket(this, static_cast<gen::PacketId>(pk->getId()), pk);
+    gen::PacketHandler::onReceivePacket(this, static_cast<gen::PacketId>(pk->getId()), pk.get());
 }
 
 void Session::onRecvCompleted(Context *context, bool isSuccess) {
@@ -55,25 +55,7 @@ void Session::disconnect() {
 }
 
 void Session::send(std::span<char> buffer) {
-    auto sendCtx = new Context;
-    sendCtx->completed = std::bind(&Session::onSendCompleted, this, std::placeholders::_1, std::placeholders::_2);
-    sendCtx->buffer = buffer;
-    try {
-        m_sock->send(sendCtx);
-    }
-    catch (std::exception& e) {
-        Console::Log(e.what());
-    }
-}
-
-void Session::onSendCompleted(Context *context, bool isSuccess) {
-    if (!isSuccess || context->length == 0) {
-        delete context;
-        disconnect();
-        return;
-    }
-    onSend(context->length);
-    delete context;
+    m_sock->send(buffer);
 }
 
 Socket Session::getSocket() {

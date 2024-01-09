@@ -5,51 +5,157 @@
 
 #include <vector>
 
-using Int8 = char;
-using Int16 = short;
-using Int32 = int;
-using Int64 = long long;
-using Uint8 = unsigned char;
-using Uint16 = unsigned short;
-using Uint32 = unsigned int;
-using Uint64 = unsigned long long;
+using int8 = char;
+using int16 = short;
+using int32 = int;
+using int64 = long long;
+using uint8 = unsigned char;
+using uint16 = unsigned short;
+using uint32 = unsigned int;
+using uint64 = unsigned long long;
 
 namespace gen {
     enum class PacketId {
-		CHAT = 1
+		ENTER_GAME_REQ = 1,
+		ENTER_GAME_RES = 2,
+		LOGIN_REQ = 3,
+		LOGIN_RES = 4
     };
 
-    class Chat
+    class EnterGameReq
             : public sv::Packet {
     public:
-        Chat() : sv::Packet(static_cast<unsigned short>(PacketId::CHAT)) {
+        EnterGameReq() : sv::Packet(static_cast<unsigned short>(PacketId::ENTER_GAME_REQ)) {
         }
-        ~Chat() {
+        ~EnterGameReq() {
     
         }
     public:
         void read() override
         {
             Packet::read();
-            *this >> str;
+            *this >> playerId;
         }
         void write() override
         {
-            *this << str;
+            *this << playerId;
             finish();
         }
     public:
-        std::string str;
+        int32 playerId;
 	
     };
     
-    inline sv::Packet& operator>>(sv::Packet& pk, Chat& chat) {
-        pk >> chat.str;
+    inline sv::Packet& operator>>(sv::Packet& pk, EnterGameReq& enterGameReq) {
+        pk >> enterGameReq.playerId;
         return pk;
     }
 
-    inline sv::Packet& operator<<(sv::Packet& pk, const Chat& chat) {
-        pk << chat.str;
+    inline sv::Packet& operator<<(sv::Packet& pk, const EnterGameReq& enterGameReq) {
+        pk << enterGameReq.playerId;
+        return pk;
+    }
+
+	class EnterGameRes
+            : public sv::Packet {
+    public:
+        EnterGameRes() : sv::Packet(static_cast<unsigned short>(PacketId::ENTER_GAME_RES)) {
+        }
+        ~EnterGameRes() {
+    
+        }
+    public:
+        void read() override
+        {
+            Packet::read();
+            *this >> playerList;
+        }
+        void write() override
+        {
+            *this << playerList;
+            finish();
+        }
+    public:
+        std::vector<int32> playerList;
+	
+    };
+    
+    inline sv::Packet& operator>>(sv::Packet& pk, EnterGameRes& enterGameRes) {
+        pk >> enterGameRes.playerList;
+        return pk;
+    }
+
+    inline sv::Packet& operator<<(sv::Packet& pk, const EnterGameRes& enterGameRes) {
+        pk << enterGameRes.playerList;
+        return pk;
+    }
+
+	class LoginReq
+            : public sv::Packet {
+    public:
+        LoginReq() : sv::Packet(static_cast<unsigned short>(PacketId::LOGIN_REQ)) {
+        }
+        ~LoginReq() {
+    
+        }
+    public:
+        void read() override
+        {
+            Packet::read();
+            *this >> usrId >> usrPwd;
+        }
+        void write() override
+        {
+            *this << usrId << usrPwd;
+            finish();
+        }
+    public:
+        std::string usrId;
+		std::string usrPwd;
+	
+    };
+    
+    inline sv::Packet& operator>>(sv::Packet& pk, LoginReq& loginReq) {
+        pk >> loginReq.usrId >> loginReq.usrPwd;
+        return pk;
+    }
+
+    inline sv::Packet& operator<<(sv::Packet& pk, const LoginReq& loginReq) {
+        pk << loginReq.usrId << loginReq.usrPwd;
+        return pk;
+    }
+
+	class LoginRes
+            : public sv::Packet {
+    public:
+        LoginRes() : sv::Packet(static_cast<unsigned short>(PacketId::LOGIN_RES)) {
+        }
+        ~LoginRes() {
+    
+        }
+    public:
+        void read() override
+        {
+            Packet::read();
+            *this >> isSuccess;
+        }
+        void write() override
+        {
+            *this << isSuccess;
+            finish();
+        }
+    public:
+        bool isSuccess;
+	
+    };
+    
+    inline sv::Packet& operator>>(sv::Packet& pk, LoginRes& loginRes) {
+        pk >> loginRes.isSuccess;
+        return pk;
+    }
+
+    inline sv::Packet& operator<<(sv::Packet& pk, const LoginRes& loginRes) {
+        pk << loginRes.isSuccess;
         return pk;
     }
 

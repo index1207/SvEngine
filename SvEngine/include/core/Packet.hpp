@@ -37,6 +37,9 @@ namespace sv {
             return *this;
         }
     public:
+        Packet& operator>>(bool& data);
+        Packet& operator>>(unsigned char& data);
+        Packet& operator>>(char& data);
         Packet& operator>>(unsigned short& data);
         Packet& operator>>(short& data);
         Packet& operator>>(unsigned int& data);
@@ -45,7 +48,7 @@ namespace sv {
         Packet& operator>>(long& data);
         Packet& operator>>(unsigned long long& data);
         Packet& operator>>(long long& data);
-        Packet& operator>>(std::string_view data);
+        Packet& operator>>(std::string& data);
 
         template<class T>
         Packet& operator>>(std::vector<T>& data) {

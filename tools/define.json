@@ -1,0 +1,46 @@
+{
+	"packet": [
+		{
+			"__comment__": "player list request",
+			"id": "enter_game_req",
+			"element": [
+				{
+					"name": "playerId",
+					"type": "int32"
+				}
+			]
+		},
+		{
+			"__comment__": "`enter_game_req` response",
+			"id": "enter_game_res",
+			"element": [
+				{
+					"name": "playerList",
+					"type": "list|int32"
+				}
+			]
+		},
+		{
+			"id": "login_req",
+			"element": [
+				{
+					"name": "usrId",
+					"type": "string"
+				},
+				{
+					"name": "usrPwd",
+					"type": "string"
+				}
+			]
+		},
+		{
+			"id": "login_res",
+			"element": [
+				{
+					"name": "isSuccess",
+					"type": "bool"
+				}
+			]
+		}
+	]
+}

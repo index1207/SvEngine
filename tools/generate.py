@@ -1,6 +1,7 @@
 import os
 import json
 import argparse
+import stringcase
 from dataclasses import dataclass
 
 
@@ -19,14 +20,14 @@ cppFormat.file = '''#pragma once
 
 #include <vector>
 
-using Int8 = char;
-using Int16 = short;
-using Int32 = int;
-using Int64 = long long;
-using Uint8 = unsigned char;
-using Uint16 = unsigned short;
-using Uint32 = unsigned int;
-using Uint64 = unsigned long long;
+using int8 = char;
+using int16 = short;
+using int32 = int;
+using int64 = long long;
+using uint8 = unsigned char;
+using uint16 = unsigned short;
+using uint32 = unsigned int;
+using uint64 = unsigned long long;
 
 namespace {0} {{
     enum class PacketId {{
@@ -49,7 +50,7 @@ namespace {0}
     class PacketHandler
 	{{
 	public:
-		static void onReceivePacket(sv::Session* session, PacketId id, std::shared_ptr<sv::Packet> packet)
+		static void onReceivePacket(sv::Session* session, PacketId id, sv::Packet* packet)
         {{
 	        switch (id)
 	        {{
@@ -105,6 +106,11 @@ class Element:
     name: str = None
 
 
+def camelcase(s):
+    camelcase = stringcase.camelcase(s)
+    return camelcase[0].upper() + camelcase[1:]
+
+
 def readCppClass():
     read_class = ' >> '.join(value.name for value in elementList)
     write_line = ' << '.join(value.name for value in elementList)
@@ -114,18 +120,18 @@ def readCppClass():
     read_class = '*this >> ' + read_class + ';'
     write_line = '*this << ' + write_line + ';'
 
-    read_op = ' >> '.join(f'{packetId.lower()}.{value.name}' for value in elementList)
-    write_op = ' << '.join(f'{packetId.lower()}.{value.name}' for value in elementList)
+    read_op = ' >> '.join(f'{stringcase.camelcase(packetId)}.{value.name}' for value in elementList)
+    write_op = ' << '.join(f'{stringcase.camelcase(packetId)}.{value.name}' for value in elementList)
     read_op = f'pk >> {read_op};'
     write_op = f'pk << {write_op};'
 
     return cppFormat.classFormat.format(
-        packetId.title(),
+        camelcase(packetId),
         packetId.upper(),
         read_class,
         write_line,
         '\t'.join('{} {};\n\t'.format(value.type, value.name) for value in elementList),
-        f'{packetId.title()}& {packetId.lower()}',
+        f'{camelcase(packetId)}& {stringcase.camelcase(packetId)}',
         read_op,
         write_op
     )
@@ -148,10 +154,10 @@ def getLangTypename(typename):
         if args.lang == 'cpp':
             tmp = typename.split('|')
             return f'std::vector<{getLangTypename(tmp[1])}>'
-    return typename.title()
+    return typename
 
 
-with open('PacketDefine.json') as jsonFile:
+with open('define.json') as jsonFile:
     data = json.load(jsonFile)
 
     packetList = data['packet']
@@ -165,7 +171,7 @@ with open('PacketDefine.json') as jsonFile:
     # defined packet list
     for packet in packetList:
         packetId = packet['id']
-        packetIdList.append(packetId.upper())
+        packetIdList.append(packetId)
         elements = packet['element']
         elementList = []
 
@@ -184,10 +190,10 @@ with open('PacketDefine.json') as jsonFile:
         conditionList = []
         handlerList = []
         for classes in packetIdList:
-            handlerName = f'{classes.title()}PacketHandler'
+            handlerName = f'{camelcase(classes)}PacketHandler'
             handlerList.append(handlerName)
             conditionList.append(f'\t\t\tcase PacketId::{classes.upper()}:\n'
-                                    + f'\t\t\t\t{handlerName}(session, std::static_pointer_cast<{classes.title()}>(packet));\n'
+                                    + f'\t\t\t\t{handlerName}(session, static_cast<{camelcase(classes)}*>(packet));\n'
                                     + '\t\t\t\tbreak;'
             )
 
@@ -195,13 +201,13 @@ with open('PacketDefine.json') as jsonFile:
     if args.lang == 'cpp':
         outputPacket = cppFormat.file.format(
             args.namespace, #namespace
-            ',\n'.join(str(f'\t\t{value} = {packetIdList.index(value)+1}') for value in packetIdList), # packet enum
+            ',\n'.join(str(f'\t\t{value.upper()} = {packetIdList.index(value)+1}') for value in packetIdList), # packet enum
             '\n\t'.join(classList), #packet classes
             )
         outputHandler = cppFormat.handler.format(
             args.namespace,
             '\n'.join(str(value) for value in conditionList), #dispatches
-            '\n'.join(str('\t\tstatic void '+value+f'(sv::Session* session, std::shared_ptr<{packetIdList[handlerList.index(value)].title()}> packet);') for value in handlerList) #handlers
+            '\n'.join(str('\t\tstatic void '+value+f'(sv::Session* session, {camelcase(packetIdList[handlerList.index(value)])}* packet);') for value in handlerList) #handlers
             )
         ext = 'hpp'
 

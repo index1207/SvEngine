@@ -9,8 +9,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{D38E0D41
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PacketGenerator", "PacketGenerator", "{E6F6BF2A-EE40-4B63-BADF-2EDD9A5EE861}"
 	ProjectSection(SolutionItems) = preProject
+		tools\define.json = tools\define.json
 		tools\generate.py = tools\generate.py
-		tools\PacketDefine.json = tools\PacketDefine.json
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DummyClient", "DummyClient\DummyClient.csproj", "{71A88F57-BFE0-4510-B615-5525AE4DC182}"

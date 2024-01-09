@@ -4,6 +4,7 @@
     <OutputType>Library</OutputType>
     <TargetFramework>netcoreapp3.0</TargetFramework>
     <CheckEolTargetFramework>false</CheckEolTargetFramework>
+    <BaseOutputPath>$(SolutionDir)bin\lib</BaseOutputPath>
   </PropertyGroup>
 
 </Project>

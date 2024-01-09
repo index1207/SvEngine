@@ -21,7 +21,8 @@ namespace Sv
         {
             m_buffer = new byte[1024];
 
-            BitConverter.TryWriteBytes(new Span<byte>(m_buffer, 0, sizeof(ushort)), id);
+            if (BitConverter.TryWriteBytes(new Span<byte>(m_buffer, 0, sizeof(ushort)), id))
+                Console.WriteLine("SUCCESS");
             m_writeOffset += sizeof(ushort) + sizeof(ushort); // id + size
         }
 

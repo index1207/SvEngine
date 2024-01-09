@@ -121,26 +121,33 @@ void sv::Packet::read() {
     *this >> m_id >> m_size;
 }
 
-sv::Packet& sv::Packet::operator>>(std::string_view data)
+sv::Packet& sv::Packet::operator>>(std::string& data)
 {
     unsigned short len;
     *this >> len;
-    data = std::string(m_buffer.begin(), m_buffer.begin() + len);
+    std::copy(m_buffer.begin(), m_buffer.begin() + len, data.begin());
     m_buffer.erase(m_buffer.begin(), m_buffer.begin() + len);
+    return *this;
+}
+
+Packet& sv::Packet::operator>>(bool& data)
+{
+    unsigned char t;
+    *this >> t;
+    data = static_cast<bool>(t);
+
     return *this;
 }
 
 Packet& sv::Packet::operator>>(unsigned short& data)
 {
     std::memcpy(&data, m_buffer.data(), sizeof(data));
-    //data = ntohs(data);
     return *this;
 }
 
 Packet& sv::Packet::operator>>(short& data)
 {
     std::memcpy(&data, m_buffer.data(), sizeof(data));
-    //data = static_cast<short>(ntohs(data));
     return *this;
 }
 

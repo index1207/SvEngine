@@ -18,19 +18,18 @@ public:
 public:
     void onConnected() override
     {
+        Session::onConnected();
         Console::Log("Connected");
     }
     void onDisconnected() override
     {
+        Session::onDisconnected();
         Console::Log("Disconnected");
     }
     void onReceive(std::span<char> buffer, int length) override
     {
         Session::onReceive(buffer, length);
-    }
-    void onSend(int length) override
-    {
-        Session::onSend(length);
+        send(buffer);
     }
 private:
 };
