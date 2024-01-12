@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using System.Threading;
 
 namespace Sv
 {
@@ -10,13 +11,29 @@ namespace Sv
     {
         private Socket _socket;
         private byte[] _buffer = new byte[1024];
+        int _isDisconnected;
         private SocketAsyncEventArgs _recvEvent = new SocketAsyncEventArgs();
 
-        public void Run(Socket sock)
+        public Session(Socket socket)
         {
-            _socket = sock;
- 
-            _recvEvent.Completed += OnRecvCompleted;
+            _socket = socket;
+            _isDisconnected = 0;
+        }
+
+        public void Run()
+        { 
+            _recvEvent.Completed += (object sender, SocketAsyncEventArgs recvEvent) =>
+            {
+                if (recvEvent.SocketError == SocketError.Success)
+                {
+                    OnReceive(new Span<byte>(_recvEvent.Buffer, 0, _recvEvent.Buffer.Length));
+                    _socket.ReceiveAsync(_recvEvent);
+                }
+                else
+                {
+                    OnDisconnected();
+                }
+            };
             _recvEvent.SetBuffer(_buffer);
 
             _socket.ReceiveAsync(_recvEvent);
@@ -27,17 +44,17 @@ namespace Sv
             _socket.Send(data);
         }
 
+        public void Disconnect()
+        {
+            if (Interlocked.Exchange(ref _isDisconnected, 1) == 0)
+            {
+                _socket.Disconnect(false);
+                OnDisconnected();
+            }
+        }
+
         public virtual void OnConnected() { }
         public virtual void OnDisconnected() { }
         public virtual void OnReceive(Span<byte> data) { }
-
-        private void OnRecvCompleted(object sender, SocketAsyncEventArgs recvEvent)
-        {
-            if(recvEvent.SocketError == SocketError.Success)
-            {
-                OnReceive(new Span<byte>(_recvEvent.Buffer, 0, _recvEvent.Count));
-            }
-            _socket.ReceiveAsync(_recvEvent);
-        }
     }
 }

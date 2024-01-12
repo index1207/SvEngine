@@ -20,14 +20,13 @@ Server::Server() {
     m_acceptContexts.reserve(32);
 }
 
-void Server::onAcceptCompleted(net::Context *acceptContext, bool isSuccess) {
+void Server::onAcceptCompleted(net::Context* acceptContext, bool isSuccess) {
     if (isSuccess)
     {
         auto client = m_clientFactory();
-        client->run(acceptContext->acceptSocket);
+        client->run(move(acceptContext->acceptSocket));
         client->onConnected();
     }
-    acceptContext->acceptSocket = make_unique<Socket>();
     m_listenSock.accept(acceptContext);
 }
 

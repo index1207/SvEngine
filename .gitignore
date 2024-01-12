@@ -5,6 +5,7 @@ bin/
 */x64
 */obj
 
+*.exe
 *.lib
 *.dll
 *.pdb

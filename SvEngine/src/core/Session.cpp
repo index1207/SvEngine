@@ -16,7 +16,7 @@ using namespace sv;
 Session::Session() : m_buffer(1024, '\0') {
 }
 
-void Session::run(std::unique_ptr<Socket>& sock) {
+void Session::run(std::unique_ptr<Socket> sock) {
     m_sock = std::move(sock);
 
     m_recvCtx.completed = bind(&Session::onRecvCompleted, this, std::placeholders::_1, std::placeholders::_2);
@@ -37,7 +37,6 @@ void Session::onRecvCompleted(Context *context, bool isSuccess) {
         disconnect();
         return;
     }
-
     onReceive(context->buffer.subspan(0, context->length), context->length);
     m_sock->receive(context);
 }

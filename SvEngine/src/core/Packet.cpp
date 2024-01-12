@@ -139,44 +139,78 @@ Packet& sv::Packet::operator>>(bool& data)
     return *this;
 }
 
+Packet& sv::Packet::operator>>(unsigned char& data)
+{
+    data = m_buffer.front();
+    m_buffer.erase(m_buffer.begin());
+    return *this;
+}
+
+Packet& sv::Packet::operator>>(char& data)
+{
+    unsigned char t;
+    *this >> t;
+    data = static_cast<char>(t);
+
+    return *this;
+}
+
 Packet& sv::Packet::operator>>(unsigned short& data)
 {
     std::memcpy(&data, m_buffer.data(), sizeof(data));
+    m_buffer.erase(m_buffer.begin(), m_buffer.begin() + sizeof(data));
     return *this;
 }
 
 Packet& sv::Packet::operator>>(short& data)
 {
-    std::memcpy(&data, m_buffer.data(), sizeof(data));
+    unsigned short t;
+    *this >> t;
+    data = static_cast<short>(t);
     return *this;
 }
 
 Packet& sv::Packet::operator>>(unsigned long& data)
 {
+    std::memcpy(&data, m_buffer.data(), sizeof(data));
+    m_buffer.erase(m_buffer.begin(), m_buffer.begin() + sizeof(data));
     return *this;
 }
 
 Packet& sv::Packet::operator>>(long& data)
 {
+    unsigned long t;
+    *this >> t;
+    data = static_cast<long>(t);
     return *this;
 }
 
 Packet& sv::Packet::operator>>(unsigned long long& data)
 {
+    std::memcpy(&data, m_buffer.data(), sizeof(data));
+    m_buffer.erase(m_buffer.begin(), m_buffer.begin() + sizeof(data));
     return *this;
 }
 
 Packet& sv::Packet::operator>>(long long& data)
 {
+    unsigned long long t;
+    *this >> t;
+    data = static_cast<long long>(t);
     return *this;
 }
 
 Packet& sv::Packet::operator>>(unsigned int& data)
 {
+    std::memcpy(&data, m_buffer.data(), sizeof(data));
+    m_buffer.erase(m_buffer.begin(), m_buffer.begin() + sizeof(data));
     return *this;
 }
 
 Packet& sv::Packet::operator>>(int& data)
 {
+    unsigned int t;
+    *this >> t;
+    data = static_cast<int>(t);
     return *this;
 }

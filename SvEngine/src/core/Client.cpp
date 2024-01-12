@@ -12,10 +12,9 @@ sv::Client::Client() {
 }
 
 sv::Client::~Client() {
-    m_sock.close();
 }
 
-void sv::Client::run(net::Endpoint endpoint) {
+void sv::Client::run(Endpoint endpoint) {
     m_sock.setLocalEndpoint(endpoint);
 
     auto connectContext = new Context;
@@ -27,8 +26,7 @@ void sv::Client::run(net::Endpoint endpoint) {
 void sv::Client::onConnectCompleted(Context *context, bool isSuccess) {
     if(isSuccess) {
         auto client = m_serverFactory();
-        auto sock = std::make_unique<Socket>(m_sock);
-        client->run(sock);
+        client->run(std::make_unique<Socket>(m_sock));
         client->onConnected();
     }
     else

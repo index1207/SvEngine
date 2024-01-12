@@ -22,7 +22,7 @@ namespace sv {
         Session();
         virtual ~Session();
     public:
-        void run(std::unique_ptr<Socket>& sock);
+        void run(std::unique_ptr<Socket> sock);
         Socket getSocket();
     public:
         void disconnect();
