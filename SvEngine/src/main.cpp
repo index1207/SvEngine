@@ -6,8 +6,11 @@
 #include "core/Session.hpp"
 #include "util/Console.hpp"
 
-using namespace net;
+#include <conio.h>
+
 using namespace sv;
+
+using namespace net;
 using namespace std;
 
 class TestClient : public Session
@@ -41,7 +44,7 @@ int main() {
         server.run(endpoint);
         Console::Log(("Server is running on " + endpoint.toString()).c_str());
 
-        getchar();
+        system("pause > nul");
     }
     catch (std::exception& e) {
         std::cout << e.what() << '\n';

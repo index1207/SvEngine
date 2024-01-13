@@ -4,11 +4,11 @@
 
 #include "core/Server.hpp"
 #include "core/Session.hpp"
+#include "util/Console.hpp"
+
+#include "net/IoSystem.hpp"
 
 #include "net/Exception.hpp"
-
-#include <functional>
-#include <utility>
 
 using namespace sv;
 
@@ -38,16 +38,24 @@ void Server::run(Endpoint endpoint, int count) {
 
     for(int i = 0; i < count; ++i) {
         auto acceptContext = new Context;
-        acceptContext->completed = bind(&Server::onAcceptCompleted, this, placeholders::_1, placeholders::_2);
+        acceptContext->completed = std::bind(&Server::onAcceptCompleted, this, placeholders::_1, placeholders::_2);
 
-        if(!m_listenSock.accept(acceptContext))
+       if (!m_listenSock.accept(acceptContext))
             throw network_error("accept()");
 
         m_acceptContexts.emplace_back(acceptContext);
     }
 }
 
-Server::~Server() {
-    for(auto& acceptContext : m_acceptContexts)
+void sv::Server::cancel()
+{
+    for (auto* acceptContext : m_acceptContexts) {
+        CancelIoEx(reinterpret_cast<HANDLE>(m_listenSock.getHandle()), reinterpret_cast<LPOVERLAPPED>(acceptContext));
         delete acceptContext;
+    }
+    m_acceptContexts.clear();
+}
+
+Server::~Server() {
+    cancel();
 }
