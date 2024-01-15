@@ -26,7 +26,7 @@ namespace sv {
         static void Initialize();
     public:
         static void SetOutputEncoding();
-        static void Log(const char* message, LogType type = LogType::Display);
+        static void Log(std::string_view message, LogType type = LogType::Display);
     private:
         static HANDLE m_consoleHandle;
     };

@@ -6,40 +6,25 @@ using System.Threading;
 
 namespace DummyClient
 {
-    class TestSession : Sv.Session
-    {
-        public TestSession(Socket sock) : base(sock)
-        {
-        }
-
-        public override void OnConnected()
-        {
-            base.OnConnected();
-            Console.WriteLine("Connected to server.");
-
-            Send(Encoding.UTF8.GetBytes("HELLO"));
-        }
-
-        public override void OnDisconnected()
-        {
-            base.OnDisconnected();
-            Console.WriteLine("Disconnected.");
-        }
-
-        public override void OnReceive(Span<byte> data)
-        {
-            base.OnReceive(data);
-            Console.WriteLine(Encoding.UTF8.GetString(data));
-        }
-    }
     class Program
     {
+        static Sv.Connector connector;
         static void Main(string[] args)
         {
-            Sv.Connector connector = new Sv.Connector();
-            connector.SessionFactory += (sock) =>
+            Thread.Sleep(500);
+            connector = new Sv.Connector();
+            connector.OnConnect += (EndPoint ep) =>
             {
-                return new TestSession(sock);
+                Console.WriteLine("On Connected");
+                connector.Send(Encoding.UTF8.GetBytes("HEllo"));
+            };
+            connector.OnDisconnect += () =>
+            {
+                Console.WriteLine("On Disconnected");
+            };
+            connector.OnReceive += (Sv.Message msg) =>
+            {
+                Console.WriteLine($"{Encoding.UTF8.GetString(msg.RawData)}");
             };
             connector.Connect(new IPEndPoint(IPAddress.Loopback, 9999));
 

@@ -41,6 +41,7 @@ namespace sv {
         std::vector<char> m_buffer;
         net::Context m_recvCtx;
         std::atomic<bool> m_isDisconnected;
+        std::mutex m_mtx;
     };
 
 }

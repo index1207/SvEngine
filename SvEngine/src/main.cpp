@@ -13,6 +13,8 @@ using namespace sv;
 using namespace net;
 using namespace std;
 
+string s = "HELLO";
+
 class TestClient : public Session
 {
 public:
@@ -31,7 +33,8 @@ public:
     }
     void onReceive(std::span<char> buffer, int length) override
     {
-        Session::onReceive(buffer, length);
+        //Session::onReceive(buffer, length);
+        Console::Log(string(buffer.begin(), buffer.begin()+length));
         send(buffer);
     }
 private:

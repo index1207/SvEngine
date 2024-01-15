@@ -14,7 +14,7 @@ void sv::Console::SetOutputEncoding()
 
 }
 
-void Console::Log(const char* message, LogType type) {
+void Console::Log(std::string_view message, LogType type) {
     std::osyncstream(std::cout) << message << std::endl;
 }
 

@@ -56,6 +56,7 @@ void Session::disconnect() {
 }
 
 void Session::send(std::span<char> buffer) {
+    std::lock_guard lock(m_mtx);
     m_sock->send(buffer);
 }
 

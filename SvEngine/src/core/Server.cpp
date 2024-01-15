@@ -40,8 +40,8 @@ void Server::run(Endpoint endpoint, int count) {
         auto acceptContext = new Context;
         acceptContext->completed = std::bind(&Server::onAcceptCompleted, this, placeholders::_1, placeholders::_2);
 
-       if (!m_listenSock.accept(acceptContext))
-            throw network_error("accept()");
+        if (!m_listenSock.accept(acceptContext))
+            onAcceptCompleted(acceptContext, false);
 
         m_acceptContexts.emplace_back(acceptContext);
     }
