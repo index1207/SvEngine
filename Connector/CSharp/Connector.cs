@@ -6,12 +6,17 @@ using System.Threading;
 
 namespace Sv
 {
+    public enum FailCause
+    {
+        Connect
+    }
     public class Connector
     {
         private Socket m_socket;
         public Action<EndPoint> OnConnect { get; set; } = (_) => { };
         public Action OnDisconnect { get; set; } = () => { };
         public Action<Message> OnReceive { get; set; } = (_) => { };
+        public Action<FailCause> OnFail { get; set; } = (_) => { };
 
         int _isDisconnected;
         private SocketAsyncEventArgs _recvEvent;
@@ -55,6 +60,10 @@ namespace Sv
                 if(connectArgs.SocketError == SocketError.Success)
                 {
                     OnConnect(connectArgs.RemoteEndPoint);
+                }
+                else
+                {
+                    OnFail(FailCause.Connect);
                 }
             };
             m_socket.ConnectAsync(args);

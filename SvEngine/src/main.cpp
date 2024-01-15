@@ -13,8 +13,6 @@ using namespace sv;
 using namespace net;
 using namespace std;
 
-string s = "HELLO";
-
 class TestClient : public Session
 {
 public:
@@ -39,7 +37,7 @@ public:
     }
 private:
 };
-
+    
 int main() {
     auto server = Server::open<TestClient>();
     auto endpoint = Endpoint(IpAddress::Any, 9999);
