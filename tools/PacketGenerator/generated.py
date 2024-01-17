@@ -249,12 +249,12 @@ for filename in defList:
         genPacket = open(f'generated/{camelcase(filename.rstrip(".json"))}.{ext}', 'w')
         genPacket.write(outputPacket)
 
-    if args.lang == 'cpp':
-        outputHandler = cppFormat.handler.format(
-            '\n'.join(f'#include <generated/{camelcase(value.rstrip(".json"))}.hpp>' for value in defList),
-            args.namespace,
-            '\n'.join(str(value) for value in conditionList),    #dispatches
-            '\n'.join(str('\t\tstatic void '+value+f'(sv::Session* session, {camelcase(packetIdList[handlerList.index(value)])}* packet);') for value in handlerList) #handlers
-        )
-    genHandler = open(f'generated/PacketHandler.{ext}', 'w')
-    genHandler.write(outputHandler)
+if args.lang == 'cpp':
+    outputHandler = cppFormat.handler.format(
+        '\n'.join(f'#include <generated/{camelcase(value.rstrip(".json"))}.hpp>' for value in defList),
+        args.namespace,
+        '\n'.join(str(value) for value in conditionList),    #dispatches
+        '\n'.join(str('\t\tstatic void '+value+f'(sv::Session* session, {camelcase(packetIdList[handlerList.index(value)])}* packet);') for value in handlerList) #handlers
+    )
+genHandler = open(f'generated/PacketHandler.{ext}', 'w')
+genHandler.write(outputHandler)
