@@ -8,7 +8,6 @@
 #include "net/Context.hpp"
 #include "util/Console.hpp"
 
-#include "generated/Packet.hpp"
 #include "generated/PacketHandler.hpp"
 
 using namespace sv;
@@ -26,12 +25,15 @@ void Session::run(std::unique_ptr<Socket> sock) {
     m_ref = shared_from_this();
 }
 
-void sv::Session::onReceive(std::span<char> buffer, int length)
+void sv::Session::onReceivePacket(std::span<char> buffer, int length)
 {
     if (length <= 2)
         return;
-    std::shared_ptr pk = move(Packet::parseFrom(buffer));
-    gen::PacketHandler::onReceivePacket(this, static_cast<gen::PacketId>(pk->getId()), pk.get());
+
+    gen::PacketId id;
+    std::memcpy(&id, buffer.data(), sizeof(unsigned short));
+
+    gen::PacketHandler::onReceivePacket(this, id, Packet::parseFrom(buffer).get());
 }
 
 void Session::onRecvCompleted(Context *context, bool isSuccess) {

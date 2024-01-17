@@ -30,7 +30,7 @@ namespace Sv
         {
             BitConverter.TryWriteBytes(new Span<byte>(m_buffer, 2, sizeof(ushort)), m_writeOffset);
         }
-
+            
         virtual protected void Write() { }
         virtual protected void Read()
         {

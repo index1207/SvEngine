@@ -98,6 +98,25 @@ cppFormat.classFormat = '''class {0}
 '''
 
 csharpFormat = Format()
+csharpFormat.file = """/*
+    TODO: Copy to your project.
+*/
+
+namespace {0}
+{{
+    public enum PacketId
+    {{
+{1}
+    }}
+
+    {2}
+}}
+"""
+
+csharpFormat.classFormat = """class {0} : Sv.Packet {{
+
+    }}
+"""
 
 
 @dataclass
@@ -111,7 +130,7 @@ def camelcase(s):
     return camelcase[0].upper() + camelcase[1:]
 
 
-def readCppClass():
+def readCppClass(conditionList, handlerList):
     read_class = ' >> '.join(value.name for value in elementList)
     write_line = ' << '.join(value.name for value in elementList)
     if read_class == '' or write_line == '':
@@ -125,6 +144,14 @@ def readCppClass():
     read_op = f'pk >> {read_op};'
     write_op = f'pk << {write_op};'
 
+    for classes in packetIdList:
+        handlerName = f'{camelcase(classes)}PacketHandler'
+        handlerList.append(handlerName)
+        conditionList.append(f'\t\t\tcase PacketId::{classes.upper()}:\n'
+                                + f'\t\t\t\t{handlerName}(session, static_cast<{camelcase(classes)}*>(packet));\n'
+                                + '\t\t\t\tbreak;'
+        )
+
     return cppFormat.classFormat.format(
         camelcase(packetId),
         packetId.upper(),
@@ -134,6 +161,11 @@ def readCppClass():
         f'{camelcase(packetId)}& {stringcase.camelcase(packetId)}',
         read_op,
         write_op
+    )
+
+def readCsharpClass(conditionList, handlerList):
+    return csharpFormat.classFormat.format(
+        camelcase(packetId)
     )
 
 
@@ -183,24 +215,19 @@ with open('define.json') as jsonFile:
 
             elementList.append(elem)
 
-        # Add class list.
-        if args.lang == 'cpp':
-            classList.append(readCppClass())
-
         conditionList = []
         handlerList = []
-        for classes in packetIdList:
-            handlerName = f'{camelcase(classes)}PacketHandler'
-            handlerList.append(handlerName)
-            conditionList.append(f'\t\t\tcase PacketId::{classes.upper()}:\n'
-                                    + f'\t\t\t\t{handlerName}(session, static_cast<{camelcase(classes)}*>(packet));\n'
-                                    + '\t\t\t\tbreak;'
-            )
+
+        # Add class list.
+        if args.lang == 'cpp':
+            classList.append(readCppClass(conditionList, handlerList))
+        elif args.lang == 'csharp':
+            classList.append(readCsharpClass(conditionList, handlerList))
 
     # formatting data
     if args.lang == 'cpp':
         outputPacket = cppFormat.file.format(
-            args.namespace, #namespace
+            args.namespace.lower(), #namespace
             ',\n'.join(str(f'\t\t{value.upper()} = {packetIdList.index(value)+1}') for value in packetIdList), # packet enum
             '\n\t'.join(classList), #packet classes
             )
@@ -210,18 +237,16 @@ with open('define.json') as jsonFile:
             '\n'.join(str('\t\tstatic void '+value+f'(sv::Session* session, {camelcase(packetIdList[handlerList.index(value)])}* packet);') for value in handlerList) #handlers
             )
         ext = 'hpp'
+    if args.lang == 'csharp':
+        outputPacket = csharpFormat.file.format(
+            camelcase(args.namespace),
+            ',\n'.join(str(f'\t\t{value.upper()} = {packetIdList.index(value)+1}') for value in packetIdList),
+            '\n\t'.join(classList)
+        )
+        ext = 'cs'
 
     # write packet & handler file
-    genPacket = open(f'../SvEngine/include/generated/Packet.{ext}', 'w')
+    genPacket = open(f'generated/GenPacket.{ext}', 'w')
     genPacket.write(outputPacket)
-    genHandler = open(f'../SvEngine/include/generated/PacketHandler.{ext}', 'w')
+    genHandler = open(f'generated/PacketHandler.{ext}', 'w')
     genHandler.write(outputHandler)
-
-    if os.path.isfile(f'../SvEngine/src/generated/PacketHandler.cpp') == False:
-        if ext == 'hpp':
-            ext = 'cpp'
-        open(f'../SvEngine/src/generated/PacketHandler.{ext}', 'w').write('''#include <generated/PacketHandler.hpp>
-#include <core/Session.hpp>
-
-using namespace gen;
-''')

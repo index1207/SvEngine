@@ -6,8 +6,6 @@
 #include "core/Session.hpp"
 #include "util/Console.hpp"
 
-#include <conio.h>
-
 using namespace sv;
 
 using namespace net;
@@ -31,8 +29,8 @@ public:
     }
     void onReceive(std::span<char> buffer, int length) override
     {
-        //Session::onReceive(buffer, length);
-        Console::Log(string(buffer.begin(), buffer.begin()+length));
+        Session::onReceive(buffer, length);
+        Console::Log("Recevie " + string(buffer.begin(), buffer.begin() + length));
         send(buffer);
     }
 private:
