@@ -9,7 +9,7 @@ It used [netcpp](https://github.com/index1207/netcpp) library that based on IOCP
 Through `Console` class to log server status.
 
 ### Generated Packet & Packet Handler
-Write packet structure with json formated file at define directory and run `generate.py` to generate **Packet** and **Packet Handler** source file.
+Write packet structure with json formated file at `define` directory and run `generate.py` or `PacketGenerator` project to generate **Packet** and **Packet Handler** source file.
 All you have to do is only implement Packet Handler methods!
 
 It will support many languages.
