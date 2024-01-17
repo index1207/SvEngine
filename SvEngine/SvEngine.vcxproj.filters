@@ -74,14 +74,14 @@
     <ClInclude Include="include\core\Session.hpp">
       <Filter>include\core</Filter>
     </ClInclude>
-    <ClInclude Include="..\generated\Example.hpp">
-      <Filter>generated</Filter>
-    </ClInclude>
-    <ClInclude Include="..\generated\PacketHandler.hpp">
-      <Filter>generated</Filter>
-    </ClInclude>
     <ClInclude Include="include\util\Types.hpp">
       <Filter>include\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\tools\PacketGenerator\generated\Example.hpp">
+      <Filter>generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\tools\PacketGenerator\generated\PacketHandler.hpp">
+      <Filter>generated</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

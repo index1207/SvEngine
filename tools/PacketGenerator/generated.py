@@ -36,11 +36,11 @@ namespace {1} {{
 
 cppFormat.handler = '''#pragma once
 #include <core/Packet.hpp>
-#include <generated/Packet.hpp>
+{0}
 
 namespace sv {{ class Session; }}
 
-namespace {0}
+namespace {1}
 {{
     class PacketHandler
 	{{
@@ -49,11 +49,11 @@ namespace {0}
         {{
 	        switch (id)
 	        {{
-{1}
+{2}
 	        }}
         }}
 	private:
-{2}
+{3}
 	}};
 }}
 '''
@@ -188,12 +188,16 @@ args = parser.parse_args()
 
 ext = ''
 outputHandler = ''
-for filename in os.listdir("define/"):
+defList = os.listdir("define/")
+for filename in defList:
     with open("define/"+filename) as jsonFile:
         data = json.load(jsonFile)
-
+        
         packetList = data['packet']
-        includeList = data['include']
+        
+        includeList = []
+        if len(data) > 1:
+            includeList = data['include']
 
         packetIdList = []
         classList = []
@@ -232,11 +236,6 @@ for filename in os.listdir("define/"):
                 ',\n'.join(str(f'\t\t{value.upper()} = {packetIdList.index(value)+1}') for value in packetIdList), # packet enum
                 '\n\t'.join(classList), #packet classes
                 )
-            outputHandler = cppFormat.handler.format(
-                args.namespace,
-                '\n'.join(str(value) for value in conditionList),    #dispatches
-                '\n'.join(str('\t\tstatic void '+value+f'(sv::Session* session, {camelcase(packetIdList[handlerList.index(value)])}* packet);') for value in handlerList) #handlers
-                )
             ext = 'hpp'
         if args.lang == 'csharp':
             outputPacket = csharpFormat.file.format(
@@ -247,7 +246,15 @@ for filename in os.listdir("define/"):
             ext = 'cs'
 
         # write packet & handler file
-        genPacket = open(f'../../generated/{camelcase(filename.rstrip(".json"))}.{ext}', 'w')
+        genPacket = open(f'generated/{camelcase(filename.rstrip(".json"))}.{ext}', 'w')
         genPacket.write(outputPacket)
-    genHandler = open(f'../../generated/PacketHandler.{ext}', 'w')
+
+    if args.lang == 'cpp':
+        outputHandler = cppFormat.handler.format(
+            '\n'.join(f'#include <generated/{camelcase(value.rstrip(".json"))}.hpp>' for value in defList),
+            args.namespace,
+            '\n'.join(str(value) for value in conditionList),    #dispatches
+            '\n'.join(str('\t\tstatic void '+value+f'(sv::Session* session, {camelcase(packetIdList[handlerList.index(value)])}* packet);') for value in handlerList) #handlers
+        )
+    genHandler = open(f'generated/PacketHandler.{ext}', 'w')
     genHandler.write(outputHandler)

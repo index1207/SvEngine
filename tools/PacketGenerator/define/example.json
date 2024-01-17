@@ -1,7 +1,4 @@
 {
-	"include": [
-		"test.json"
-	],
 	"packet": [
 		{
 			"__comment__": "player list request",

@@ -28,6 +28,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="define\" />
+    <Folder Include="generated\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="generated.py" />
