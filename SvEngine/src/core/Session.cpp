@@ -4,11 +4,12 @@
 
 #include "core/Session.hpp"
 #include "core/Packet.hpp"
-
-#include "net/Context.hpp"
 #include "util/Console.hpp"
 
-#include "generated/PacketHandler.hpp"
+#include "net/Context.hpp"
+#include "net/Exception.hpp"
+
+#include "generated/PacketHandler.gen.hpp"
 
 using namespace sv;
 
@@ -59,7 +60,10 @@ void Session::disconnect() {
 
 void Session::send(std::span<char> buffer) {
     std::lock_guard lock(m_mtx);
-    m_sock->send(buffer);
+    Console::Log("SEND");
+    if (m_sock->send(buffer) == SOCKET_ERROR) {
+        throw net::network_error("send()");
+    }
 }
 
 Socket Session::getSocket() {

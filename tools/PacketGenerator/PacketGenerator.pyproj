@@ -12,8 +12,7 @@
     <Name>PacketGenerator</Name>
     <RootNamespace>PacketGenerator</RootNamespace>
     <LaunchProvider>Standard Python launcher</LaunchProvider>
-    <CommandLineArguments>
-    </CommandLineArguments>
+    <CommandLineArguments>-l cpp</CommandLineArguments>
     <EnableNativeCodeDebugging>False</EnableNativeCodeDebugging>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
@@ -26,6 +25,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Content Include="define\example.json" />
+    <Content Include="generated\Example.gen.cs" />
+    <Content Include="generated\Example.gen.hpp" />
+    <Content Include="generated\PacketHandler.gen.cs" />
+    <Content Include="generated\PacketHandler.gen.hpp" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="define\" />

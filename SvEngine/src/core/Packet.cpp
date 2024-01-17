@@ -100,7 +100,7 @@ sv::Packet &sv::Packet::operator<<(unsigned long data) {
 }
 
 void sv::Packet::finish() {
-    auto size = static_cast<unsigned short>(m_buffer.size()-2);
+    auto size = static_cast<unsigned short>(m_buffer.size()-4);
     for (int i = sizeof(size) - 1; i >= 0; --i)
         m_buffer[sizeof(unsigned short) - i + 1] = size >> 8 * i & 0xFF;
 }

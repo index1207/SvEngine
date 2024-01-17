@@ -1,7 +1,6 @@
 import os
 import json
 import argparse
-from xml.etree.ElementInclude import include
 import stringcase
 from dataclasses import dataclass
 
@@ -93,7 +92,11 @@ cppFormat.classFormat = '''class {0}
 '''
 
 csharpFormat = Format()
-csharpFormat.file = """/*
+csharpFormat.file = """using System;
+using System.Collections.Generic;
+
+
+/*
     TODO: Copy to your project.
 */
 
@@ -108,8 +111,24 @@ namespace {0}
 }}
 """
 
-csharpFormat.classFormat = """class {0} : Sv.Packet {{
-
+csharpFormat.classFormat = """class {0} : Sv.Packet
+    {{
+        {1}
+        
+        public {0}() : base((ushort)PacketId.{2})
+        {{}}
+        
+        protected override void Read()
+        {{
+            base.Read();
+            {3}
+        }}
+        
+        protected override void Write()
+        {{
+            base.Write();
+            {4}
+        }}
     }}
 """
 
@@ -125,7 +144,7 @@ def camelcase(s):
     return camelcase[0].upper() + camelcase[1:]
 
 
-def readCppClass(conditionList, handlerList):
+def readCpp(conditionList, handlerList):
     read_class = ' >> '.join(value.name for value in elementList)
     write_line = ' << '.join(value.name for value in elementList)
     if read_class == '' or write_line == '':
@@ -158,23 +177,26 @@ def readCppClass(conditionList, handlerList):
         write_op
     )
 
-def readCsharpClass(conditionList, handlerList):
+def readCsharp(conditionList, handlerList):
     return csharpFormat.classFormat.format(
-        camelcase(packetId)
+        camelcase(packetId),
+        '\n\t\t'.join(f'private {value.type} {value.name};' for value in elementList),
+        stringcase.constcase(packetId)
     )
 
 
 def getLangTypename(typename):
-    if typename == 'int':
-        if args.lang == 'cpp':
-            return 'Int32'
     if typename == 'string':
         if args.lang == 'cpp':
             return 'std::string'
     if typename.find('list') != -1:
+        val = typename.split('|')
         if args.lang == 'cpp':
-            tmp = typename.split('|')
-            return f'std::vector<{getLangTypename(tmp[1])}>'
+            return f'std::vector<{getLangTypename(val[1])}>'
+        if args.lang == 'csharp':
+            return f'List<{getLangTypename(val[1])}>'
+    if args.lang == 'csharp' and typename != 'bool':
+        typename = typename.title()
     return typename
 
 
@@ -224,14 +246,14 @@ for filename in defList:
 
             # Add class list.
             if args.lang == 'cpp':
-                classList.append(readCppClass(conditionList, handlerList))
+                classList.append(readCpp(conditionList, handlerList))
             elif args.lang == 'csharp':
-                classList.append(readCsharpClass(conditionList, handlerList))
+                classList.append(readCsharp(conditionList, handlerList))
 
         # formatting data
         if args.lang == 'cpp':
             outputPacket = cppFormat.file.format(
-                '\n'.join(f'#include "./{camelcase(inc.rstrip(".json"))}.hpp"' for inc in includeList),
+                '\n'.join(f'#include "./{camelcase(inc.rstrip(".json"))}.gen.hpp"' for inc in includeList),
                 args.namespace.lower(), #namespace
                 ',\n'.join(str(f'\t\t{value.upper()} = {packetIdList.index(value)+1}') for value in packetIdList), # packet enum
                 '\n\t'.join(classList), #packet classes
@@ -246,15 +268,15 @@ for filename in defList:
             ext = 'cs'
 
         # write packet & handler file
-        genPacket = open(f'generated/{camelcase(filename.rstrip(".json"))}.{ext}', 'w')
+        genPacket = open(f'generated/{camelcase(filename.rstrip(".json"))}.gen.{ext}', 'w')
         genPacket.write(outputPacket)
 
 if args.lang == 'cpp':
     outputHandler = cppFormat.handler.format(
-        '\n'.join(f'#include <generated/{camelcase(value.rstrip(".json"))}.hpp>' for value in defList),
+        '\n'.join(f'#include <generated/{camelcase(value.rstrip(".json"))}.gen.hpp>' for value in defList),
         args.namespace,
         '\n'.join(str(value) for value in conditionList),    #dispatches
         '\n'.join(str('\t\tstatic void '+value+f'(sv::Session* session, {camelcase(packetIdList[handlerList.index(value)])}* packet);') for value in handlerList) #handlers
     )
-genHandler = open(f'generated/PacketHandler.{ext}', 'w')
+genHandler = open(f'generated/PacketHandler.gen.{ext}', 'w')
 genHandler.write(outputHandler)

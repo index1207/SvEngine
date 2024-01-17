@@ -11,7 +11,7 @@ namespace DummyClient
         static Sv.Connector connector;
         static void Main(string[] args)
         {
-            Thread.Sleep(500);
+            Thread.Sleep(1000);
             connector = new Sv.Connector();
             connector.OnConnect += (EndPoint ep) =>
             {
@@ -24,7 +24,7 @@ namespace DummyClient
             };
             connector.OnReceive += (Sv.Message msg) =>
             {
-                Console.WriteLine($"{Encoding.UTF8.GetString(msg.RawData)}");
+                Console.WriteLine("On Receive");
             };
             connector.Connect(new IPEndPoint(IPAddress.Loopback, 9999));
 

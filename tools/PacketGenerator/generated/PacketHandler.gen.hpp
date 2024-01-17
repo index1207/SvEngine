@@ -1,6 +1,6 @@
 #pragma once
 #include <core/Packet.hpp>
-#include <generated/Example.hpp>
+#include <generated/Example.gen.hpp>
 
 namespace sv { class Session; }
 

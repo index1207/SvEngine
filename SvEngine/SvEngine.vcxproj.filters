@@ -77,11 +77,5 @@
     <ClInclude Include="include\util\Types.hpp">
       <Filter>include\util</Filter>
     </ClInclude>
-    <ClInclude Include="..\tools\PacketGenerator\generated\Example.hpp">
-      <Filter>generated</Filter>
-    </ClInclude>
-    <ClInclude Include="..\tools\PacketGenerator\generated\PacketHandler.hpp">
-      <Filter>generated</Filter>
-    </ClInclude>
   </ItemGroup>
 </Project>

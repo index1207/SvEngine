@@ -181,8 +181,6 @@
     <ClCompile Include="src\util\Console.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\tools\PacketGenerator\generated\Example.hpp" />
-    <ClInclude Include="..\tools\PacketGenerator\generated\PacketHandler.hpp" />
     <ClInclude Include="include\core\Client.hpp" />
     <ClInclude Include="include\core\Engine.hpp" />
     <ClInclude Include="include\core\Packet.hpp" />

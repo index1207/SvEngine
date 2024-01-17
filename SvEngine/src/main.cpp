@@ -1,4 +1,5 @@
 #include <iostream>
+
 #include <net/IoSystem.hpp>
 #include <net/Dns.hpp>
 
@@ -6,10 +7,12 @@
 #include "core/Session.hpp"
 #include "util/Console.hpp"
 
-using namespace sv;
+#include <generated/Example.gen.hpp>
 
 using namespace net;
 using namespace std;
+
+using namespace sv;
 
 class TestClient : public Session
 {
@@ -21,6 +24,8 @@ public:
     {
         Session::onConnected();
         Console::Log("Connected");
+        
+        send(make_unique<gen::LoginRes>().get());
     }
     void onDisconnected() override
     {
@@ -29,9 +34,7 @@ public:
     }
     void onReceive(std::span<char> buffer, int length) override
     {
-        Session::onReceive(buffer, length);
-        Console::Log("Recevie " + string(buffer.begin(), buffer.begin() + length));
-        send(buffer);
+        Session::onReceivePacket(buffer, length);
     }
 private:
 };

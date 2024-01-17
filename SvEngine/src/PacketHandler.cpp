@@ -1,4 +1,4 @@
-#include <generated/PacketHandler.hpp>
+#include <generated/PacketHandler.gen.hpp>
 
 using namespace gen;
 
