@@ -1,6 +1,7 @@
 import os
 import json
 import argparse
+from xml.etree.ElementInclude import include
 import stringcase
 from dataclasses import dataclass
 
@@ -17,24 +18,18 @@ cppFormat.file = '''#pragma once
 #pragma warning(push)
 #pragma warning(disable: 26495)
 #include <core/Packet.hpp>
+#include <util/Types.hpp>
 
 #include <vector>
 
-using int8 = char;
-using int16 = short;
-using int32 = int;
-using int64 = long long;
-using uint8 = unsigned char;
-using uint16 = unsigned short;
-using uint32 = unsigned int;
-using uint64 = unsigned long long;
+{0}
 
-namespace {0} {{
+namespace {1} {{
     enum class PacketId {{
-{1}
+{2}
     }};
 
-    {2}
+    {3}
 }}
 #pragma warning(pop)
 '''
@@ -169,12 +164,6 @@ def readCsharpClass(conditionList, handlerList):
     )
 
 
-parser = argparse.ArgumentParser()
-parser.add_argument('-l', '--language', default='cpp', action='store', dest='lang', help='generated file language')
-parser.add_argument('-n', '--namespace', default='gen', action='store', dest='namespace', help='namespace name')
-args = parser.parse_args()
-
-
 def getLangTypename(typename):
     if typename == 'int':
         if args.lang == 'cpp':
@@ -189,64 +178,76 @@ def getLangTypename(typename):
     return typename
 
 
-with open('define.json') as jsonFile:
-    data = json.load(jsonFile)
 
-    packetList = data['packet']
-    packetIdList = []
-    classList = []
 
-    outputPacket = ''
-    outputHandler = ''
-    ext = ''
+parser = argparse.ArgumentParser()
+parser.add_argument('-l', '--language', default='cpp', action='store', dest='lang', help='generated file language')
+parser.add_argument('-n', '--namespace', default='gen', action='store', dest='namespace', help='namespace name')
+args = parser.parse_args()
 
-    # defined packet list
-    for packet in packetList:
-        packetId = packet['id']
-        packetIdList.append(packetId)
-        elements = packet['element']
-        elementList = []
 
-        # packet element
-        for element in elements:
-            elem = Element()
-            elem.name = element['name']
-            elem.type = getLangTypename(element['type'])
+ext = ''
+outputHandler = ''
+for filename in os.listdir("define/"):
+    with open("define/"+filename) as jsonFile:
+        data = json.load(jsonFile)
 
-            elementList.append(elem)
+        packetList = data['packet']
+        includeList = data['include']
 
-        conditionList = []
-        handlerList = []
+        packetIdList = []
+        classList = []
 
-        # Add class list.
+        outputPacket = ''
+
+        # defined packet list
+        for packet in packetList:
+            packetId = packet['id']
+            packetIdList.append(packetId)
+            elements = packet['element']
+            elementList = []
+
+            # packet element
+            for element in elements:
+                elem = Element()
+                elem.name = element['name']
+                elem.type = getLangTypename(element['type'])
+
+                elementList.append(elem)
+
+            conditionList = []
+            handlerList = []
+
+            # Add class list.
+            if args.lang == 'cpp':
+                classList.append(readCppClass(conditionList, handlerList))
+            elif args.lang == 'csharp':
+                classList.append(readCsharpClass(conditionList, handlerList))
+
+        # formatting data
         if args.lang == 'cpp':
-            classList.append(readCppClass(conditionList, handlerList))
-        elif args.lang == 'csharp':
-            classList.append(readCsharpClass(conditionList, handlerList))
-
-    # formatting data
-    if args.lang == 'cpp':
-        outputPacket = cppFormat.file.format(
-            args.namespace.lower(), #namespace
-            ',\n'.join(str(f'\t\t{value.upper()} = {packetIdList.index(value)+1}') for value in packetIdList), # packet enum
-            '\n\t'.join(classList), #packet classes
+            outputPacket = cppFormat.file.format(
+                '\n'.join(f'#include "./{camelcase(inc.rstrip(".json"))}.hpp"' for inc in includeList),
+                args.namespace.lower(), #namespace
+                ',\n'.join(str(f'\t\t{value.upper()} = {packetIdList.index(value)+1}') for value in packetIdList), # packet enum
+                '\n\t'.join(classList), #packet classes
+                )
+            outputHandler = cppFormat.handler.format(
+                args.namespace,
+                '\n'.join(str(value) for value in conditionList),    #dispatches
+                '\n'.join(str('\t\tstatic void '+value+f'(sv::Session* session, {camelcase(packetIdList[handlerList.index(value)])}* packet);') for value in handlerList) #handlers
+                )
+            ext = 'hpp'
+        if args.lang == 'csharp':
+            outputPacket = csharpFormat.file.format(
+                camelcase(args.namespace),
+                ',\n'.join(str(f'\t\t{value.upper()} = {packetIdList.index(value)+1}') for value in packetIdList),
+                '\n\t'.join(classList)
             )
-        outputHandler = cppFormat.handler.format(
-            args.namespace,
-            '\n'.join(str(value) for value in conditionList), #dispatches
-            '\n'.join(str('\t\tstatic void '+value+f'(sv::Session* session, {camelcase(packetIdList[handlerList.index(value)])}* packet);') for value in handlerList) #handlers
-            )
-        ext = 'hpp'
-    if args.lang == 'csharp':
-        outputPacket = csharpFormat.file.format(
-            camelcase(args.namespace),
-            ',\n'.join(str(f'\t\t{value.upper()} = {packetIdList.index(value)+1}') for value in packetIdList),
-            '\n\t'.join(classList)
-        )
-        ext = 'cs'
+            ext = 'cs'
 
-    # write packet & handler file
-    genPacket = open(f'generated/GenPacket.{ext}', 'w')
-    genPacket.write(outputPacket)
-    genHandler = open(f'generated/PacketHandler.{ext}', 'w')
+        # write packet & handler file
+        genPacket = open(f'../../generated/{camelcase(filename.rstrip(".json"))}.{ext}', 'w')
+        genPacket.write(outputPacket)
+    genHandler = open(f'../../generated/PacketHandler.{ext}', 'w')
     genHandler.write(outputHandler)
