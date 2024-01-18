@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>1cbc2443-d0a8-4ed5-ac39-1782d2001b4e</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>generated.py</StartupFile>
+    <StartupFile>execute.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -12,7 +12,8 @@
     <Name>PacketGenerator</Name>
     <RootNamespace>PacketGenerator</RootNamespace>
     <LaunchProvider>Standard Python launcher</LaunchProvider>
-    <CommandLineArguments>-l cpp</CommandLineArguments>
+    <CommandLineArguments>
+    </CommandLineArguments>
     <EnableNativeCodeDebugging>False</EnableNativeCodeDebugging>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
@@ -25,8 +26,13 @@
   </PropertyGroup>
   <ItemGroup>
     <Content Include="define\example.json" />
+    <Content Include="define\message.json" />
     <Content Include="generated\Example.gen.cs" />
     <Content Include="generated\Example.gen.hpp" />
+    <Content Include="generated\Message.gen.cs" />
+    <Content Include="generated\Message.gen.hpp" />
+    <Content Include="generated\Packet.gen.cs" />
+    <Content Include="generated\Packet.gen.hpp" />
     <Content Include="generated\PacketHandler.gen.cs" />
     <Content Include="generated\PacketHandler.gen.hpp" />
   </ItemGroup>
@@ -35,7 +41,8 @@
     <Folder Include="generated\" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="generated.py" />
+    <Compile Include="execute.py" />
+    <Compile Include="generate.py" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in

@@ -1,0 +1,22 @@
+{
+	"packet": [
+		{
+			"id": "message",
+			"element": [
+				{
+					"name": "data",
+					"type": "string"
+				}
+			]
+		},
+		{
+			"id": "SendMessageReq",
+			"element": [
+				{
+					"name": "msg",
+					"type": "list|message"
+				}
+			]
+		}
+	]
+}

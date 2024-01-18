@@ -14,6 +14,14 @@ void PacketHandler::LoginReqPacketHandler(sv::Session* session, LoginReq* packet
 {
 }
 
-void gen::PacketHandler::LoginResPacketHandler(sv::Session* session, LoginRes* packet)
+void PacketHandler::LoginResPacketHandler(sv::Session* session, LoginRes* packet)
+{
+}
+
+void PacketHandler::MessagePacketHandler(sv::Session* session, Message* packet)
+{
+}
+
+void PacketHandler::SendMessageReqPacketHandler(sv::Session* session, SendMessageReq* packet)
 {
 }

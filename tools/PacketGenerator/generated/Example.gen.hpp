@@ -1,21 +1,17 @@
 #pragma once
 #pragma warning(push)
 #pragma warning(disable: 26495)
+#include <generated/Packet.gen.hpp>
+
 #include <core/Packet.hpp>
 #include <util/Types.hpp>
 
 #include <vector>
 
+/* Additional generated packet headers. */
 
 
 namespace gen {
-    enum class PacketId {
-		ENTER_GAME_REQ = 1,
-		ENTER_GAME_RES = 2,
-		LOGIN_REQ = 3,
-		LOGIN_RES = 4
-    };
-
     class EnterGameReq
             : public sv::Packet {
     public:
@@ -36,7 +32,7 @@ namespace gen {
             finish();
         }
     public:
-        int32 playerId;
+        Int32 playerId;
 	
     };
     
@@ -70,7 +66,7 @@ namespace gen {
             finish();
         }
     public:
-        std::vector<int32> playerList;
+        std::vector<Int32> playerList;
 	
     };
     
@@ -139,7 +135,7 @@ namespace gen {
             finish();
         }
     public:
-        bool isSuccess;
+        Bool isSuccess;
 	
     };
     
