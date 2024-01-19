@@ -1,4 +1,4 @@
-# SV Engine
+﻿# SV Engine
 SV Engine is simple server engine. It helps develop multi-play game on Unity or Unreal engine and other projects.
 
 ## Features
@@ -18,20 +18,18 @@ It will support many languages.
 Use connector library to connect to server.
 your project can develop through session interaction events being called.
 
-#### Session Events
-- On Connect
-- On Disconnect
-- On Receive
-
 ### Support languages
-- <details>
-    <summary><b>C++</b></summary>
-	&nbsp; &nbsp;<input type="checkbox" checked> server connector <br>
-	&nbsp; &nbsp;<input type="checkbox" checked> generated packet
-</details>
+- **C++**	
+	- ✅ server connector
+	- ✅ generated packet
+- **C#**
+	- ✅ server connector
+	- ❌ generated packet - <i>being implementing</i>
 
-- <details>
-	<summary><b>C#</b></summary>
-	&nbsp; &nbsp;<input type="checkbox" checked> server connector <br>
-	&nbsp; &nbsp;<input type="checkbox"> generated packet - <i>being implementing</i>
-</details>
+
+## How to setup
+To use this server engine, to build `netcpp` library.
+To build `netcpp`, follow this process.
+1. `cd lib && mkdir bin`
+2. `cmake -S netcpp -B bin`
+3. Open `.sln` project and build by `Debug` & `Release` mods.
