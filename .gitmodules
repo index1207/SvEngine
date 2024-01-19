@@ -1,0 +1,3 @@
+[submodule "lib/netcpp"]
+	path = lib/netcpp
+	url = https://github.com/index1207/netcpp.git
