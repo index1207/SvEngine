@@ -60,8 +60,7 @@ void Session::disconnect() {
 
 void Session::send(std::span<char> buffer) {
     std::lock_guard lock(m_mtx);
-    Console::Log("SEND");
-    if (m_sock->send(buffer) == SOCKET_ERROR) {
+    if (!m_sock->send(buffer)) {
         throw net::network_error("send()");
     }
 }
