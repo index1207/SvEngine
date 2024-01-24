@@ -1,7 +1,3 @@
-//
-// Created by han93 on 2023-12-23.
-//
-
 #pragma once
 
 #include <net/Endpoint.hpp>

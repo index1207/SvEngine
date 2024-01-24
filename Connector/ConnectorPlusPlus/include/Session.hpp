@@ -1,7 +1,3 @@
-//
-// Created by han93 on 2023-12-13.
-//
-
 #pragma once
 
 #include <vector>
@@ -34,14 +30,11 @@ namespace sv {
     public:
         void disconnect();
         void send(std::span<char> buffer);
-        void send(Packet* packet);
     public:
         virtual void onConnected() {};
         virtual void onDisconnected() {};
         virtual void onReceive(std::span<char> buffer, int length) {};
         virtual void onFail(Failure cause) {};
-    public:
-        void onReceivePacket(std::span<char> buffer, int length);
     protected:
         std::unique_ptr<Socket> m_sock;
     private:

@@ -18,6 +18,7 @@ namespace sv {
         ~Server();
     public:
         void run(net::Endpoint endpoint, int count = 1);
+        void loop();
         void cancel();
     public:
         template<class T = sv::Session>

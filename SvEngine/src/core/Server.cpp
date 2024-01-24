@@ -47,6 +47,11 @@ void Server::run(Endpoint endpoint, int count) {
     }
 }
 
+void Server::loop() {
+
+}
+
+
 void sv::Server::cancel()
 {
     for (auto* acceptContext : m_acceptContexts) {

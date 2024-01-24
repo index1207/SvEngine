@@ -1,8 +1,4 @@
-//
-// Created by han93 on 2023-12-23.
-//
-
-#include "core/Client.hpp"
+#include "Client.hpp"
 #include "net/Exception.hpp"
 
 #include <net/Context.hpp>
@@ -24,11 +20,11 @@ void sv::Client::run(Endpoint endpoint) {
 }
 
 void sv::Client::onConnectCompleted(Context *context, bool isSuccess) {
-    if(isSuccess) {
-        auto client = m_serverFactory();
+    auto client = m_serverFactory();
+    if (isSuccess) {
         client->run(std::make_unique<Socket>(m_sock));
         client->onConnected();
     }
     else
-        printf("Can't connect to server.\n");
+        client->onFail(Failure::Connect);
 }
