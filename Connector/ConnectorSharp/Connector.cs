@@ -76,7 +76,7 @@ namespace Sv
                 m_socket.Send(buffer);
             }
         }
-
+            
         public void Disconnect()
         {
             if (Interlocked.Exchange(ref _isDisconnected, 1) == 0)

@@ -26,17 +26,6 @@ void Session::run(std::unique_ptr<Socket> sock) {
     m_ref = shared_from_this();
 }
 
-void sv::Session::onReceivePacket(std::span<char> buffer, int length)
-{
-    if (length <= 2)
-        return;
-
-    gen::PacketId id;
-    std::memcpy(&id, buffer.data(), sizeof(unsigned short));
-
-    gen::PacketHandler::onReceivePacket(this, id, Packet::parseFrom(buffer).get());
-}
-
 void Session::onRecvCompleted(Context *context, bool isSuccess) {
     if(!isSuccess || context->length == 0) {
         disconnect();

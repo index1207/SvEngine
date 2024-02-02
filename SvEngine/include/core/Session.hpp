@@ -38,10 +38,8 @@ namespace sv {
     public:
         virtual void onConnected() {};
         virtual void onDisconnected() {};
-        virtual void onReceive(std::span<char> buffer, int length) {};
-        virtual void onFail(Failure cause) {};
-    public:
-        void onReceivePacket(std::span<char> buffer, int length);
+        virtual void onReceive(std::span<char>, int) {};
+        virtual void onFail(Failure) {};
     protected:
         std::unique_ptr<Socket> m_sock;
     private:

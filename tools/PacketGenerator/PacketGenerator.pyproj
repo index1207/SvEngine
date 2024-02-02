@@ -26,15 +26,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Content Include="define\example.json" />
-    <Content Include="define\message.json" />
-    <Content Include="generated\Example.gen.cs" />
+    <Content Include="generated\ClientPacketHandler.gen.hpp" />
     <Content Include="generated\Example.gen.hpp" />
-    <Content Include="generated\Message.gen.cs" />
-    <Content Include="generated\Message.gen.hpp" />
-    <Content Include="generated\Packet.gen.cs" />
     <Content Include="generated\Packet.gen.hpp" />
-    <Content Include="generated\PacketHandler.gen.cs" />
-    <Content Include="generated\PacketHandler.gen.hpp" />
+    <Content Include="generated\ServerPacketHandler.gen.hpp" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="define\" />

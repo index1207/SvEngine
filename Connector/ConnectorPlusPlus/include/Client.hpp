@@ -7,6 +7,7 @@
 namespace sv {
     class Client {
         using serverFactory = std::function<std::shared_ptr<Session>()>;
+
         Client();
     public:
         ~Client();
@@ -14,9 +15,9 @@ namespace sv {
         void run(net::Endpoint endpoint);
     public:
         template<class T = sv::Session>
-        static inline Client open()
+        static inline std::shared_ptr<Client> open()
         {
-            Client client;
+            auto client = std::shared_ptr(new Client);
             client.m_serverFactory = []{
                 return std::make_shared<T>();
             };

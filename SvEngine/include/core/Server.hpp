@@ -22,10 +22,10 @@ namespace sv {
         void cancel();
     public:
         template<class T = sv::Session>
-        static inline Server open()
+        static inline std::shared_ptr<Server> open()
         {
-            Server server;
-            server.m_clientFactory = []{
+            auto server = std::shared_ptr<Server>(new Server);
+            server->m_clientFactory = []{
                 return std::make_shared<T>();
             };
             return server;
