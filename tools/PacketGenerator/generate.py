@@ -4,13 +4,13 @@ import json
 import argparse
 from re import I
 import stringcase
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 
 @dataclass
 class Format:
     file: str = None
-    handler: str = None
+    handler: list = field(default_factory=lambda: [])
     classFormat: str = None
 
 
@@ -18,10 +18,10 @@ cppFormat = Format()
 cppFormat.file = '''#pragma once
 #pragma warning(push)
 #pragma warning(disable: 26495)
-#include <generated/Packet.gen.hpp>
+#include "generated/Packet.gen.hpp"
 
 #include <core/Packet.hpp>
-#include <util/Types.hpp>
+#include "util/Types.hpp"
 
 #include <vector>
 
@@ -34,10 +34,12 @@ namespace {1} {{
 #pragma warning(pop)
 '''
 
-cppFormat.handler = '''#pragma once
-#include <generated/Packet.gen.hpp>
+cppFormat.handler.append('''#pragma once
+#include "Packet.gen.hpp"
 #include <core/Packet.hpp>
 {0}
+
+using namespace sv;                                             
 
 namespace sv {{ class Session; }}
 
@@ -46,7 +48,7 @@ namespace {1}
     class PacketHandler
 	{{
 	public:
-		static void onReceivePacket(sv::Session* session, PacketId id, sv::Packet* packet)
+		static void onReceivePacket(Session* session, PacketId id, Packet* packet)
         {{
 	        switch (id)
 	        {{
@@ -57,7 +59,34 @@ namespace {1}
 {3}
 	}};
 }}
-'''
+''')
+
+
+cppFormat.handler.append('''#pragma once
+#include "generated/Packet.gen.hpp"
+#include "Network/Packet.h"
+{0}
+
+using namespace sv;                                                  
+using Session = class FSession;
+                         
+namespace {1}
+{{
+    class PacketHandler
+	{{
+	public:
+		static void onReceivePacket(Session* session, PacketId id, Packet* packet)
+        {{
+	        switch (id)
+	        {{
+{2}
+	        }}
+        }}
+	private:
+{3}
+	}};
+}}
+''')
 
 cppFormat.classFormat = '''class {0}
             : public sv::Packet {{
@@ -92,7 +121,7 @@ cppFormat.classFormat = '''class {0}
         return pk;
     }}
 '''
-
+                             
 csharpFormat = Format()
 csharpFormat.file = """using System;
 using System.Collections.Generic;
@@ -139,7 +168,7 @@ class Element:
     type: str = None
     name: str = None
 
-def readCpp(conditionList, handlerList):
+def readCpp(isServer):
     read_class = ' >> '.join(value.name for value in dataList)
     write_line = ' << '.join(value.name for value in dataList)
     if read_class == '' or write_line == '':
@@ -249,12 +278,14 @@ for filename in defList:
         # defined message list
         for message in messageList:
             messageName = ''
+            isServer = False
             if "client" in messageList[messageList.index(message)]:
                 messageName = message['client']
                 messageNameList[0].append(stringcase.pascalcase(messageName))
             else:
                messageName = message['server']
                messageNameList[1].append(stringcase.pascalcase(messageName))
+               isServer = True
             
             data = message['data']
             dataList = []
@@ -269,7 +300,7 @@ for filename in defList:
 
             # Add class list.
             if args.lang == 'cpp':
-                classList.append(readCpp(conditionList, handlerList))
+                classList.append(readCpp(isServer))
             elif args.lang == 'csharp':
                 classList.append(readCsharp(conditionList, handlerList))
 
@@ -303,11 +334,11 @@ if args.lang == 'cpp':
                                     + '\t\t\t\tbreak;'
             )
     for i in range(2):
-        outputHandler[i] = cppFormat.handler.format(
-            '\n'.join(f'#include <generated/{stringcase.pascalcase(value.rstrip(".json"))}.gen.hpp>' for value in defList),
+        outputHandler[i] = cppFormat.handler[i].format(
+            '\n'.join(f'#include "generated/{stringcase.pascalcase(value.rstrip(".json"))}.gen.hpp"' for value in defList),
             args.namespace,
             '\n'.join(str(value) for value in conditionList[i]),    #dispatches
-            '\n'.join(str('\t\tstatic void '+value+f'(sv::Session* session, {stringcase.pascalcase(messageNameList[i][handlerList[i].index(value)])}* packet);') for value in handlerList[i]) #handlers
+            '\n'.join(str('\t\tstatic void '+value+f'(Session* session, {stringcase.pascalcase(messageNameList[i][handlerList[i].index(value)])}* packet);') for value in handlerList[i]) #handlers
         )
     
 

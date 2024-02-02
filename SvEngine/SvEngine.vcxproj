@@ -175,7 +175,6 @@
     <ClCompile Include="src\core\Packet.cpp" />
     <ClCompile Include="src\core\Server.cpp" />
     <ClCompile Include="src\core\Session.cpp" />
-    <ClCompile Include="src\PacketHandler.cpp" />
     <ClCompile Include="src\util\Console.cpp" />
   </ItemGroup>
   <ItemGroup>

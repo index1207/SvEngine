@@ -6,6 +6,8 @@
 #include <net/Socket.hpp>
 #include <net/Exception.hpp>
 
+#include "generated/ServerPacketHandler.gen.hpp"
+
 using namespace std;
 using namespace net;
 using namespace sv;
@@ -19,9 +21,6 @@ public:
 	virtual void onConnected() override
 	{
 		Console::Log("Connected");
-
-		std::string data = "Hello, World!";
-		send(data);
 	}
 	
 	virtual void onDisconnected() override
@@ -31,7 +30,14 @@ public:
 
 	virtual void onReceive(std::span<char> buffer, int length) override
 	{
-		Console::Log("RECV");
+		if (length <= 2)
+			return;
+
+		gen::PacketId id = (gen::PacketId)0;
+		std::memcpy(&id, buffer.data(), sizeof(unsigned short));
+		id = static_cast<gen::PacketId>(htons(static_cast<unsigned short>(id)));
+
+		gen::PacketHandler::onReceivePacket(this, id, buffer);
 	}
 };
 

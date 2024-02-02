@@ -12,12 +12,15 @@ namespace gen
     class PacketHandler
 	{
 	public:
-		static void onReceivePacket(Session* session, PacketId id, Packet* packet)
+		static void onReceivePacket(Session* session, PacketId id, std::span<char> buffer)
         {
+			Packet* pk;
 	        switch (id)
 	        {
 			case PacketId::ENTER_GAME_REQ:
-				EnterGameReqPacketHandler(session, static_cast<EnterGameReq*>(packet));
+				pk = new EnterGameReq;
+				pk->parse(buffer);
+				EnterGameReqPacketHandler(session, static_cast<EnterGameReq*>(pk));
 				break;
 	        }
         }

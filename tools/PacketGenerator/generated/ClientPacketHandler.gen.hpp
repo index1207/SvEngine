@@ -1,16 +1,17 @@
 #pragma once
-#include <generated/Packet.gen.hpp>
-#include <core/Packet.hpp>
-#include <generated/Example.gen.hpp>
+#include "generated/Packet.gen.hpp"
+#include "Network/Packet.h"
+#include "generated/Example.gen.hpp"
 
-namespace sv { class Session; }
-
+using namespace sv;                                                  
+using Session = class FSession;
+                         
 namespace gen
 {
     class PacketHandler
 	{
 	public:
-		static void onReceivePacket(sv::Session* session, PacketId id, sv::Packet* packet)
+		static void onReceivePacket(Session* session, PacketId id, Packet* packet)
         {
 	        switch (id)
 	        {
@@ -20,6 +21,6 @@ namespace gen
 	        }
         }
 	private:
-		static void EnterGameResPacketHandler(sv::Session* session, EnterGameRes* packet);
+		static void EnterGameResPacketHandler(Session* session, EnterGameRes* packet);
 	};
 }

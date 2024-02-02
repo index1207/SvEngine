@@ -159,6 +159,8 @@ Packet& sv::Packet::operator>>(unsigned short& data)
 {
     std::memcpy(&data, m_buffer.data(), sizeof(data));
     m_buffer.erase(m_buffer.begin(), m_buffer.begin() + sizeof(data));
+
+    data = ntohs(data);
     return *this;
 }
 
@@ -174,6 +176,7 @@ Packet& sv::Packet::operator>>(unsigned long& data)
 {
     std::memcpy(&data, m_buffer.data(), sizeof(data));
     m_buffer.erase(m_buffer.begin(), m_buffer.begin() + sizeof(data));
+    data = ntohl(data);
     return *this;
 }
 
@@ -189,6 +192,7 @@ Packet& sv::Packet::operator>>(unsigned long long& data)
 {
     std::memcpy(&data, m_buffer.data(), sizeof(data));
     m_buffer.erase(m_buffer.begin(), m_buffer.begin() + sizeof(data));
+    data = ntohll(data);
     return *this;
 }
 
@@ -204,12 +208,13 @@ Packet& sv::Packet::operator>>(unsigned int& data)
 {
     std::memcpy(&data, m_buffer.data(), sizeof(data));
     m_buffer.erase(m_buffer.begin(), m_buffer.begin() + sizeof(data));
+    data = static_cast<unsigned int>(ntohl(static_cast<u_long>(data)));
     return *this;
 }
 
 Packet& sv::Packet::operator>>(int& data)
 {
-    unsigned int t;
+    unsigned int t = 0;
     *this >> t;
     data = static_cast<int>(t);
     return *this;

@@ -16,9 +16,6 @@
     <ClCompile Include="src\util\Console.cpp">
       <Filter>src\util</Filter>
     </ClCompile>
-    <ClCompile Include="src\PacketHandler.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">

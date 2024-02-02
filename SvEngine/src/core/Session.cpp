@@ -9,8 +9,6 @@
 #include "net/Context.hpp"
 #include "net/Exception.hpp"
 
-#include "generated/PacketHandler.gen.hpp"
-
 using namespace sv;
 
 Session::Session() : m_buffer(1024, '\0') {

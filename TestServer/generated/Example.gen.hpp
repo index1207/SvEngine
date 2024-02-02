@@ -16,6 +16,7 @@ namespace gen {
             : public sv::Packet {
     public:
         EnterGameReq() : sv::Packet(static_cast<unsigned short>(PacketId::ENTER_GAME_REQ)) {
+            playerId = 0;
         }
         ~EnterGameReq() {
     
