@@ -19,7 +19,7 @@ cppFormat = Format()
 cppFormat.file = '''#pragma once
 #pragma warning(push)
 #pragma warning(disable: 26495)
-#include "generated/Packet.gen.hpp"
+#include "Packet.gen.hpp"
 
 #include <core/Packet.hpp>
 #include "util/Types.hpp"
@@ -56,7 +56,11 @@ namespace {1}
         {{
 	        switch (id)
 	        {{
+            case PacketId::None:
+                break;
 {2}
+            default:
+                break;
 	        }}
         }}
 	private:
@@ -83,7 +87,11 @@ namespace {1}
         {{
 	        switch (id)
 	        {{
+            case PacketId::None:
+                break;             
 {2}
+            default:
+                break;                         
 	        }}
         }}
 	private:
@@ -126,9 +134,9 @@ cppFormat.classFormat = '''class {0}
     }}
 '''
 
-cppFormat.enumFormat = """enum class {0} {{
+cppFormat.enumFormat = """enum {0} {{
         {1}
-    }}"""
+    }};"""
                              
 csharpFormat = Format()
 csharpFormat.file = """using System;
@@ -176,7 +184,7 @@ class Element:
     type: str = None
     name: str = None
 
-def readCpp(isServer):
+def readCpp(readType):
     read_class = ' >> '.join(value.name for value in dataList)
     write_line = ' << '.join(value.name for value in dataList)
     if read_class == '' or write_line == '':
@@ -189,14 +197,19 @@ def readCpp(isServer):
     write_op = ' << '.join(f'{stringcase.camelcase(messageName)}.{value.name}' for value in dataList)
     read_op = f'pk >> {read_op};'
     write_op = f'pk << {write_op};'
+    
+
+    idname = stringcase.constcase(messageName)
+    if readType == 'struct':
+        idname = 'None'
 
     return cppFormat.classFormat.format(
-        stringcase.pascalcase(messageName),
-        stringcase.constcase(messageName),
+        (messageName),
+        idname,
         read_class,
         write_line,
         '\t'.join('{} {};\n\t'.format(value.type, value.name) for value in dataList),
-        f'{stringcase.pascalcase(messageName)}& {stringcase.camelcase(messageName)}',
+        f'{(messageName)}& {stringcase.camelcase(messageName)}',
         read_op,
         write_op
     )
@@ -210,7 +223,7 @@ def readCsharp(conditionList, handlerList):
             readLine += f'ushort {elem.name}Len = BitConverter.ToUInt16(m_buffer, m_readOffset);\
             \n\t\t\tm_readOffset += sizeof(ushort);\
             \n\t\t\tfor (ushort i = 0; i < {elem.name}Len; ++i) {{\n\
-                {elem.name}.Add(BitConverter.To{stringcase.pascalcase(listTy)}(m_buffer, m_readOffset));\n\
+                {elem.name}.Add(BitConverter.To{(listTy)}(m_buffer, m_readOffset));\n\
                 m_readOffset += sizeof({listTy});\n\
             }}'
             # writeLine += f'BitConverter.TryWriteBytes(new Span<byte>(m_buffer, m_writeOffset, m_buffer.Length), {elem.name});\
@@ -221,14 +234,14 @@ def readCsharp(conditionList, handlerList):
             # writeLine += f'BitConverter.TryWriteBytes(new Span<byte>(m_buffer, m_writeOffset, m_buffer.Length), {elem.name});\
             # \n\t\t\tm_writeOffset += sizeof({elem.type});\n'
         else:
-            convType = stringcase.pascalcase(elem.type)
+            convType = (elem.type)
             readLine += f'{elem.name} = BitConverter.To{convType}(m_buffer, m_readOffset);\
             \n\t\t\tm_readOffset += sizeof({elem.type});\n'
             writeLine += f'BitConverter.TryWriteBytes(new Span<byte>(m_buffer, m_writeOffset, m_buffer.Length), {elem.name});\
             \n\t\t\tm_writeOffset += sizeof({elem.type});\n'
 
     return csharpFormat.classFormat.format(
-        stringcase.pascalcase(messageName), # class name
+        (messageName), # class name
         '\n\t\t'.join(f'private {value.type} {value.name};' for value in dataList), # element declaration
         stringcase.constcase(messageName), # packet id bind
         readLine, # data read
@@ -249,8 +262,7 @@ def getLangTypename(typename):
     if args.lang == 'csharp':
         if typename == 'bool':
             typename = 'Boolean'
-    else:
-        typename = stringcase.pascalcase(typename)
+
     return typename
 
 
@@ -258,6 +270,7 @@ def getLangTypename(typename):
 
 parser = argparse.ArgumentParser()
 parser.add_argument('-l', '--language', default='cpp', action='store', dest='lang', help='generated file language')
+parser.add_argument('-p', '--path', default='./define', action='store', dest='path', help='define directory path')
 parser.add_argument('-n', '--namespace', default='gen', action='store', dest='namespace', help='namespace name')
 args = parser.parse_args()
 
@@ -265,22 +278,25 @@ args = parser.parse_args()
 ext = ''
 outputHandler = ['','']
 
-messageNameList = [[],[]]
+messageNameList = [[],[],[]] # Client, Server, Struct
 conditionList = [[],[]]
 handlerList = [[],[]]
 
-defList = os.listdir("define/")
+defList = os.listdir(args.path)
 for filename in defList:
-    with open("define/"+filename) as jsonFile:
+    with open(args.path + filename) as jsonFile:
         classList= []
         enumClassList= []
         data = json.load(jsonFile)
         
         messageList = []
+        structList = []
         enumList = []
         includeList = []
         if 'message' in data:
             messageList = data['message']
+        if 'struct' in data:
+            structList = data['struct']
         if 'enum' in data:
             enumList = data['enum']
         if 'include' in data:
@@ -291,18 +307,36 @@ for filename in defList:
         if len(enumList) > 0:
             for enum in enumList:
                 enumClassList.append(cppFormat.enumFormat.format(enum['name'], ',\n\t\t'.join(enum['list'])))
+        
+        if len(structList) > 0:
+            for struct in structList:
+                messageName = struct['name']
+                data = struct['data']
+                dataList = []
 
+                # message data
+                for element in data:
+                    elem = Element()
+                    elem.name = element['name']
+                    elem.type = getLangTypename(element['type'])
+
+                    dataList.append(elem)
+
+                # Add class list.
+                if args.lang == 'cpp':
+                    classList.append(readCpp('struct'))
+                elif args.lang == 'csharp':
+                    classList.append(readCsharp(conditionList, handlerList))
         # defined message list
         if len(messageList) > 0:
             for message in messageList:
-                messageName = ''
                 isServer = False
-                if "client" in messageList[messageList.index(message)]:
+                if 'client' in messageList[messageList.index(message)]:
                     messageName = message['client']
-                    messageNameList[0].append(stringcase.pascalcase(messageName))
-                else:
+                    messageNameList[0].append((messageName))
+                elif 'server' in messageList[messageList.index(message)]:
                    messageName = message['server']
-                   messageNameList[1].append(stringcase.pascalcase(messageName))
+                   messageNameList[1].append((messageName))
                    isServer = True
             
                 data = message['data']
@@ -318,45 +352,45 @@ for filename in defList:
 
                 # Add class list.
                 if args.lang == 'cpp':
-                    classList.append(readCpp(isServer))
+                    classList.append(readCpp('message'))
                 elif args.lang == 'csharp':
                     classList.append(readCsharp(conditionList, handlerList))
 
         # formatting data
         if args.lang == 'cpp':
             outputFile = cppFormat.file.format(
-                '\n'.join(f'#include "./{stringcase.pascalcase(inc.rstrip(".json"))}.gen.hpp"' for inc in includeList),
+                '\n'.join(f'#include "./{(inc.rstrip(".json"))}.gen.hpp"' for inc in includeList),
                 args.namespace.lower(), #namespace
                 '\n\t'.join(enumClassList + classList), #packet classes
                 )
             ext = 'hpp'
         if args.lang == 'csharp':
             outputFile = csharpFormat.file.format(
-                stringcase.pascalcase(args.namespace),
+                (args.namespace),
                 ',\n'.join(str(f'\t\t{stringcase.constcase(value)} = {messageNameList.index(value)+1}') for value in messageNameList),
                 '\n\t'.join(classList)
             )
             ext = 'cs'
 
         # write packet & handler file
-        genPacket = open(f'generated/{stringcase.pascalcase(filename.rstrip(".json"))}.gen.{ext}', 'w')
+        genPacket = open(f'generated/{(filename.rstrip(".json"))}.gen.{ext}', 'w')
         genPacket.write(outputFile)
 
 if args.lang == 'cpp':
     for i in range(2):
         for classes in messageNameList[i]:
-            handlerName = f'{stringcase.pascalcase(classes)}PacketHandler'
+            handlerName = f'{(classes)}PacketHandler'
             handlerList[i].append(handlerName)
             conditionList[i].append(f'\t\t\tcase PacketId::{stringcase.constcase(classes)}:\n'
-                                    + f'\t\t\t\t{handlerName}(session, Packet::parseFrom<{stringcase.pascalcase(classes)}>(buffer));\n'
+                                    + f'\t\t\t\t{handlerName}(session, Packet::parseFrom<{(classes)}>(buffer));\n'
                                     + '\t\t\t\tbreak;'
             )
     for i in range(2):
         outputHandler[i] = cppFormat.handler[i].format(
-            '\n'.join(f'#include "generated/{stringcase.pascalcase(value.rstrip(".json"))}.gen.hpp"' for value in defList),
+            '\n'.join(f'#include "generated/{(value.rstrip(".json"))}.gen.hpp"' for value in defList),
             args.namespace,
             '\n'.join(str(value) for value in conditionList[i]),    #dispatches
-            '\n'.join(str('\t\tstatic void '+value+f'(Session* session, TSharedPtr<{stringcase.pascalcase(messageNameList[i][handlerList[i].index(value)])}> packet);') for value in handlerList[i]) #handlers
+            '\n'.join(str('\t\tstatic void '+value+f'(Session* session, TSharedPtr<{(messageNameList[i][handlerList[i].index(value)])}> packet);') for value in handlerList[i]) #handlers
         )
     
 
@@ -366,9 +400,10 @@ if args.lang == 'cpp':
     types.write('#pragma once\n\n\
 namespace {0} {{\n\
     enum class PacketId {{\n\
+        None = 0,\
 {1}\
     \n\t}};\n\
-\n}}'.format(args.namespace, ',\n'.join(str(f'\t\t{stringcase.constcase(value)} = {allMessageList.index(value)+1}') for value in allMessageList)))
+\n}}'.format(args.namespace, ',\n'.join(str(f'\t\t{stringcase.constcase(value)} = {allMessageList.index(value)+2}') for value in allMessageList)))
 
 open(f'generated/ServerPacketHandler.gen.{ext}', 'w').write(outputHandler[0])
 open(f'generated/ClientPacketHandler.gen.{ext}', 'w').write(outputHandler[1])

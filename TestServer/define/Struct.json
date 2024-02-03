@@ -1,0 +1,13 @@
+{
+	"struct": [
+		{
+			"name": "PlayerInfo",
+			"data": [
+				{
+					"type": "uint64",
+					"name": "objectId"
+				}
+			]
+		}
+	]
+}

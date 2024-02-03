@@ -12,8 +12,7 @@
     <Name>PacketGenerator</Name>
     <RootNamespace>PacketGenerator</RootNamespace>
     <LaunchProvider>Standard Python launcher</LaunchProvider>
-    <CommandLineArguments>
-    </CommandLineArguments>
+    <CommandLineArguments>-s ../../TestServer/ -c "D:/Project/Unreal Project/Multiplay/Source/Multiplay/"</CommandLineArguments>
     <EnableNativeCodeDebugging>False</EnableNativeCodeDebugging>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
@@ -25,19 +24,19 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Content Include="define\example.json" />
-    <Content Include="generated\ClientPacketHandler.gen.hpp" />
-    <Content Include="generated\Example.gen.hpp" />
-    <Content Include="generated\Packet.gen.hpp" />
-    <Content Include="generated\ServerPacketHandler.gen.hpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="define\" />
     <Folder Include="generated\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="execute.py" />
     <Compile Include="generate.py" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="generated\ClientPacketHandler.gen.hpp" />
+    <Content Include="generated\Enum.gen.hpp" />
+    <Content Include="generated\Packet.gen.hpp" />
+    <Content Include="generated\Protocol.gen.hpp" />
+    <Content Include="generated\ServerPacketHandler.gen.hpp" />
+    <Content Include="generated\Struct.gen.hpp" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in

@@ -163,9 +163,16 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="generated\Example.gen.hpp" />
+    <ClInclude Include="generated\Enum.gen.hpp" />
     <ClInclude Include="generated\Packet.gen.hpp" />
+    <ClInclude Include="generated\Protocol.gen.hpp" />
     <ClInclude Include="generated\ServerPacketHandler.gen.hpp" />
+    <ClInclude Include="generated\Struct.gen.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="define\Enum.json" />
+    <None Include="define\Protocol.json" />
+    <None Include="define\Struct.json" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

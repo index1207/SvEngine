@@ -1,7 +1,9 @@
 #pragma once
 #include "Packet.gen.hpp"
 #include <core/Packet.hpp>
-#include "generated/Example.gen.hpp"
+#include "generated/Enum.gen.hpp"
+#include "generated/Protocol.gen.hpp"
+#include "generated/Struct.gen.hpp"
 
 using namespace sv;
                          
@@ -19,12 +21,12 @@ namespace gen
         {
 	        switch (id)
 	        {
-			case PacketId::ENTER_GAME_REQ:
-				EnterGameReqPacketHandler(session, Packet::parseFrom<EnterGameReq>(buffer));
-				break;
+
+            default:
+                break;
 	        }
         }
 	private:
-		static void EnterGameReqPacketHandler(Session* session, TSharedPtr<EnterGameReq> packet);
+
 	};
 }
