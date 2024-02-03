@@ -24,25 +24,29 @@ namespace gen {
         void read() override
         {
             Packet::read();
-            *this >> objectId;
+            *this >> objectId >> x >> y >> z >> yaw;
         }
         void write() override
         {
-            *this << objectId;
+            *this << objectId << x << y << z << yaw;
             finish();
         }
     public:
         uint64 objectId;
+		float x;
+		float y;
+		float z;
+		float yaw;
 	
     };
     
     inline sv::Packet& operator>>(sv::Packet& pk, PlayerInfo& playerInfo) {
-        pk >> playerInfo.objectId;
+        pk >> playerInfo.objectId >> playerInfo.x >> playerInfo.y >> playerInfo.z >> playerInfo.yaw;
         return pk;
     }
 
     inline sv::Packet& operator<<(sv::Packet& pk, const PlayerInfo& playerInfo) {
-        pk << playerInfo.objectId;
+        pk << playerInfo.objectId << playerInfo.x << playerInfo.y << playerInfo.z << playerInfo.yaw;
         return pk;
     }
 

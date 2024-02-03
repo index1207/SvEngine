@@ -21,6 +21,8 @@ namespace gen
         {
 	        switch (id)
 	        {
+            case PacketId::None:
+                break;
 
             default:
                 break;
