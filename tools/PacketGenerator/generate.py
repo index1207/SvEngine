@@ -12,6 +12,7 @@ class Format:
     file: str = None
     handler: list = field(default_factory=lambda: [])
     classFormat: str = None
+    enumFormat: str = None
 
 
 cppFormat = Format()
@@ -124,6 +125,10 @@ cppFormat.classFormat = '''class {0}
         return pk;
     }}
 '''
+
+cppFormat.enumFormat = """enum class {0} {{
+        {1}
+    }}"""
                              
 csharpFormat = Format()
 csharpFormat.file = """using System;
@@ -266,57 +271,67 @@ handlerList = [[],[]]
 
 defList = os.listdir("define/")
 for filename in defList:
-    classList= []
     with open("define/"+filename) as jsonFile:
+        classList= []
+        enumClassList= []
         data = json.load(jsonFile)
         
-        messageList = data['message']
-        
+        messageList = []
+        enumList = []
         includeList = []
-        if len(data) > 1:
+        if 'message' in data:
+            messageList = data['message']
+        if 'enum' in data:
+            enumList = data['enum']
+        if 'include' in data:
             includeList = data['include']
 
-        outputPacket = ''
+        outputFile = ''
+
+        if len(enumList) > 0:
+            for enum in enumList:
+                enumClassList.append(cppFormat.enumFormat.format(enum['name'], ',\n\t\t'.join(enum['list'])))
 
         # defined message list
-        for message in messageList:
-            messageName = ''
-            isServer = False
-            if "client" in messageList[messageList.index(message)]:
-                messageName = message['client']
-                messageNameList[0].append(stringcase.pascalcase(messageName))
-            else:
-               messageName = message['server']
-               messageNameList[1].append(stringcase.pascalcase(messageName))
-               isServer = True
+        if len(messageList) > 0:
+            for message in messageList:
+                messageName = ''
+                isServer = False
+                if "client" in messageList[messageList.index(message)]:
+                    messageName = message['client']
+                    messageNameList[0].append(stringcase.pascalcase(messageName))
+                else:
+                   messageName = message['server']
+                   messageNameList[1].append(stringcase.pascalcase(messageName))
+                   isServer = True
             
-            data = message['data']
-            dataList = []
+                data = message['data']
+                dataList = []
 
-            # message data
-            for element in data:
-                elem = Element()
-                elem.name = element['name']
-                elem.type = getLangTypename(element['type'])
+                # message data
+                for element in data:
+                    elem = Element()
+                    elem.name = element['name']
+                    elem.type = getLangTypename(element['type'])
 
-                dataList.append(elem)
+                    dataList.append(elem)
 
-            # Add class list.
-            if args.lang == 'cpp':
-                classList.append(readCpp(isServer))
-            elif args.lang == 'csharp':
-                classList.append(readCsharp(conditionList, handlerList))
+                # Add class list.
+                if args.lang == 'cpp':
+                    classList.append(readCpp(isServer))
+                elif args.lang == 'csharp':
+                    classList.append(readCsharp(conditionList, handlerList))
 
         # formatting data
         if args.lang == 'cpp':
-            outputPacket = cppFormat.file.format(
+            outputFile = cppFormat.file.format(
                 '\n'.join(f'#include "./{stringcase.pascalcase(inc.rstrip(".json"))}.gen.hpp"' for inc in includeList),
                 args.namespace.lower(), #namespace
-                '\n\t'.join(classList), #packet classes
+                '\n\t'.join(enumClassList + classList), #packet classes
                 )
             ext = 'hpp'
         if args.lang == 'csharp':
-            outputPacket = csharpFormat.file.format(
+            outputFile = csharpFormat.file.format(
                 stringcase.pascalcase(args.namespace),
                 ',\n'.join(str(f'\t\t{stringcase.constcase(value)} = {messageNameList.index(value)+1}') for value in messageNameList),
                 '\n\t'.join(classList)
@@ -325,7 +340,7 @@ for filename in defList:
 
         # write packet & handler file
         genPacket = open(f'generated/{stringcase.pascalcase(filename.rstrip(".json"))}.gen.{ext}', 'w')
-        genPacket.write(outputPacket)
+        genPacket.write(outputFile)
 
 if args.lang == 'cpp':
     for i in range(2):

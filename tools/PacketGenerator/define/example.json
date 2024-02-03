@@ -1,4 +1,13 @@
 {
+	"enum": [
+		{
+			"name": "Class",
+			"list": [
+				"Knight",
+				"Archer"
+			]
+		}
+	],
 	"message": [
 		{
 			"__comment__": "player list request",
