@@ -23,12 +23,18 @@ namespace gen
 	        {
             case PacketId::None:
                 break;
-
+			case PacketId::LOGIN_REQ:
+				LoginReqPacketHandler(session, Packet::parseFrom<LoginReq>(buffer));
+				break;
+			case PacketId::ENTER_GAME_REQ:
+				EnterGameReqPacketHandler(session, Packet::parseFrom<EnterGameReq>(buffer));
+				break;
             default:
                 break;
 	        }
         }
 	private:
-
+		static void LoginReqPacketHandler(Session* session, TSharedPtr<LoginReq> packet);
+		static void EnterGameReqPacketHandler(Session* session, TSharedPtr<EnterGameReq> packet);
 	};
 }

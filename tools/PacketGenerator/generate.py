@@ -187,17 +187,15 @@ class Element:
 def readCpp(readType):
     read_class = ' >> '.join(value.name for value in dataList)
     write_line = ' << '.join(value.name for value in dataList)
-    if read_class == '' or write_line == '':
-        raise Exception("Packet element can't be null.")
-
-    read_class = '*this >> ' + read_class + ';'
-    write_line = '*this << ' + write_line + ';'
 
     read_op = ' >> '.join(f'{stringcase.camelcase(messageName)}.{value.name}' for value in dataList)
     write_op = ' << '.join(f'{stringcase.camelcase(messageName)}.{value.name}' for value in dataList)
-    read_op = f'pk >> {read_op};'
-    write_op = f'pk << {write_op};'
     
+    if read_class != '' or write_line != '':
+        read_class = '*this >> ' + read_class + ';'
+        write_line = '*this << ' + write_line + ';'
+        read_op = f'pk >> {read_op};'
+        write_op = f'pk << {write_op};'
 
     idname = stringcase.constcase(messageName)
     if readType == 'struct':
@@ -359,7 +357,7 @@ for filename in defList:
         # formatting data
         if args.lang == 'cpp':
             outputFile = cppFormat.file.format(
-                '\n'.join(f'#include "./{(inc.rstrip(".json"))}.gen.hpp"' for inc in includeList),
+                '\n'.join(f'#include "{(inc.rstrip(".json"))}.gen.hpp"' for inc in includeList),
                 args.namespace.lower(), #namespace
                 '\n\t'.join(enumClassList + classList), #packet classes
                 )
@@ -400,10 +398,10 @@ if args.lang == 'cpp':
     types.write('#pragma once\n\n\
 namespace {0} {{\n\
     enum class PacketId {{\n\
-        None = 0,\
+        None = 0,\n\
 {1}\
     \n\t}};\n\
-\n}}'.format(args.namespace, ',\n'.join(str(f'\t\t{stringcase.constcase(value)} = {allMessageList.index(value)+2}') for value in allMessageList)))
+\n}}'.format(args.namespace, ',\n'.join(str(f'\t\t{stringcase.constcase(value)} = {allMessageList.index(value)+1}') for value in allMessageList)))
 
 open(f'generated/ServerPacketHandler.gen.{ext}', 'w').write(outputHandler[0])
 open(f'generated/ClientPacketHandler.gen.{ext}', 'w').write(outputHandler[1])

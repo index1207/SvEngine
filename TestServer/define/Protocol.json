@@ -1,3 +1,42 @@
 {
-
+	"include": [
+		"Struct.json"
+	],
+	"message": [
+		{
+			"client": "LoginReq",
+			"data": []
+		},
+		{
+			"server": "LoginRes",
+			"data": [
+				{
+					"type": "bool",
+					"name": "isSuccess"
+				},
+				{
+					"type": "list|PlayerInfo",
+					"name": "playerList"
+				}
+			]
+		},
+		{
+			"client": "EnterGameReq",
+			"data": [
+				{
+					"type": "uint64",
+					"name": "playerIdx"
+				}
+			]
+		},
+		{
+			"server": "EnterGameRes",
+			"data": [
+				{
+					"type": "bool",
+					"name": "isSuccess"
+				}
+			]
+		}
+	]
 }
