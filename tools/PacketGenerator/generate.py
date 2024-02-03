@@ -39,8 +39,11 @@ cppFormat.handler.append('''#pragma once
 #include <core/Packet.hpp>
 {0}
 
-using namespace sv;                                             
-
+using namespace sv;
+                         
+template<typename T>                         
+using TSharedPtr = std::shared_ptr<T>;
+                         
 namespace sv {{ class Session; }}
 
 namespace {1}
@@ -48,7 +51,7 @@ namespace {1}
     class PacketHandler
 	{{
 	public:
-		static void onReceivePacket(Session* session, PacketId id, Packet* packet)
+		static void onReceivePacket(Session* session, PacketId id, std::span<char> buffer)
         {{
 	        switch (id)
 	        {{
@@ -63,19 +66,19 @@ namespace {1}
 
 
 cppFormat.handler.append('''#pragma once
-#include "generated/Packet.gen.hpp"
+#include "Packet.gen.hpp"
 #include "Network/Packet.h"
 {0}
 
 using namespace sv;                                                  
-using Session = class FSession;
+using Session = class FSession;                         
                          
 namespace {1}
 {{
     class PacketHandler
 	{{
 	public:
-		static void onReceivePacket(Session* session, PacketId id, Packet* packet)
+		static void onReceivePacket(Session* session, PacketId id, std::span<char> buffer)
         {{
 	        switch (id)
 	        {{
@@ -96,7 +99,7 @@ cppFormat.classFormat = '''class {0}
         ~{0}() {{
     
         }}
-    public:
+    protected:
         void read() override
         {{
             Packet::read();
@@ -330,7 +333,7 @@ if args.lang == 'cpp':
             handlerName = f'{stringcase.pascalcase(classes)}PacketHandler'
             handlerList[i].append(handlerName)
             conditionList[i].append(f'\t\t\tcase PacketId::{stringcase.constcase(classes)}:\n'
-                                    + f'\t\t\t\t{handlerName}(session, static_cast<{stringcase.pascalcase(classes)}*>(packet));\n'
+                                    + f'\t\t\t\t{handlerName}(session, Packet::parseFrom<{stringcase.pascalcase(classes)}>(buffer));\n'
                                     + '\t\t\t\tbreak;'
             )
     for i in range(2):
@@ -338,7 +341,7 @@ if args.lang == 'cpp':
             '\n'.join(f'#include "generated/{stringcase.pascalcase(value.rstrip(".json"))}.gen.hpp"' for value in defList),
             args.namespace,
             '\n'.join(str(value) for value in conditionList[i]),    #dispatches
-            '\n'.join(str('\t\tstatic void '+value+f'(Session* session, {stringcase.pascalcase(messageNameList[i][handlerList[i].index(value)])}* packet);') for value in handlerList[i]) #handlers
+            '\n'.join(str('\t\tstatic void '+value+f'(Session* session, TSharedPtr<{stringcase.pascalcase(messageNameList[i][handlerList[i].index(value)])}> packet);') for value in handlerList[i]) #handlers
         )
     
 

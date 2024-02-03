@@ -110,13 +110,6 @@ void sv::Packet::parse(std::span<char> buffer) {
     read();
 }
 
-std::unique_ptr<sv::Packet> sv::Packet::parseFrom(std::span<char> buffer)
-{
-    auto pk = std::make_unique<Packet>(0);
-    pk->parse(buffer);
-    return pk;
-}
-
 void sv::Packet::read() {
     *this >> m_id >> m_size;
 }

@@ -13,15 +13,14 @@
 
 namespace gen {
     class EnterGameReq
-            : public sv::Packet {
+        : public sv::Packet {
     public:
         EnterGameReq() : sv::Packet(static_cast<unsigned short>(PacketId::ENTER_GAME_REQ)) {
-            playerId = 0;
         }
         ~EnterGameReq() {
-    
+
         }
-    public:
+    protected:
         void read() override
         {
             Packet::read();
@@ -34,9 +33,9 @@ namespace gen {
         }
     public:
         Int32 playerId;
-	
+
     };
-    
+
     inline sv::Packet& operator>>(sv::Packet& pk, EnterGameReq& enterGameReq) {
         pk >> enterGameReq.playerId;
         return pk;
@@ -47,15 +46,15 @@ namespace gen {
         return pk;
     }
 
-	class EnterGameRes
-            : public sv::Packet {
+    class EnterGameRes
+        : public sv::Packet {
     public:
         EnterGameRes() : sv::Packet(static_cast<unsigned short>(PacketId::ENTER_GAME_RES)) {
         }
         ~EnterGameRes() {
-    
+
         }
-    public:
+    protected:
         void read() override
         {
             Packet::read();
@@ -68,9 +67,9 @@ namespace gen {
         }
     public:
         std::vector<Int32> playerList;
-	
+
     };
-    
+
     inline sv::Packet& operator>>(sv::Packet& pk, EnterGameRes& enterGameRes) {
         pk >> enterGameRes.playerList;
         return pk;

@@ -58,6 +58,5 @@ Socket Session::getSocket() {
 
 void Session::send(Packet* packet) {
     packet->write();
-    packet->finish();
     send(packet->data());
 }

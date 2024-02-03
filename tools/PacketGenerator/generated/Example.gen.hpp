@@ -20,7 +20,7 @@ namespace gen {
         ~EnterGameReq() {
     
         }
-    public:
+    protected:
         void read() override
         {
             Packet::read();
@@ -54,7 +54,7 @@ namespace gen {
         ~EnterGameRes() {
     
         }
-    public:
+    protected:
         void read() override
         {
             Packet::read();

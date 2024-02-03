@@ -11,6 +11,7 @@
 
 namespace sv {
     class Packet {
+        friend class Session;
     public:
         Packet(unsigned short id, int reserve = 1024);
         virtual ~Packet() {};
@@ -61,16 +62,23 @@ namespace sv {
             }
             return *this;
         }
-    public:
+    protected:
         void virtual write() {};
         void virtual read();
+        void finish();
     public:
         unsigned short getId() const { return m_id; }
         unsigned short getSize() const { return m_size; }
     public:
         void parse(std::span<char> buffer);
-        static std::unique_ptr<Packet> parseFrom(std::span<char> buffer);
-        void finish();
+
+        template<class T>
+        static std::shared_ptr<T> parseFrom(std::span<char> buffer)
+        {
+            auto pk = std::make_unique<T>();
+            pk->parse(buffer);
+            return pk;
+        }
         std::vector<char>& data();
     private:
         std::vector<char> m_buffer;
