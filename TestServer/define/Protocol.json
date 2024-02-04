@@ -35,6 +35,28 @@
 				{
 					"type": "bool",
 					"name": "isSuccess"
+				},
+				{
+					"type": "PlayerInfo",
+					"name": "player"
+				}
+			]
+		},
+		{
+			"server": "SpawnNotify",
+			"data": [
+				{
+					"type": "list|PlayerInfo",
+					"name": "playerList"
+				}
+				]
+		},
+		{	
+			"server": "DespawnNotify",
+			"data": [
+				{
+					"type": "list|uint64",
+					"name": "playerList"
 				}
 			]
 		}

@@ -17,7 +17,7 @@ namespace gen
     class PacketHandler
 	{
 	public:
-		static void onReceivePacket(Session* session, PacketId id, std::span<char> buffer)
+		static void onReceivePacket(TSharedPtr<Session> session, PacketId id, std::span<char> buffer)
         {
 	        switch (id)
 	        {
@@ -34,7 +34,7 @@ namespace gen
 	        }
         }
 	private:
-		static void LoginReqPacketHandler(Session* session, TSharedPtr<LoginReq> packet);
-		static void EnterGameReqPacketHandler(Session* session, TSharedPtr<EnterGameReq> packet);
+		static void LoginReqPacketHandler(TSharedPtr<Session> session, TSharedPtr<LoginReq> packet);
+		static void EnterGameReqPacketHandler(TSharedPtr<Session> session, TSharedPtr<EnterGameReq> packet);
 	};
 }

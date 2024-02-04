@@ -13,7 +13,7 @@ namespace gen
     class PacketHandler
 	{
 	public:
-		static void onReceivePacket(Session* session, PacketId id, std::span<char> buffer)
+		static void onReceivePacket(TSharedPtr<Session> session, PacketId id, std::span<char> buffer)
         {
 	        switch (id)
 	        {
@@ -25,12 +25,20 @@ namespace gen
 			case PacketId::ENTER_GAME_RES:
 				EnterGameResPacketHandler(session, Packet::parseFrom<EnterGameRes>(buffer));
 				break;
+			case PacketId::SPAWN_NOTIFY:
+				SpawnNotifyPacketHandler(session, Packet::parseFrom<SpawnNotify>(buffer));
+				break;
+			case PacketId::DESPAWN_NOTIFY:
+				DespawnNotifyPacketHandler(session, Packet::parseFrom<DespawnNotify>(buffer));
+				break;
             default:
                 break;                         
 	        }
         }
 	private:
-		static void LoginResPacketHandler(Session* session, TSharedPtr<LoginRes> packet);
-		static void EnterGameResPacketHandler(Session* session, TSharedPtr<EnterGameRes> packet);
+		static void LoginResPacketHandler(TSharedPtr<Session> session, TSharedPtr<LoginRes> packet);
+		static void EnterGameResPacketHandler(TSharedPtr<Session> session, TSharedPtr<EnterGameRes> packet);
+		static void SpawnNotifyPacketHandler(TSharedPtr<Session> session, TSharedPtr<SpawnNotify> packet);
+		static void DespawnNotifyPacketHandler(TSharedPtr<Session> session, TSharedPtr<DespawnNotify> packet);
 	};
 }

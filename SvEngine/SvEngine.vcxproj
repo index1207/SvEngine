@@ -171,6 +171,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\util\Action.cpp" />
     <ClCompile Include="src\core\Engine.cpp" />
     <ClCompile Include="src\core\Packet.cpp" />
     <ClCompile Include="src\core\Server.cpp" />
@@ -178,6 +179,7 @@
     <ClCompile Include="src\util\Console.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\util\Action.hpp" />
     <ClInclude Include="include\core\Engine.hpp" />
     <ClInclude Include="include\core\Packet.hpp" />
     <ClInclude Include="include\core\Server.hpp" />

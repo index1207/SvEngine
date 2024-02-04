@@ -16,6 +16,7 @@
     <ClCompile Include="src\util\Console.cpp">
       <Filter>src\util</Filter>
     </ClCompile>
+    <ClCompile Include="src\util\Action.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">
@@ -56,5 +57,6 @@
     <ClInclude Include="include\util\Types.hpp">
       <Filter>include\util</Filter>
     </ClInclude>
+    <ClInclude Include="include\util\Action.hpp" />
   </ItemGroup>
 </Project>

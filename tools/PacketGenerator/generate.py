@@ -19,6 +19,7 @@ cppFormat = Format()
 cppFormat.file = '''#pragma once
 #pragma warning(push)
 #pragma warning(disable: 26495)
+#pragma warning(disable: 4100)
 #include "Packet.gen.hpp"
 
 #include <core/Packet.hpp>
@@ -52,7 +53,7 @@ namespace {1}
     class PacketHandler
 	{{
 	public:
-		static void onReceivePacket(Session* session, PacketId id, std::span<char> buffer)
+		static void onReceivePacket(TSharedPtr<Session> session, PacketId id, std::span<char> buffer)
         {{
 	        switch (id)
 	        {{
@@ -83,7 +84,7 @@ namespace {1}
     class PacketHandler
 	{{
 	public:
-		static void onReceivePacket(Session* session, PacketId id, std::span<char> buffer)
+		static void onReceivePacket(TSharedPtr<Session> session, PacketId id, std::span<char> buffer)
         {{
 	        switch (id)
 	        {{
@@ -388,7 +389,7 @@ if args.lang == 'cpp':
             '\n'.join(f'#include "generated/{(value.rstrip(".json"))}.gen.hpp"' for value in defList),
             args.namespace,
             '\n'.join(str(value) for value in conditionList[i]),    #dispatches
-            '\n'.join(str('\t\tstatic void '+value+f'(Session* session, TSharedPtr<{(messageNameList[i][handlerList[i].index(value)])}> packet);') for value in handlerList[i]) #handlers
+            '\n'.join(str('\t\tstatic void '+value+f'(TSharedPtr<Session> session, TSharedPtr<{(messageNameList[i][handlerList[i].index(value)])}> packet);') for value in handlerList[i]) #handlers
         )
     
 

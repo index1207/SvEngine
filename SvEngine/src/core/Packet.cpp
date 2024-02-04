@@ -39,9 +39,8 @@ Packet& Packet::operator<<(unsigned char data) {
 }
 
 Packet& Packet::operator<<(unsigned short data) {
-    auto t = htons(data);
-    for(int i = sizeof(t)-1; i >= 0; --i)
-        m_buffer.push_back((t>>8*i)&0xFF);
+    for(int i = sizeof(data)-1; i >= 0; --i)
+        m_buffer.push_back((data>>8*i)&0xFF);
     return *this;
 }
 
@@ -52,16 +51,14 @@ Packet& Packet::operator<<(unsigned int data) {
 }
 
 Packet& Packet::operator<<(unsigned long data) {
-    auto t = htonl(data);
-    for(int i = sizeof(t)-1; i >= 0; --i)
-        m_buffer.push_back((t>>8*i)&0xFF);
+    for(int i = sizeof(data)-1; i >= 0; --i)
+        m_buffer.push_back((data>>8*i)&0xFF);
     return *this;
 }
 
 Packet& Packet::operator<<(unsigned long long data) {
-    auto t = htonll(data);
-    for(int i = sizeof(t)-1; i >= 0; --i)
-        m_buffer.push_back((t>>8*i)&0xFF);
+    for(int i = sizeof(data)-1; i >= 0; --i)
+        m_buffer.push_back((data >>8*i)&0xFF);
     return *this;
 }
 
@@ -75,9 +72,8 @@ Packet& Packet::operator<<(char data) {
 }
 
 Packet& Packet::operator<<(short data) {
-    auto t = static_cast<short>(htons(data));
-    for(int i = sizeof(t)-1; i >= 0; --i)
-        m_buffer.push_back((t>>8*i)&0xFF);
+    for(int i = sizeof(data)-1; i >= 0; --i)
+        m_buffer.push_back((data>>8*i)&0xFF);
     return *this;
 }
 
@@ -88,17 +84,14 @@ Packet& Packet::operator<<(int data) {
 }
 
 Packet& Packet::operator<<(long data) {
-    auto t = static_cast<long>(htonl(data));
     for(int i = sizeof(data)-1; i >= 0; --i)
-        m_buffer.push_back((t>>8*i)&0xFF);
+        m_buffer.push_back((data>>8*i)&0xFF);
     return *this;
 }
 
-Packet& Packet::operator<<(long long data)
-{
-    auto t = static_cast<long long>(htonll(static_cast<unsigned long long>(data)));
+Packet& Packet::operator<<(long long data) {
     for (int i = sizeof(data) - 1; i >= 0; --i)
-        m_buffer.push_back((t >> 8 * i) & 0xFF);
+        m_buffer.push_back((data>>8*i)&0xFF);
     return *this;
 }
 
@@ -143,6 +136,7 @@ Packet& Packet::operator>>(unsigned int& data)
     std::memcpy(&data, m_buffer.data(), sizeof(data));
     m_buffer.erase(m_buffer.begin(), m_buffer.begin() + sizeof(data));
     data = static_cast<unsigned int>(ntohl(static_cast<u_long>(data)));
+    data = ntohl(data);
     return *this;
 }
 

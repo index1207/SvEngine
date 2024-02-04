@@ -1,6 +1,7 @@
 #pragma once
 #pragma warning(push)
 #pragma warning(disable: 26495)
+#pragma warning(disable: 4100)
 #include "Packet.gen.hpp"
 
 #include <core/Packet.hpp>
@@ -126,25 +127,94 @@ namespace gen {
         void read() override
         {
             Packet::read();
-            *this >> isSuccess;
+            *this >> isSuccess >> player;
         }
         void write() override
         {
-            *this << isSuccess;
+            *this << isSuccess << player;
             finish();
         }
     public:
         bool isSuccess;
+		PlayerInfo player;
 	
     };
     
     inline sv::Packet& operator>>(sv::Packet& pk, EnterGameRes& enterGameRes) {
-        pk >> enterGameRes.isSuccess;
+        pk >> enterGameRes.isSuccess >> enterGameRes.player;
         return pk;
     }
 
     inline sv::Packet& operator<<(sv::Packet& pk, const EnterGameRes& enterGameRes) {
-        pk << enterGameRes.isSuccess;
+        pk << enterGameRes.isSuccess << enterGameRes.player;
+        return pk;
+    }
+
+	class SpawnNotify
+            : public sv::Packet {
+    public:
+        SpawnNotify() : sv::Packet(static_cast<unsigned short>(PacketId::SPAWN_NOTIFY)) {
+        }
+        ~SpawnNotify() {
+    
+        }
+    protected:
+        void read() override
+        {
+            Packet::read();
+            *this >> playerList;
+        }
+        void write() override
+        {
+            *this << playerList;
+            finish();
+        }
+    public:
+        std::vector<PlayerInfo> playerList;
+	
+    };
+    
+    inline sv::Packet& operator>>(sv::Packet& pk, SpawnNotify& spawnNotify) {
+        pk >> spawnNotify.playerList;
+        return pk;
+    }
+
+    inline sv::Packet& operator<<(sv::Packet& pk, const SpawnNotify& spawnNotify) {
+        pk << spawnNotify.playerList;
+        return pk;
+    }
+
+	class DespawnNotify
+            : public sv::Packet {
+    public:
+        DespawnNotify() : sv::Packet(static_cast<unsigned short>(PacketId::DESPAWN_NOTIFY)) {
+        }
+        ~DespawnNotify() {
+    
+        }
+    protected:
+        void read() override
+        {
+            Packet::read();
+            *this >> playerList;
+        }
+        void write() override
+        {
+            *this << playerList;
+            finish();
+        }
+    public:
+        std::vector<uint64> playerList;
+	
+    };
+    
+    inline sv::Packet& operator>>(sv::Packet& pk, DespawnNotify& despawnNotify) {
+        pk >> despawnNotify.playerList;
+        return pk;
+    }
+
+    inline sv::Packet& operator<<(sv::Packet& pk, const DespawnNotify& despawnNotify) {
+        pk << despawnNotify.playerList;
         return pk;
     }
 
