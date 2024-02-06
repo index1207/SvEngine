@@ -4,12 +4,9 @@
 #pragma warning(disable: 4100)
 #include "Packet.gen.hpp"
 
-#include <core/Packet.hpp>
-#include "util/Types.hpp"
-
 #include <vector>
 
-/* Additional generated packet headers. */
+/* Additional headers. */
 #include "Struct.gen.hpp"
 
 namespace gen {
@@ -147,6 +144,72 @@ namespace gen {
 
     inline sv::Packet& operator<<(sv::Packet& pk, const EnterGameRes& enterGameRes) {
         pk << enterGameRes.isSuccess << enterGameRes.player;
+        return pk;
+    }
+
+	class LeaveGameReq
+            : public sv::Packet {
+    public:
+        LeaveGameReq() : sv::Packet(static_cast<unsigned short>(PacketId::LEAVE_GAME_REQ)) {
+        }
+        ~LeaveGameReq() {
+    
+        }
+    protected:
+        void read() override
+        {
+            Packet::read();
+            
+        }
+        void write() override
+        {
+            
+            finish();
+        }
+    public:
+        
+    };
+    
+    inline sv::Packet& operator>>(sv::Packet& pk, LeaveGameReq& leaveGameReq) {
+        
+        return pk;
+    }
+
+    inline sv::Packet& operator<<(sv::Packet& pk, const LeaveGameReq& leaveGameReq) {
+        
+        return pk;
+    }
+
+	class LeaveGameRes
+            : public sv::Packet {
+    public:
+        LeaveGameRes() : sv::Packet(static_cast<unsigned short>(PacketId::LEAVE_GAME_RES)) {
+        }
+        ~LeaveGameRes() {
+    
+        }
+    protected:
+        void read() override
+        {
+            Packet::read();
+            
+        }
+        void write() override
+        {
+            
+            finish();
+        }
+    public:
+        
+    };
+    
+    inline sv::Packet& operator>>(sv::Packet& pk, LeaveGameRes& leaveGameRes) {
+        
+        return pk;
+    }
+
+    inline sv::Packet& operator<<(sv::Packet& pk, const LeaveGameRes& leaveGameRes) {
+        
         return pk;
     }
 

@@ -26,13 +26,19 @@ namespace gen
 			case PacketId::LOGIN_REQ:
 			{{
 				auto packet = Packet::parseFrom<LoginReq>(buffer);
-				packet->handler = std::bind(LoginReqPacketHandler, std::placeholders::_1, packet);
+				packet->setHandler(std::bind(LoginReqPacketHandler, std::placeholders::_1, packet));
 				return packet;
 			}}
 			case PacketId::ENTER_GAME_REQ:
 			{{
 				auto packet = Packet::parseFrom<EnterGameReq>(buffer);
-				packet->handler = std::bind(EnterGameReqPacketHandler, std::placeholders::_1, packet);
+				packet->setHandler(std::bind(EnterGameReqPacketHandler, std::placeholders::_1, packet));
+				return packet;
+			}}
+			case PacketId::LEAVE_GAME_REQ:
+			{{
+				auto packet = Packet::parseFrom<LeaveGameReq>(buffer);
+				packet->setHandler(std::bind(LeaveGameReqPacketHandler, std::placeholders::_1, packet));
 				return packet;
 			}}
             default:
@@ -43,5 +49,6 @@ namespace gen
 	private:
 		static void LoginReqPacketHandler(TSharedPtr<Session> session, TSharedPtr<LoginReq> packet);
 		static void EnterGameReqPacketHandler(TSharedPtr<Session> session, TSharedPtr<EnterGameReq> packet);
+		static void LeaveGameReqPacketHandler(TSharedPtr<Session> session, TSharedPtr<LeaveGameReq> packet);
 	};
 }

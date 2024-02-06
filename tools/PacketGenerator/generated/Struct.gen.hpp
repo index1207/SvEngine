@@ -4,12 +4,9 @@
 #pragma warning(disable: 4100)
 #include "Packet.gen.hpp"
 
-#include <core/Packet.hpp>
-#include "util/Types.hpp"
-
 #include <vector>
 
-/* Additional generated packet headers. */
+/* Additional headers. */
 
 
 namespace gen {

@@ -11,8 +11,9 @@
 #include <functional>
 
 namespace sv {
+    class Session;
     class Packet {
-        friend class Session;
+        friend Session;
         using HandlerFunc = std::function<void(std::shared_ptr<Session>)>;
     public:
         Packet(unsigned short id, int reserve = 1024);
@@ -85,8 +86,10 @@ namespace sv {
             return pk;
         }
         std::vector<char>& data();
-        HandlerFunc handler;
+        void setHandler(const HandlerFunc& handler);
+        void executeHandler(std::shared_ptr<Session> session);
     private:
+        HandlerFunc m_handler;
         std::vector<char> m_buffer;
         unsigned short m_id;
         unsigned short m_size;

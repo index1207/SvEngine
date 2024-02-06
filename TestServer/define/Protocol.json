@@ -43,15 +43,23 @@
 			]
 		},
 		{
+			"client": "LeaveGameReq",
+			"data": []
+		},
+		{
+			"server": "LeaveGameRes",
+			"data": []
+		},
+		{
 			"server": "SpawnNotify",
 			"data": [
 				{
 					"type": "list|PlayerInfo",
 					"name": "playerList"
 				}
-				]
+			]
 		},
-		{	
+		{
 			"server": "DespawnNotify",
 			"data": [
 				{

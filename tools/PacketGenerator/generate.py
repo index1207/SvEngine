@@ -22,12 +22,9 @@ cppFormat.file = '''#pragma once
 #pragma warning(disable: 4100)
 #include "Packet.gen.hpp"
 
-#include <core/Packet.hpp>
-#include "util/Types.hpp"
-
 #include <vector>
 
-/* Additional generated packet headers. */
+/* Additional headers. */
 {0}
 
 namespace {1} {{
@@ -385,7 +382,7 @@ if args.lang == 'cpp':
             conditionList[i].append(f'\t\t\tcase PacketId::{stringcase.constcase(classes)}:\n'
                                     + '\t\t\t{{\n'
                                     + f'\t\t\t\tauto packet = Packet::parseFrom<{(classes)}>(buffer);\n'
-                                    + f'\t\t\t\tpacket->handler = std::bind({handlerName}, std::placeholders::_1, packet);\n'
+                                    + f'\t\t\t\tpacket->setHandler(std::bind({handlerName}, std::placeholders::_1, packet));\n'
                                     + f'\t\t\t\treturn packet;'
                                     + '\n\t\t\t}}'
             )

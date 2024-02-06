@@ -22,25 +22,31 @@ namespace gen
 			case PacketId::LOGIN_RES:
 			{{
 				auto packet = Packet::parseFrom<LoginRes>(buffer);
-				packet->handler = std::bind(LoginResPacketHandler, std::placeholders::_1, packet);
+				packet->setHandler(std::bind(LoginResPacketHandler, std::placeholders::_1, packet));
 				return packet;
 			}}
 			case PacketId::ENTER_GAME_RES:
 			{{
 				auto packet = Packet::parseFrom<EnterGameRes>(buffer);
-				packet->handler = std::bind(EnterGameResPacketHandler, std::placeholders::_1, packet);
+				packet->setHandler(std::bind(EnterGameResPacketHandler, std::placeholders::_1, packet));
+				return packet;
+			}}
+			case PacketId::LEAVE_GAME_RES:
+			{{
+				auto packet = Packet::parseFrom<LeaveGameRes>(buffer);
+				packet->setHandler(std::bind(LeaveGameResPacketHandler, std::placeholders::_1, packet));
 				return packet;
 			}}
 			case PacketId::SPAWN_NOTIFY:
 			{{
 				auto packet = Packet::parseFrom<SpawnNotify>(buffer);
-				packet->handler = std::bind(SpawnNotifyPacketHandler, std::placeholders::_1, packet);
+				packet->setHandler(std::bind(SpawnNotifyPacketHandler, std::placeholders::_1, packet));
 				return packet;
 			}}
 			case PacketId::DESPAWN_NOTIFY:
 			{{
 				auto packet = Packet::parseFrom<DespawnNotify>(buffer);
-				packet->handler = std::bind(DespawnNotifyPacketHandler, std::placeholders::_1, packet);
+				packet->setHandler(std::bind(DespawnNotifyPacketHandler, std::placeholders::_1, packet));
 				return packet;
 			}}
             default:
@@ -51,6 +57,7 @@ namespace gen
 	private:
 		static void LoginResPacketHandler(TSharedPtr<Session> session, TSharedPtr<LoginRes> packet);
 		static void EnterGameResPacketHandler(TSharedPtr<Session> session, TSharedPtr<EnterGameRes> packet);
+		static void LeaveGameResPacketHandler(TSharedPtr<Session> session, TSharedPtr<LeaveGameRes> packet);
 		static void SpawnNotifyPacketHandler(TSharedPtr<Session> session, TSharedPtr<SpawnNotify> packet);
 		static void DespawnNotifyPacketHandler(TSharedPtr<Session> session, TSharedPtr<DespawnNotify> packet);
 	};

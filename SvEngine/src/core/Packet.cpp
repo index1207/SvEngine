@@ -5,6 +5,7 @@
 #include <winsock2.h>
 
 #include "core/Packet.hpp"
+#include <core/Session.hpp>
 
 using namespace sv;
 
@@ -14,23 +15,37 @@ Packet::Packet(unsigned short id, int reserve) : m_buffer(4, 0), m_id(0), m_size
         m_buffer[sizeof(unsigned short) - i - 1] = id >> 8 * i & 0xFF;
 }
 
-std::vector<char>& Packet::data() {
+std::vector<char>& Packet::data()
+{
     return m_buffer;
 }
 
-void Packet::finish() {
+void Packet::finish()
+{
     auto size = static_cast<unsigned short>(m_buffer.size() - 4);
     for (int i = sizeof(size) - 1; i >= 0; --i)
         m_buffer[sizeof(unsigned short) - i + 1] = size >> 8 * i & 0xFF;
 }
 
-void Packet::parse(std::span<char> buffer) {
+void Packet::parse(std::span<char> buffer)
+{
     m_buffer = std::vector(buffer.begin(), buffer.end());
     read();
 }
 
-void Packet::read() {
+void Packet::read()
+{
     *this >> m_id >> m_size;
+}
+
+void Packet::setHandler(const HandlerFunc& handler)
+{
+    m_handler = handler;
+}
+
+void Packet::executeHandler(std::shared_ptr<Session> session)
+{
+    m_handler(session);
 }
 
 Packet& Packet::operator<<(unsigned char data) {

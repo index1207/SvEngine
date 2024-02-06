@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "generated/ServerPacketHandler.gen.hpp"
 
+#include "GameSession.hpp"
+#include "content/Player.hpp"
 #include "content/Room.hpp"
 
 #include <format>
@@ -33,4 +35,19 @@ void gen::PacketHandler::EnterGameReqPacketHandler(TSharedPtr<Session> session, 
 	GRoom->HandleEnterGameLocked(player);
 
 	return;
+}
+
+void gen::PacketHandler::LeaveGameReqPacketHandler(TSharedPtr<Session> session, TSharedPtr<LeaveGameReq> packet)
+{
+	auto gameSession = std::static_pointer_cast<GameSession>(session);
+	
+	auto player = gameSession->player.load();
+	if (packet == nullptr)
+		return;
+
+	auto room = player->room.load().lock();
+	if (room == nullptr)
+		return;
+
+	room->HandleLeaveGameLocked(player);
 }

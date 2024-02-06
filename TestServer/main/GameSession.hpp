@@ -30,7 +30,7 @@ public:
 
 		auto packet = gen::PacketHandler::parsePacket(id, buffer);
 		if (packet != nullptr)
-			packet->handler(shared_from_this());
+			packet->executeHandler(shared_from_this());
 	}
 	void flush()
 	{
@@ -38,7 +38,7 @@ public:
 		{
 			auto packet = packetQue.front();
 			if (packet != nullptr)
-				packet->handler(shared_from_this());
+				packet->executeHandler(shared_from_this());
 			packetQue.pop();
 		}
 	}

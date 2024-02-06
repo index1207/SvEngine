@@ -13,8 +13,10 @@ public:
 	virtual ~Room();
 public:
 	bool HandleEnterGameLocked(std::shared_ptr<Player> player);
+	bool HandleLeaveGameLocked(std::shared_ptr<Player> player);
 private:
 	bool EnterPlayer(std::shared_ptr<Player> player);
+	bool LeavePlayer(uint64 player);
 	void Broadcast(Packet* pk, uint64 exceptId = 0);
 private:
 	std::mutex mtx;
