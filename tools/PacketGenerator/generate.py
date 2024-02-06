@@ -42,10 +42,10 @@ cppFormat.handler.append('''#pragma once
 {0}
 
 using namespace sv;
-                         
-template<typename T>                         
+
+template<typename T>
 using TSharedPtr = std::shared_ptr<T>;
-                         
+
 namespace sv {{ class Session; }}
 
 namespace {1}
@@ -53,7 +53,7 @@ namespace {1}
     class PacketHandler
 	{{
 	public:
-		static void onReceivePacket(TSharedPtr<Session> session, PacketId id, std::span<char> buffer)
+		static TSharedPtr<Packet> parsePacket(PacketId id, std::span<char> buffer)
         {{
 	        switch (id)
 	        {{
@@ -63,6 +63,7 @@ namespace {1}
             default:
                 break;
 	        }}
+            return nullptr;             
         }}
 	private:
 {3}
@@ -76,15 +77,15 @@ cppFormat.handler.append('''#pragma once
 #include "Network/Packet.h"
 {0}
 
-using namespace sv;                                                  
-using Session = class FSession;                         
-                         
+using namespace sv;
+using Session = class FSession;
+
 namespace {1}
 {{
     class PacketHandler
 	{{
 	public:
-		static void onReceivePacket(TSharedPtr<Session> session, PacketId id, std::span<char> buffer)
+		static TSharedPtr<Packet> parsePacket(PacketId id, std::span<char> buffer)
         {{
 	        switch (id)
 	        {{
@@ -94,6 +95,7 @@ namespace {1}
             default:
                 break;                         
 	        }}
+            return nullptr;             
         }}
 	private:
 {3}
@@ -381,8 +383,11 @@ if args.lang == 'cpp':
             handlerName = f'{(classes)}PacketHandler'
             handlerList[i].append(handlerName)
             conditionList[i].append(f'\t\t\tcase PacketId::{stringcase.constcase(classes)}:\n'
-                                    + f'\t\t\t\t{handlerName}(session, Packet::parseFrom<{(classes)}>(buffer));\n'
-                                    + '\t\t\t\tbreak;'
+                                    + '\t\t\t{{\n'
+                                    + f'\t\t\t\tauto packet = Packet::parseFrom<{(classes)}>(buffer);\n'
+                                    + f'\t\t\t\tpacket->handler = std::bind({handlerName}, std::placeholders::_1, packet);\n'
+                                    + f'\t\t\t\treturn packet;'
+                                    + '\n\t\t\t}}'
             )
     for i in range(2):
         outputHandler[i] = cppFormat.handler[i].format(

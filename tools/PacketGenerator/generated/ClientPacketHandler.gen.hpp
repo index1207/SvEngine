@@ -5,35 +5,48 @@
 #include "generated/Protocol.gen.hpp"
 #include "generated/Struct.gen.hpp"
 
-using namespace sv;                                                  
-using Session = class FSession;                         
-                         
+using namespace sv;
+using Session = class FSession;
+
 namespace gen
 {
     class PacketHandler
 	{
 	public:
-		static void onReceivePacket(TSharedPtr<Session> session, PacketId id, std::span<char> buffer)
+		static TSharedPtr<Packet> parsePacket(PacketId id, std::span<char> buffer)
         {
 	        switch (id)
 	        {
             case PacketId::None:
                 break;             
 			case PacketId::LOGIN_RES:
-				LoginResPacketHandler(session, Packet::parseFrom<LoginRes>(buffer));
-				break;
+			{{
+				auto packet = Packet::parseFrom<LoginRes>(buffer);
+				packet->handler = std::bind(LoginResPacketHandler, std::placeholders::_1, packet);
+				return packet;
+			}}
 			case PacketId::ENTER_GAME_RES:
-				EnterGameResPacketHandler(session, Packet::parseFrom<EnterGameRes>(buffer));
-				break;
+			{{
+				auto packet = Packet::parseFrom<EnterGameRes>(buffer);
+				packet->handler = std::bind(EnterGameResPacketHandler, std::placeholders::_1, packet);
+				return packet;
+			}}
 			case PacketId::SPAWN_NOTIFY:
-				SpawnNotifyPacketHandler(session, Packet::parseFrom<SpawnNotify>(buffer));
-				break;
+			{{
+				auto packet = Packet::parseFrom<SpawnNotify>(buffer);
+				packet->handler = std::bind(SpawnNotifyPacketHandler, std::placeholders::_1, packet);
+				return packet;
+			}}
 			case PacketId::DESPAWN_NOTIFY:
-				DespawnNotifyPacketHandler(session, Packet::parseFrom<DespawnNotify>(buffer));
-				break;
+			{{
+				auto packet = Packet::parseFrom<DespawnNotify>(buffer);
+				packet->handler = std::bind(DespawnNotifyPacketHandler, std::placeholders::_1, packet);
+				return packet;
+			}}
             default:
                 break;                         
 	        }
+            return nullptr;             
         }
 	private:
 		static void LoginResPacketHandler(TSharedPtr<Session> session, TSharedPtr<LoginRes> packet);

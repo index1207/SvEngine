@@ -8,10 +8,12 @@
 #include <memory>
 #include <string_view>
 #include <span>
+#include <functional>
 
 namespace sv {
     class Packet {
         friend class Session;
+        using HandlerFunc = std::function<void(std::shared_ptr<Session>)>;
     public:
         Packet(unsigned short id, int reserve = 1024);
         virtual ~Packet() {};
@@ -83,6 +85,7 @@ namespace sv {
             return pk;
         }
         std::vector<char>& data();
+        HandlerFunc handler;
     private:
         std::vector<char> m_buffer;
         unsigned short m_id;
