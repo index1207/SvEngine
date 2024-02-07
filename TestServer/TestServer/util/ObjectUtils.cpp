@@ -1,8 +1,8 @@
 #include "pch.h"
 #include "ObjectUtils.hpp"
 
-#include "main/GameSession.hpp"
-#include "content/Player.hpp"
+#include "GameSession.hpp"
+#include "Player.hpp"
 
 std::atomic<int64_t> ObjectUtils::s_idGenerator = 0;
 

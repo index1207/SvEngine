@@ -4,12 +4,6 @@
 
 #pragma once
 
-#include <vector>
-#include <functional>
-
-#include "net/Socket.hpp"
-#include "net/Context.hpp"
-
 using namespace net;
 
 namespace sv {

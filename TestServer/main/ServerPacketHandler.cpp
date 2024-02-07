@@ -2,10 +2,10 @@
 #include "generated/ServerPacketHandler.gen.hpp"
 
 #include "GameSession.hpp"
-#include "content/Player.hpp"
-#include "content/Room.hpp"
+#include "Player.hpp"
+#include "Room.hpp"
 
-#include <format>
+#include <util/ObjectUtils.hpp>
 
 using namespace gen;
 
@@ -16,10 +16,10 @@ void gen::PacketHandler::LoginReqPacketHandler(TSharedPtr<Session> session, TSha
 	LoginRes loginPkt;
 	for (int i = 0; i < 3; ++i) {
 		PlayerInfo info;
-		info.x = action::Random::RandomRange(-100.f, 100.f);
-		info.y = action::Random::RandomRange(-100.f, 100.f);
-		info.z = 0;
-		info.yaw = action::Random::RandomRange(-180.f, 180.f);
+		info.location.x = action::Random::RandomRange(-100.f, 100.f);
+		info.location.y = action::Random::RandomRange(-100.f, 100.f);
+		info.location.z = 0;
+		info.location.yaw = action::Random::RandomRange(-180.f, 180.f);
 		loginPkt.playerList.push_back(info);
 	}
 	loginPkt.isSuccess = true;

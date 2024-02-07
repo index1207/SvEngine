@@ -1,7 +1,7 @@
 #pragma once
 
 namespace gen {
-    enum PacketId : u_short {
+    enum PacketId : ushort {
         None = 0,
 		LOGIN_REQ = 1,
 		ENTER_GAME_REQ = 2,

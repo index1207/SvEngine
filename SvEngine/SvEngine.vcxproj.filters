@@ -17,6 +17,7 @@
       <Filter>src\util</Filter>
     </ClCompile>
     <ClCompile Include="src\util\Action.cpp" />
+    <ClCompile Include="PCH\pch.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">
@@ -58,5 +59,7 @@
       <Filter>include\util</Filter>
     </ClInclude>
     <ClInclude Include="include\util\Action.hpp" />
+    <ClInclude Include="PCH\pch.h" />
+    <ClInclude Include="include\CoreHeader.hpp" />
   </ItemGroup>
 </Project>

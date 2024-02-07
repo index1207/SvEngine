@@ -1,7 +1,6 @@
 #pragma once
 
 #include "generated/ServerPacketHandler.gen.hpp"
-#include <queue>
 
 class GameSession : public sv::Session
 {

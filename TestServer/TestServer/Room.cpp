@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "Room.hpp"
 #include "Player.hpp"
-#include "main/GameSession.hpp"
+#include "GameSession.hpp"
 
 #include "generated/Protocol.gen.hpp"
 
@@ -23,10 +23,10 @@ bool Room::HandleEnterGameLocked(std::shared_ptr<Player> player)
 	
 	auto success = EnterPlayer(player);
 
-	player->playerInfo->x = action::Random::RandomRange(-100.f, 100.f);
-	player->playerInfo->y = action::Random::RandomRange(-100.f, 100.f);
-	player->playerInfo->z = 0;
-	player->playerInfo->yaw = action::Random::RandomRange(-180.f, 180.f);
+	player->playerInfo->location.x = action::Random::RandomRange(-100.f, 100.f) * 10;
+	player->playerInfo->location.y = action::Random::RandomRange(-100.f, 100.f) * 10;
+	player->playerInfo->location.z = 0;
+	player->playerInfo->location.yaw = action::Random::RandomRange(-180.f, 180.f);
 
 	/* 나에게 입장 알림 */
 	{

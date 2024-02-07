@@ -1,6 +1,4 @@
 #include "pch.h"
-#include <iostream>
-
 #include "GameSession.hpp"
 
 using namespace std;
@@ -22,4 +20,4 @@ int main()
 	catch (exception& e) {
 		Console::Log(e.what());
 	}
-}	
+}

@@ -24,23 +24,23 @@ namespace gen
             case PacketId::None:
                 break;
 			case PacketId::LOGIN_REQ:
-			{{
+			{
 				auto packet = Packet::parseFrom<LoginReq>(buffer);
 				packet->setHandler(std::bind(LoginReqPacketHandler, std::placeholders::_1, packet));
 				return packet;
-			}}
+			}
 			case PacketId::ENTER_GAME_REQ:
-			{{
+			{
 				auto packet = Packet::parseFrom<EnterGameReq>(buffer);
 				packet->setHandler(std::bind(EnterGameReqPacketHandler, std::placeholders::_1, packet));
 				return packet;
-			}}
+			}
 			case PacketId::LEAVE_GAME_REQ:
-			{{
+			{
 				auto packet = Packet::parseFrom<LeaveGameReq>(buffer);
 				packet->setHandler(std::bind(LeaveGameReqPacketHandler, std::placeholders::_1, packet));
 				return packet;
-			}}
+			}
             default:
                 break;
 	        }

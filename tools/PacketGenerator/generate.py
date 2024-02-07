@@ -149,7 +149,7 @@ using System.Collections.Generic;
 
 namespace {0}
 {{
-    public enum PacketId
+    public enum PacketId : ushort
     {{
 {1}
     }}
@@ -380,11 +380,11 @@ if args.lang == 'cpp':
             handlerName = f'{(classes)}PacketHandler'
             handlerList[i].append(handlerName)
             conditionList[i].append(f'\t\t\tcase PacketId::{stringcase.constcase(classes)}:\n'
-                                    + '\t\t\t{{\n'
+                                    + '\t\t\t{\n'
                                     + f'\t\t\t\tauto packet = Packet::parseFrom<{(classes)}>(buffer);\n'
                                     + f'\t\t\t\tpacket->setHandler(std::bind({handlerName}, std::placeholders::_1, packet));\n'
                                     + f'\t\t\t\treturn packet;'
-                                    + '\n\t\t\t}}'
+                                    + '\n\t\t\t}'
             )
     for i in range(2):
         outputHandler[i] = cppFormat.handler[i].format(
@@ -400,7 +400,7 @@ if args.lang == 'cpp':
     allMessageList = list(itertools.chain(*messageNameList))
     types.write('#pragma once\n\n\
 namespace {0} {{\n\
-    enum class PacketId {{\n\
+    enum PacketId : u_short {{\n\
         None = 0,\n\
 {1}\
     \n\t}};\n\

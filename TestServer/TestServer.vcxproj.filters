@@ -18,25 +18,25 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main\main.cpp">
+    <ClCompile Include="Main\main.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="main\ServerPacketHandler.cpp">
+    <ClCompile Include="Main\ServerPacketHandler.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="content\Player.cpp">
+    <ClCompile Include="TestServer\Player.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="content\Room.cpp">
+    <ClCompile Include="TestServer\Room.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="util\ObjectUtils.cpp">
+    <ClCompile Include="TestServer\util\ObjectUtils.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="main\GameSession.cpp">
+    <ClCompile Include="TestServer\GameSession.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="PCH\pch.cpp">
+    <ClCompile Include="Main\PCH\pch.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
@@ -56,19 +56,19 @@
     <ClInclude Include="generated\Struct.gen.hpp">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="content\Player.hpp">
+    <ClInclude Include="TestServer\Player.hpp">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="content\Room.hpp">
+    <ClInclude Include="TestServer\Room.hpp">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="util\ObjectUtils.hpp">
+    <ClInclude Include="TestServer\util\ObjectUtils.hpp">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="main\GameSession.hpp">
+    <ClInclude Include="TestServer\GameSession.hpp">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="PCH\pch.h">
+    <ClInclude Include="Main\PCH\pch.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>

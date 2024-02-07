@@ -67,6 +67,24 @@
 					"name": "playerList"
 				}
 			]
+		},
+		{
+			"server": "MoveReq",
+			"data": [
+				{
+					"type": "vec4",
+					"name": "location"
+				}
+			]
+		},
+		{
+			"server": "MoveRes",
+			"data": [
+				{
+					"type": "vec4",
+					"name": "location"
+				}
+			]
 		}
 	]
 }

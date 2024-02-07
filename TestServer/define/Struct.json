@@ -1,12 +1,25 @@
 {
 	"struct": [
 		{
-			"name": "PlayerInfo",
+			"name": "vec3",
 			"data": [
 				{
-					"type": "uint64",
-					"name": "objectId"
+					"type": "float",
+					"name": "x"
 				},
+				{
+					"type": "float",
+					"name": "y"
+				},
+				{
+					"type": "float",
+					"name": "z"
+				}
+			]
+		},
+		{
+			"name": "vec4",
+			"data": [
 				{
 					"type": "float",
 					"name": "x"
@@ -22,6 +35,19 @@
 				{
 					"type": "float",
 					"name": "yaw"
+				}
+			]
+		},
+		{
+			"name": "PlayerInfo",
+			"data": [
+				{
+					"type": "uint64",
+					"name": "objectId"
+				},
+				{
+					"type": "vec4",
+					"name": "location"
 				}
 			]
 		}

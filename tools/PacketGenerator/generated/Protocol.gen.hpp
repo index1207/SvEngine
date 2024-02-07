@@ -281,5 +281,73 @@ namespace gen {
         return pk;
     }
 
+	class MoveReq
+            : public sv::Packet {
+    public:
+        MoveReq() : sv::Packet(static_cast<unsigned short>(PacketId::MOVE_REQ)) {
+        }
+        ~MoveReq() {
+    
+        }
+    protected:
+        void read() override
+        {
+            Packet::read();
+            *this >> location;
+        }
+        void write() override
+        {
+            *this << location;
+            finish();
+        }
+    public:
+        vec4 location;
+	
+    };
+    
+    inline sv::Packet& operator>>(sv::Packet& pk, MoveReq& moveReq) {
+        pk >> moveReq.location;
+        return pk;
+    }
+
+    inline sv::Packet& operator<<(sv::Packet& pk, const MoveReq& moveReq) {
+        pk << moveReq.location;
+        return pk;
+    }
+
+	class MoveRes
+            : public sv::Packet {
+    public:
+        MoveRes() : sv::Packet(static_cast<unsigned short>(PacketId::MOVE_RES)) {
+        }
+        ~MoveRes() {
+    
+        }
+    protected:
+        void read() override
+        {
+            Packet::read();
+            *this >> location;
+        }
+        void write() override
+        {
+            *this << location;
+            finish();
+        }
+    public:
+        vec4 location;
+	
+    };
+    
+    inline sv::Packet& operator>>(sv::Packet& pk, MoveRes& moveRes) {
+        pk >> moveRes.location;
+        return pk;
+    }
+
+    inline sv::Packet& operator<<(sv::Packet& pk, const MoveRes& moveRes) {
+        pk << moveRes.location;
+        return pk;
+    }
+
 }
 #pragma warning(pop)
