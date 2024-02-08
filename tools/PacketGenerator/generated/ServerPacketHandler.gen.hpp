@@ -41,6 +41,12 @@ namespace gen
 				packet->setHandler(std::bind(LeaveGameReqPacketHandler, std::placeholders::_1, packet));
 				return packet;
 			}
+			case PacketId::MOVE_REQ:
+			{
+				auto packet = Packet::parseFrom<MoveReq>(buffer);
+				packet->setHandler(std::bind(MoveReqPacketHandler, std::placeholders::_1, packet));
+				return packet;
+			}
             default:
                 break;
 	        }
@@ -50,5 +56,6 @@ namespace gen
 		static void LoginReqPacketHandler(TSharedPtr<Session> session, TSharedPtr<LoginReq> packet);
 		static void EnterGameReqPacketHandler(TSharedPtr<Session> session, TSharedPtr<EnterGameReq> packet);
 		static void LeaveGameReqPacketHandler(TSharedPtr<Session> session, TSharedPtr<LeaveGameReq> packet);
+		static void MoveReqPacketHandler(TSharedPtr<Session> session, TSharedPtr<MoveReq> packet);
 	};
 }

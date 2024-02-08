@@ -1,5 +1,12 @@
 {
 	"enum": [
-		
+		{
+			"name": "EMoveState",
+			"list": [
+				"MOVE_STATE_NONE",
+				"MOVE_STATE_IDLE",
+				"MOVE_STATE_RUN"
+			]
+		}
 	]
 }

@@ -1,3 +1,4 @@
+import copy
 import itertools
 import os
 import json
@@ -21,6 +22,13 @@ cppFormat.file = '''#pragma once
 #pragma warning(disable: 26495)
 #pragma warning(disable: 4100)
 #include "Packet.gen.hpp"
+
+#ifdef __UNREAL__
+#include "Network/Packet.h"
+#elif __SERVER__
+#include "core/Packet.hpp"
+#include "util/Types.hpp"
+#endif
 
 #include <vector>
 
@@ -134,7 +142,7 @@ cppFormat.classFormat = '''class {0}
     }}
 '''
 
-cppFormat.enumFormat = """enum {0} {{
+cppFormat.enumFormat = """enum {0} : uint16 {{
         {1}
     }};"""
                              
@@ -185,11 +193,20 @@ class Element:
     name: str = None
 
 def readCpp(readType):
-    read_class = ' >> '.join(value.name for value in dataList)
-    write_line = ' << '.join(value.name for value in dataList)
+    inElem = [[], []]
+    for value in dataList:
+        if value.type[0] == 'E':
+            inElem[0].append(f'unmove<uint16>({value.name})')
+            inElem[1].append(f'unmove<uint16>({stringcase.camelcase(messageName)}.{value.name})')
+        else:
+            inElem[0].append(value.name)
+            inElem[1].append(f'{stringcase.camelcase(messageName)}.{value.name}')
+            
+    read_class = ' >> '.join(value for value in inElem[0])
+    write_line = ' << '.join(value for value in inElem[0])
 
-    read_op = ' >> '.join(f'{stringcase.camelcase(messageName)}.{value.name}' for value in dataList)
-    write_op = ' << '.join(f'{stringcase.camelcase(messageName)}.{value.name}' for value in dataList)
+    read_op = ' >> '.join(value for value in inElem[1])
+    write_op = ' << '.join(value for value in inElem[1])
     
     if read_class != '' or write_line != '':
         read_class = '*this >> ' + read_class + ';'
@@ -399,8 +416,9 @@ types = open(f'generated/Packet.gen.{ext}', 'w')
 if args.lang == 'cpp':
     allMessageList = list(itertools.chain(*messageNameList))
     types.write('#pragma once\n\n\
+template<class T> inline T& unmove(T&& t) {{ return static_cast<T&>(t); }}\n\n\
 namespace {0} {{\n\
-    enum PacketId : u_short {{\n\
+    enum PacketId : uint16 {{\n\
         None = 0,\n\
 {1}\
     \n\t}};\n\

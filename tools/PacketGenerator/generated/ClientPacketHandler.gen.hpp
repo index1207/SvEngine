@@ -49,12 +49,6 @@ namespace gen
 				packet->setHandler(std::bind(DespawnNotifyPacketHandler, std::placeholders::_1, packet));
 				return packet;
 			}
-			case PacketId::MOVE_REQ:
-			{
-				auto packet = Packet::parseFrom<MoveReq>(buffer);
-				packet->setHandler(std::bind(MoveReqPacketHandler, std::placeholders::_1, packet));
-				return packet;
-			}
 			case PacketId::MOVE_RES:
 			{
 				auto packet = Packet::parseFrom<MoveRes>(buffer);
@@ -72,7 +66,6 @@ namespace gen
 		static void LeaveGameResPacketHandler(TSharedPtr<Session> session, TSharedPtr<LeaveGameRes> packet);
 		static void SpawnNotifyPacketHandler(TSharedPtr<Session> session, TSharedPtr<SpawnNotify> packet);
 		static void DespawnNotifyPacketHandler(TSharedPtr<Session> session, TSharedPtr<DespawnNotify> packet);
-		static void MoveReqPacketHandler(TSharedPtr<Session> session, TSharedPtr<MoveReq> packet);
 		static void MoveResPacketHandler(TSharedPtr<Session> session, TSharedPtr<MoveRes> packet);
 	};
 }

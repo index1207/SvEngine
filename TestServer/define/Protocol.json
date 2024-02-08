@@ -69,11 +69,11 @@
 			]
 		},
 		{
-			"server": "MoveReq",
+			"client": "MoveReq",
 			"data": [
 				{
-					"type": "vec4",
-					"name": "location"
+					"type": "Status",
+					"name": "status"
 				}
 			]
 		},
@@ -81,8 +81,8 @@
 			"server": "MoveRes",
 			"data": [
 				{
-					"type": "vec4",
-					"name": "location"
+					"type": "PlayerInfo",
+					"name": "info"
 				}
 			]
 		}

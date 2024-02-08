@@ -19,14 +19,14 @@ Room::~Room()
 
 bool Room::HandleEnterGameLocked(std::shared_ptr<Player> player)
 {
-	std::lock_guard lock(mtx);
+	std::lock_guard lock(_lock);
 	
 	auto success = EnterPlayer(player);
 
-	player->playerInfo->location.x = action::Random::RandomRange(-100.f, 100.f) * 10;
-	player->playerInfo->location.y = action::Random::RandomRange(-100.f, 100.f) * 10;
-	player->playerInfo->location.z = 0;
-	player->playerInfo->location.yaw = action::Random::RandomRange(-180.f, 180.f);
+	player->playerInfo->status.location.x = action::Random::RandomRange(-100.f, 100.f) * 3;
+	player->playerInfo->status.location.y = action::Random::RandomRange(-100.f, 100.f) * 3;
+	player->playerInfo->status.location.z = 100;
+	player->playerInfo->status.yaw = action::Random::RandomRange(-180.f, 180.f);
 
 	/* 나에게 입장 알림 */
 	{
@@ -63,7 +63,7 @@ bool Room::HandleLeaveGameLocked(std::shared_ptr<Player> player)
 	if (player == nullptr)
 		return false;
 
-	std::lock_guard lock(mtx);
+	std::lock_guard lock(_lock);
 	auto objectId = player->playerInfo->objectId;
 	bool success = LeavePlayer(objectId);
 
@@ -85,6 +85,23 @@ bool Room::HandleLeaveGameLocked(std::shared_ptr<Player> player)
 	}
 
 	return success;
+}
+
+void Room::HandleMoveLocked(std::shared_ptr<Player> player, gen::Status status)
+{
+	std::lock_guard lock(_lock);
+
+	const auto objectId = player->playerInfo->objectId;
+	if (_players.find(objectId) == _players.end())
+		return;
+
+	gen::PlayerInfo info;
+	info.objectId = objectId;
+	info.status = status;
+
+	gen::MoveRes moveRes;
+	moveRes.info = info;
+	Broadcast(&moveRes);
 }
 
 bool Room::EnterPlayer(std::shared_ptr<Player> player)

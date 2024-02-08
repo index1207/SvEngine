@@ -46,3 +46,4 @@ using HashSet = std::unordered_set<Value>;
 
 template<class Value>
 using ConcurrencyHashSet = concurrency::concurrent_unordered_set<Value>;
+

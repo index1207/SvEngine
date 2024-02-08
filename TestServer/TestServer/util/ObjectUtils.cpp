@@ -4,7 +4,7 @@
 #include "GameSession.hpp"
 #include "Player.hpp"
 
-std::atomic<int64_t> ObjectUtils::s_idGenerator = 0;
+std::atomic<int64_t> ObjectUtils::s_idGenerator = 1;
 
 std::shared_ptr<class Player> ObjectUtils::CreatePlayer(std::shared_ptr<Session> session)
 {

@@ -1,7 +1,10 @@
 {
+	"include": [
+		"Enum.json"
+	],
 	"struct": [
 		{
-			"name": "vec3",
+			"name": "Vec3",
 			"data": [
 				{
 					"type": "float",
@@ -18,23 +21,23 @@
 			]
 		},
 		{
-			"name": "vec4",
+			"name": "Status",
 			"data": [
 				{
-					"type": "float",
-					"name": "x"
-				},
-				{
-					"type": "float",
-					"name": "y"
-				},
-				{
-					"type": "float",
-					"name": "z"
+					"type": "Vec3",
+					"name": "location"
 				},
 				{
 					"type": "float",
 					"name": "yaw"
+				},
+				{
+					"type": "float",
+					"name": "speed"
+				},
+				{
+					"type": "EMoveState",
+					"name": "state"
 				}
 			]
 		},
@@ -46,8 +49,8 @@
 					"name": "objectId"
 				},
 				{
-					"type": "vec4",
-					"name": "location"
+					"type": "Status",
+					"name": "status"
 				}
 			]
 		}

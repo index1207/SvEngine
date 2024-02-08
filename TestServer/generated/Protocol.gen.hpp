@@ -4,6 +4,13 @@
 #pragma warning(disable: 4100)
 #include "Packet.gen.hpp"
 
+#ifdef __UNREAL__
+#include "Network/Packet.h"
+#elif __SERVER__
+#include "core/Packet.hpp"
+#include "util/Types.hpp"
+#endif
+
 #include <vector>
 
 /* Additional headers. */
@@ -293,25 +300,25 @@ namespace gen {
         void read() override
         {
             Packet::read();
-            *this >> location;
+            *this >> status;
         }
         void write() override
         {
-            *this << location;
+            *this << status;
             finish();
         }
     public:
-        vec4 location;
+        Status status;
 	
     };
     
     inline sv::Packet& operator>>(sv::Packet& pk, MoveReq& moveReq) {
-        pk >> moveReq.location;
+        pk >> moveReq.status;
         return pk;
     }
 
     inline sv::Packet& operator<<(sv::Packet& pk, const MoveReq& moveReq) {
-        pk << moveReq.location;
+        pk << moveReq.status;
         return pk;
     }
 
@@ -327,25 +334,25 @@ namespace gen {
         void read() override
         {
             Packet::read();
-            *this >> location;
+            *this >> info;
         }
         void write() override
         {
-            *this << location;
+            *this << info;
             finish();
         }
     public:
-        vec4 location;
+        PlayerInfo info;
 	
     };
     
     inline sv::Packet& operator>>(sv::Packet& pk, MoveRes& moveRes) {
-        pk >> moveRes.location;
+        pk >> moveRes.info;
         return pk;
     }
 
     inline sv::Packet& operator<<(sv::Packet& pk, const MoveRes& moveRes) {
-        pk << moveRes.location;
+        pk << moveRes.info;
         return pk;
     }
 

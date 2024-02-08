@@ -4,18 +4,25 @@
 #pragma warning(disable: 4100)
 #include "Packet.gen.hpp"
 
+#ifdef __UNREAL__
+#include "Network/Packet.h"
+#elif __SERVER__
+#include "core/Packet.hpp"
+#include "util/Types.hpp"
+#endif
+
 #include <vector>
 
 /* Additional headers. */
-
+#include "Enum.gen.hpp"
 
 namespace gen {
-    class vec3
+    class Vec3
             : public sv::Packet {
     public:
-        vec3() : sv::Packet(static_cast<unsigned short>(PacketId::None)) {
+        Vec3() : sv::Packet(static_cast<unsigned short>(PacketId::None)) {
         }
-        ~vec3() {
+        ~Vec3() {
     
         }
     protected:
@@ -36,50 +43,50 @@ namespace gen {
 	
     };
     
-    inline sv::Packet& operator>>(sv::Packet& pk, vec3& vec3) {
+    inline sv::Packet& operator>>(sv::Packet& pk, Vec3& vec3) {
         pk >> vec3.x >> vec3.y >> vec3.z;
         return pk;
     }
 
-    inline sv::Packet& operator<<(sv::Packet& pk, const vec3& vec3) {
+    inline sv::Packet& operator<<(sv::Packet& pk, const Vec3& vec3) {
         pk << vec3.x << vec3.y << vec3.z;
         return pk;
     }
 
-	class vec4
+	class Status
             : public sv::Packet {
     public:
-        vec4() : sv::Packet(static_cast<unsigned short>(PacketId::None)) {
+        Status() : sv::Packet(static_cast<unsigned short>(PacketId::None)) {
         }
-        ~vec4() {
+        ~Status() {
     
         }
     protected:
         void read() override
         {
             Packet::read();
-            *this >> x >> y >> z >> yaw;
+            *this >> location >> yaw >> speed >> unmove<uint16>(state);
         }
         void write() override
         {
-            *this << x << y << z << yaw;
+            *this << location << yaw << speed << unmove<uint16>(state);
             finish();
         }
     public:
-        float x;
-		float y;
-		float z;
+        Vec3 location;
 		float yaw;
+		float speed;
+		EMoveState state;
 	
     };
     
-    inline sv::Packet& operator>>(sv::Packet& pk, vec4& vec4) {
-        pk >> vec4.x >> vec4.y >> vec4.z >> vec4.yaw;
+    inline sv::Packet& operator>>(sv::Packet& pk, Status& status) {
+        pk >> status.location >> status.yaw >> status.speed >> unmove<uint16>(status.state);
         return pk;
     }
 
-    inline sv::Packet& operator<<(sv::Packet& pk, const vec4& vec4) {
-        pk << vec4.x << vec4.y << vec4.z << vec4.yaw;
+    inline sv::Packet& operator<<(sv::Packet& pk, const Status& status) {
+        pk << status.location << status.yaw << status.speed << unmove<uint16>(status.state);
         return pk;
     }
 
@@ -95,26 +102,26 @@ namespace gen {
         void read() override
         {
             Packet::read();
-            *this >> objectId >> location;
+            *this >> objectId >> status;
         }
         void write() override
         {
-            *this << objectId << location;
+            *this << objectId << status;
             finish();
         }
     public:
         uint64 objectId;
-		vec4 location;
+		Status status;
 	
     };
     
     inline sv::Packet& operator>>(sv::Packet& pk, PlayerInfo& playerInfo) {
-        pk >> playerInfo.objectId >> playerInfo.location;
+        pk >> playerInfo.objectId >> playerInfo.status;
         return pk;
     }
 
     inline sv::Packet& operator<<(sv::Packet& pk, const PlayerInfo& playerInfo) {
-        pk << playerInfo.objectId << playerInfo.location;
+        pk << playerInfo.objectId << playerInfo.status;
         return pk;
     }
 
