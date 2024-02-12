@@ -39,16 +39,6 @@ void Packet::read()
     *this >> m_id >> m_size;
 }
 
-void Packet::setHandler(const HandlerFunc& handler)
-{
-    m_handler = handler;
-}
-
-void Packet::executeHandler(std::shared_ptr<Session> session)
-{
-    m_handler(session);
-}
-
 Packet& Packet::operator<<(unsigned char data) {
     m_buffer.push_back(static_cast<char>(data));
     return *this;

@@ -20,18 +20,18 @@ namespace gen {
     class Vec3
             : public sv::Packet {
     public:
-        Vec3() : sv::Packet(static_cast<unsigned short>(PacketId::None)) {
+        Vec3() : Packet(static_cast<unsigned short>(PacketId::None)) {
         }
         ~Vec3() {
     
         }
     protected:
-        void read() override
+        virtual void read() override
         {
             Packet::read();
             *this >> x >> y >> z;
         }
-        void write() override
+        virtual void write() override
         {
             *this << x << y << z;
             finish();
@@ -56,20 +56,20 @@ namespace gen {
 	class Status
             : public sv::Packet {
     public:
-        Status() : sv::Packet(static_cast<unsigned short>(PacketId::None)) {
+        Status() : Packet(static_cast<unsigned short>(PacketId::None)) {
         }
         ~Status() {
     
         }
     protected:
-        void read() override
+        virtual void read() override
         {
             Packet::read();
-            *this >> location >> yaw >> speed >> unmove<uint16>(state);
+            *this >> location >> yaw >> speed >> reinterpret_cast<uint16&>(state);
         }
-        void write() override
+        virtual void write() override
         {
-            *this << location << yaw << speed << unmove<uint16>(state);
+            *this << location << yaw << speed << (state);
             finish();
         }
     public:
@@ -81,30 +81,30 @@ namespace gen {
     };
     
     inline sv::Packet& operator>>(sv::Packet& pk, Status& status) {
-        pk >> status.location >> status.yaw >> status.speed >> unmove<uint16>(status.state);
+        pk >> status.location >> status.yaw >> status.speed >> reinterpret_cast<uint16&>(status.state);
         return pk;
     }
 
     inline sv::Packet& operator<<(sv::Packet& pk, const Status& status) {
-        pk << status.location << status.yaw << status.speed << unmove<uint16>(status.state);
+        pk << status.location << status.yaw << status.speed << (status.state);
         return pk;
     }
 
 	class PlayerInfo
             : public sv::Packet {
     public:
-        PlayerInfo() : sv::Packet(static_cast<unsigned short>(PacketId::None)) {
+        PlayerInfo() : Packet(static_cast<unsigned short>(PacketId::None)) {
         }
         ~PlayerInfo() {
     
         }
     protected:
-        void read() override
+        virtual void read() override
         {
             Packet::read();
             *this >> objectId >> status;
         }
-        void write() override
+        virtual void write() override
         {
             *this << objectId << status;
             finish();

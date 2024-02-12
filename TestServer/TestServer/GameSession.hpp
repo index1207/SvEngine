@@ -23,23 +23,7 @@ public:
 		if (length <= 2)
 			return;
 
-		gen::PacketId id = gen::PacketId::None;
-		std::memcpy(&id, buffer.data(), sizeof(unsigned short));
-		id = (gen::PacketId)ntohs((u_short)id);
-
-		auto packet = gen::PacketHandler::parsePacket(id, buffer);
-		if (packet != nullptr)
-			packet->executeHandler(shared_from_this());
-	}
-	void flush()
-	{
-		while (!packetQue.empty())
-		{
-			auto packet = packetQue.front();
-			if (packet != nullptr)
-				packet->executeHandler(shared_from_this());
-			packetQue.pop();
-		}
+		auto res = gen::PacketHandler::handlePacket(shared_from_this(), buffer);
 	}
 public:
 	std::queue<std::shared_ptr<Packet>> packetQue;

@@ -20,18 +20,18 @@ namespace gen {
     class LoginReq
             : public sv::Packet {
     public:
-        LoginReq() : sv::Packet(static_cast<unsigned short>(PacketId::LOGIN_REQ)) {
+        LoginReq() : Packet(static_cast<unsigned short>(PacketId::LOGIN_REQ)) {
         }
         ~LoginReq() {
     
         }
     protected:
-        void read() override
+        virtual void read() override
         {
             Packet::read();
             
         }
-        void write() override
+        virtual void write() override
         {
             
             finish();
@@ -53,18 +53,18 @@ namespace gen {
 	class LoginRes
             : public sv::Packet {
     public:
-        LoginRes() : sv::Packet(static_cast<unsigned short>(PacketId::LOGIN_RES)) {
+        LoginRes() : Packet(static_cast<unsigned short>(PacketId::LOGIN_RES)) {
         }
         ~LoginRes() {
     
         }
     protected:
-        void read() override
+        virtual void read() override
         {
             Packet::read();
             *this >> isSuccess >> playerList;
         }
-        void write() override
+        virtual void write() override
         {
             *this << isSuccess << playerList;
             finish();
@@ -88,18 +88,18 @@ namespace gen {
 	class EnterGameReq
             : public sv::Packet {
     public:
-        EnterGameReq() : sv::Packet(static_cast<unsigned short>(PacketId::ENTER_GAME_REQ)) {
+        EnterGameReq() : Packet(static_cast<unsigned short>(PacketId::ENTER_GAME_REQ)) {
         }
         ~EnterGameReq() {
     
         }
     protected:
-        void read() override
+        virtual void read() override
         {
             Packet::read();
             *this >> playerIdx;
         }
-        void write() override
+        virtual void write() override
         {
             *this << playerIdx;
             finish();
@@ -122,18 +122,18 @@ namespace gen {
 	class EnterGameRes
             : public sv::Packet {
     public:
-        EnterGameRes() : sv::Packet(static_cast<unsigned short>(PacketId::ENTER_GAME_RES)) {
+        EnterGameRes() : Packet(static_cast<unsigned short>(PacketId::ENTER_GAME_RES)) {
         }
         ~EnterGameRes() {
     
         }
     protected:
-        void read() override
+        virtual void read() override
         {
             Packet::read();
             *this >> isSuccess >> player;
         }
-        void write() override
+        virtual void write() override
         {
             *this << isSuccess << player;
             finish();
@@ -157,18 +157,18 @@ namespace gen {
 	class LeaveGameReq
             : public sv::Packet {
     public:
-        LeaveGameReq() : sv::Packet(static_cast<unsigned short>(PacketId::LEAVE_GAME_REQ)) {
+        LeaveGameReq() : Packet(static_cast<unsigned short>(PacketId::LEAVE_GAME_REQ)) {
         }
         ~LeaveGameReq() {
     
         }
     protected:
-        void read() override
+        virtual void read() override
         {
             Packet::read();
             
         }
-        void write() override
+        virtual void write() override
         {
             
             finish();
@@ -190,18 +190,18 @@ namespace gen {
 	class LeaveGameRes
             : public sv::Packet {
     public:
-        LeaveGameRes() : sv::Packet(static_cast<unsigned short>(PacketId::LEAVE_GAME_RES)) {
+        LeaveGameRes() : Packet(static_cast<unsigned short>(PacketId::LEAVE_GAME_RES)) {
         }
         ~LeaveGameRes() {
     
         }
     protected:
-        void read() override
+        virtual void read() override
         {
             Packet::read();
             
         }
-        void write() override
+        virtual void write() override
         {
             
             finish();
@@ -223,18 +223,18 @@ namespace gen {
 	class SpawnNotify
             : public sv::Packet {
     public:
-        SpawnNotify() : sv::Packet(static_cast<unsigned short>(PacketId::SPAWN_NOTIFY)) {
+        SpawnNotify() : Packet(static_cast<unsigned short>(PacketId::SPAWN_NOTIFY)) {
         }
         ~SpawnNotify() {
     
         }
     protected:
-        void read() override
+        virtual void read() override
         {
             Packet::read();
             *this >> playerList;
         }
-        void write() override
+        virtual void write() override
         {
             *this << playerList;
             finish();
@@ -257,18 +257,18 @@ namespace gen {
 	class DespawnNotify
             : public sv::Packet {
     public:
-        DespawnNotify() : sv::Packet(static_cast<unsigned short>(PacketId::DESPAWN_NOTIFY)) {
+        DespawnNotify() : Packet(static_cast<unsigned short>(PacketId::DESPAWN_NOTIFY)) {
         }
         ~DespawnNotify() {
     
         }
     protected:
-        void read() override
+        virtual void read() override
         {
             Packet::read();
             *this >> playerList;
         }
-        void write() override
+        virtual void write() override
         {
             *this << playerList;
             finish();
@@ -291,18 +291,18 @@ namespace gen {
 	class MoveReq
             : public sv::Packet {
     public:
-        MoveReq() : sv::Packet(static_cast<unsigned short>(PacketId::MOVE_REQ)) {
+        MoveReq() : Packet(static_cast<unsigned short>(PacketId::MOVE_REQ)) {
         }
         ~MoveReq() {
     
         }
     protected:
-        void read() override
+        virtual void read() override
         {
             Packet::read();
             *this >> status;
         }
-        void write() override
+        virtual void write() override
         {
             *this << status;
             finish();
@@ -325,18 +325,18 @@ namespace gen {
 	class MoveRes
             : public sv::Packet {
     public:
-        MoveRes() : sv::Packet(static_cast<unsigned short>(PacketId::MOVE_RES)) {
+        MoveRes() : Packet(static_cast<unsigned short>(PacketId::MOVE_RES)) {
         }
         ~MoveRes() {
     
         }
     protected:
-        void read() override
+        virtual void read() override
         {
             Packet::read();
             *this >> info;
         }
-        void write() override
+        virtual void write() override
         {
             *this << info;
             finish();

@@ -11,7 +11,7 @@ from dataclasses import dataclass, field
 @dataclass
 class Format:
     file: str = None
-    handler: list = field(default_factory=lambda: [])
+    handler: str = None
     classFormat: str = None
     enumFormat: str = None
 
@@ -41,88 +41,78 @@ namespace {1} {{
 #pragma warning(pop)
 '''
 
-cppFormat.handler.append('''#pragma once
+cppFormat.handler = '''#pragma once
 #include "Packet.gen.hpp"
-#include <core/Packet.hpp>
 {0}
 
 using namespace sv;
-
-template<typename T>
-using TSharedPtr = std::shared_ptr<T>;
-
-namespace sv {{ class Session; }}
-
-namespace {1}
-{{
-    class PacketHandler
-	{{
-	public:
-		static TSharedPtr<Packet> parsePacket(PacketId id, std::span<char> buffer)
-        {{
-	        switch (id)
-	        {{
-            case PacketId::None:
-                break;
-{2}
-            default:
-                break;
-	        }}
-            return nullptr;             
-        }}
-	private:
-{3}
-	}};
-}}
-''')
-
-
-cppFormat.handler.append('''#pragma once
-#include "Packet.gen.hpp"
+                         
+#ifdef __UNREAL__
+#include "winsock2.h"
 #include "Network/Packet.h"
-{0}
 
-using namespace sv;
 using Session = class FSession;
 
+#define STATIC_POINTER_CAST(to, from) StaticCastSharedPtr<to>(from)
+#else
+template<typename T>
+using TSharedPtr = std::shared_ptr<T>;
+template<typename T>
+using TFunction = std::function<T>;
+
+#define STATIC_POINTER_CAST(to, from) std::static_pointer_cast<to>(from)
+
+namespace sv {{ class Session; }}
+#endif
+
+#define HANDLE_PACKET(pckname, buffer) std::bind(pckname##PacketHandler, std::placeholders::_1, STATIC_POINTER_CAST(pckname, Packet::parseFrom<pckname>(buffer)));
+#define BIND_HANDLER(pckname, buffer) std::bind(pckname##PacketHandler, std::placeholders::_1, STATIC_POINTER_CAST(pckname, Packet::parseFrom<pckname>(buffer)));
+
 namespace {1}
 {{
     class PacketHandler
 	{{
+    	using Handler = TFunction<bool(TSharedPtr<Session>)>;
 	public:
-		static TSharedPtr<Packet> parsePacket(PacketId id, std::span<char> buffer)
+		static Handler getHandler(std::span<char> buffer)
         {{
-	        switch (id)
-	        {{
-            case PacketId::None:
-                break;             
+            gen::PacketId id = gen::PacketId::None;
+			std::memcpy(&id, buffer.data(), sizeof(unsigned short));
+			id = (gen::PacketId)ntohs((u_short)id);
+            
+            switch (id)
+            {{
 {2}
-            default:
-                break;                         
-	        }}
-            return nullptr;             
+            }}
+            return nullptr;
         }}
-	private:
+        static bool handlePacket(TSharedPtr<Session> session, std::span<char> buffer)
+        {{
+            auto handler = getHandler(buffer);
+            if (!handler || !session)
+                return false;
+            return handler(session);
+        }}
 {3}
 	}};
 }}
-''')
+'''
 
 cppFormat.classFormat = '''class {0}
             : public sv::Packet {{
     public:
-        {0}() : sv::Packet(static_cast<unsigned short>(PacketId::{1})) {{
+        {0}() : Packet(static_cast<unsigned short>(PacketId::{1})) {{
         }}
         ~{0}() {{
     
         }}
     protected:
-        void read() override
+        virtual void read() override
         {{
             Packet::read();
             {2}
         }}
-        void write() override
+        virtual void write() override
         {{
             {3}
             finish();
@@ -196,16 +186,16 @@ def readCpp(readType):
     inElem = [[], []]
     for value in dataList:
         if value.type[0] == 'E':
-            inElem[0].append(f'unmove<uint16>({value.name})')
-            inElem[1].append(f'unmove<uint16>({stringcase.camelcase(messageName)}.{value.name})')
+            inElem[0].append(f'({value.name})')
+            inElem[1].append(f'({stringcase.camelcase(messageName)}.{value.name})')
         else:
             inElem[0].append(value.name)
             inElem[1].append(f'{stringcase.camelcase(messageName)}.{value.name}')
             
-    read_class = ' >> '.join(value for value in inElem[0])
+    read_class = ' >> '.join(map(lambda x: 'reinterpret_cast<uint16&>'+x if x[0] == '(' else x, inElem[0]))
     write_line = ' << '.join(value for value in inElem[0])
 
-    read_op = ' >> '.join(value for value in inElem[1])
+    read_op = ' >> '.join(map(lambda x: 'reinterpret_cast<uint16&>'+x if x[0] == '(' else x, inElem[1]))
     write_op = ' << '.join(value for value in inElem[1])
     
     if read_class != '' or write_line != '':
@@ -291,10 +281,10 @@ args = parser.parse_args()
 
 
 ext = ''
-outputHandler = ['','']
+outputHandler = ['', '']
 
 messageNameList = [[],[],[]] # Client, Server, Struct
-conditionList = [[],[]]
+bindList = [[],[]]
 handlerList = [[],[]]
 
 defList = os.listdir(args.path)
@@ -341,7 +331,7 @@ for filename in defList:
                 if args.lang == 'cpp':
                     classList.append(readCpp('struct'))
                 elif args.lang == 'csharp':
-                    classList.append(readCsharp(conditionList, handlerList))
+                    classList.append(readCsharp(bindList, handlerList))
         # defined message list
         if len(messageList) > 0:
             for message in messageList:
@@ -369,7 +359,7 @@ for filename in defList:
                 if args.lang == 'cpp':
                     classList.append(readCpp('message'))
                 elif args.lang == 'csharp':
-                    classList.append(readCsharp(conditionList, handlerList))
+                    classList.append(readCsharp(bindList, handlerList))
 
         # formatting data
         if args.lang == 'cpp':
@@ -396,19 +386,12 @@ if args.lang == 'cpp':
         for classes in messageNameList[i]:
             handlerName = f'{(classes)}PacketHandler'
             handlerList[i].append(handlerName)
-            conditionList[i].append(f'\t\t\tcase PacketId::{stringcase.constcase(classes)}:\n'
-                                    + '\t\t\t{\n'
-                                    + f'\t\t\t\tauto packet = Packet::parseFrom<{(classes)}>(buffer);\n'
-                                    + f'\t\t\t\tpacket->setHandler(std::bind({handlerName}, std::placeholders::_1, packet));\n'
-                                    + f'\t\t\t\treturn packet;'
-                                    + '\n\t\t\t}'
-            )
     for i in range(2):
-        outputHandler[i] = cppFormat.handler[i].format(
+        outputHandler[i] = cppFormat.handler.format(
             '\n'.join(f'#include "generated/{(value.rstrip(".json"))}.gen.hpp"' for value in defList),
             args.namespace,
-            '\n'.join(str(value) for value in conditionList[i]),    #dispatches
-            '\n'.join(str('\t\tstatic void '+value+f'(TSharedPtr<Session> session, TSharedPtr<{(messageNameList[i][handlerList[i].index(value)])}> packet);') for value in handlerList[i]) #handlers
+            '\n'.join(f'\t\t\tcase {stringcase.constcase(value)}:\n\t\t\t\treturn BIND_HANDLER({value}, buffer);' for value in messageNameList[i]),
+            '\n'.join(str('\t\tstatic bool '+value+f'(TSharedPtr<Session> session, TSharedPtr<{(messageNameList[i][handlerList[i].index(value)])}> packet);') for value in handlerList[i]) #handlers
         )
     
 

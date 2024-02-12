@@ -12,10 +12,7 @@ int main()
 
 		Console::Log("Server is running on " + ep.toString());
 
-		while (true)
-		{
-			this_thread::sleep_for(500ms);
-		}
+		while (true) { Sleep(100); }
 	}
 	catch (exception& e) {
 		Console::Log(e.what());

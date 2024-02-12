@@ -1,71 +1,73 @@
 #pragma once
 #include "Packet.gen.hpp"
-#include "Network/Packet.h"
 #include "generated/Enum.gen.hpp"
 #include "generated/Protocol.gen.hpp"
 #include "generated/Struct.gen.hpp"
 
 using namespace sv;
+                         
+#ifdef __UNREAL__
+#include "winsock2.h"
+#include "Network/Packet.h"
+
 using Session = class FSession;
+
+#define STATIC_POINTER_CAST(to, from) StaticCastSharedPtr<to>(from)
+#else
+template<typename T>
+using TSharedPtr = std::shared_ptr<T>;
+template<typename T>
+using TFunction = std::function<T>;
+
+#define STATIC_POINTER_CAST(to, from) std::static_pointer_cast<to>(from)
+
+namespace sv { class Session; }
+#endif
+
+#define HANDLE_PACKET(pckname, buffer) std::bind(pckname##PacketHandler, std::placeholders::_1, STATIC_POINTER_CAST(pckname, Packet::parseFrom<pckname>(buffer)));
+#define BIND_HANDLER(pckname, buffer) std::bind(pckname##PacketHandler, std::placeholders::_1, STATIC_POINTER_CAST(pckname, Packet::parseFrom<pckname>(buffer)));
 
 namespace gen
 {
     class PacketHandler
 	{
+    	using Handler = TFunction<bool(TSharedPtr<Session>)>;
 	public:
-		static TSharedPtr<Packet> parsePacket(PacketId id, std::span<char> buffer)
+		static Handler getHandler(std::span<char> buffer)
         {
-	        switch (id)
-	        {
-            case PacketId::None:
-                break;             
-			case PacketId::LOGIN_RES:
-			{
-				auto packet = Packet::parseFrom<LoginRes>(buffer);
-				packet->setHandler(std::bind(LoginResPacketHandler, std::placeholders::_1, packet));
-				return packet;
-			}
-			case PacketId::ENTER_GAME_RES:
-			{
-				auto packet = Packet::parseFrom<EnterGameRes>(buffer);
-				packet->setHandler(std::bind(EnterGameResPacketHandler, std::placeholders::_1, packet));
-				return packet;
-			}
-			case PacketId::LEAVE_GAME_RES:
-			{
-				auto packet = Packet::parseFrom<LeaveGameRes>(buffer);
-				packet->setHandler(std::bind(LeaveGameResPacketHandler, std::placeholders::_1, packet));
-				return packet;
-			}
-			case PacketId::SPAWN_NOTIFY:
-			{
-				auto packet = Packet::parseFrom<SpawnNotify>(buffer);
-				packet->setHandler(std::bind(SpawnNotifyPacketHandler, std::placeholders::_1, packet));
-				return packet;
-			}
-			case PacketId::DESPAWN_NOTIFY:
-			{
-				auto packet = Packet::parseFrom<DespawnNotify>(buffer);
-				packet->setHandler(std::bind(DespawnNotifyPacketHandler, std::placeholders::_1, packet));
-				return packet;
-			}
-			case PacketId::MOVE_RES:
-			{
-				auto packet = Packet::parseFrom<MoveRes>(buffer);
-				packet->setHandler(std::bind(MoveResPacketHandler, std::placeholders::_1, packet));
-				return packet;
-			}
-            default:
-                break;                         
-	        }
-            return nullptr;             
+            gen::PacketId id = gen::PacketId::None;
+			std::memcpy(&id, buffer.data(), sizeof(unsigned short));
+			id = (gen::PacketId)ntohs((u_short)id);
+            
+            switch (id)
+            {
+			case LOGIN_RES:
+				return BIND_HANDLER(LoginRes, buffer);
+			case ENTER_GAME_RES:
+				return BIND_HANDLER(EnterGameRes, buffer);
+			case LEAVE_GAME_RES:
+				return BIND_HANDLER(LeaveGameRes, buffer);
+			case SPAWN_NOTIFY:
+				return BIND_HANDLER(SpawnNotify, buffer);
+			case DESPAWN_NOTIFY:
+				return BIND_HANDLER(DespawnNotify, buffer);
+			case MOVE_RES:
+				return BIND_HANDLER(MoveRes, buffer);
+            }
+            return nullptr;
         }
-	private:
-		static void LoginResPacketHandler(TSharedPtr<Session> session, TSharedPtr<LoginRes> packet);
-		static void EnterGameResPacketHandler(TSharedPtr<Session> session, TSharedPtr<EnterGameRes> packet);
-		static void LeaveGameResPacketHandler(TSharedPtr<Session> session, TSharedPtr<LeaveGameRes> packet);
-		static void SpawnNotifyPacketHandler(TSharedPtr<Session> session, TSharedPtr<SpawnNotify> packet);
-		static void DespawnNotifyPacketHandler(TSharedPtr<Session> session, TSharedPtr<DespawnNotify> packet);
-		static void MoveResPacketHandler(TSharedPtr<Session> session, TSharedPtr<MoveRes> packet);
+        static bool handlePacket(TSharedPtr<Session> session, std::span<char> buffer)
+        {
+            auto handler = getHandler(buffer);
+            if (!handler || !session)
+                return false;
+            return handler(session);
+        }
+		static bool LoginResPacketHandler(TSharedPtr<Session> session, TSharedPtr<LoginRes> packet);
+		static bool EnterGameResPacketHandler(TSharedPtr<Session> session, TSharedPtr<EnterGameRes> packet);
+		static bool LeaveGameResPacketHandler(TSharedPtr<Session> session, TSharedPtr<LeaveGameRes> packet);
+		static bool SpawnNotifyPacketHandler(TSharedPtr<Session> session, TSharedPtr<SpawnNotify> packet);
+		static bool DespawnNotifyPacketHandler(TSharedPtr<Session> session, TSharedPtr<DespawnNotify> packet);
+		static bool MoveResPacketHandler(TSharedPtr<Session> session, TSharedPtr<MoveRes> packet);
 	};
 }

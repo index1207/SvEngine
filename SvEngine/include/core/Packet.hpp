@@ -80,10 +80,7 @@ namespace sv {
             return pk;
         }
         std::vector<char>& data();
-        void setHandler(const HandlerFunc& handler);
-        void executeHandler(std::shared_ptr<Session> session);
     private:
-        HandlerFunc m_handler;
         std::vector<char> m_buffer;
         unsigned short m_id;
         unsigned short m_size;
