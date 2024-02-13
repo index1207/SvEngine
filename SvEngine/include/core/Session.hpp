@@ -41,9 +41,12 @@ namespace sv {
     private:
         concurrency::concurrent_queue<sv::Packet> m_sendQue;
         std::atomic<int> m_sendCount;
+
         std::shared_ptr<Session> m_ref; // TEMP
+
         std::vector<char> m_buffer;
         net::Context m_recvCtx;
+
         std::atomic<bool> m_isDisconnected;
     };
 }

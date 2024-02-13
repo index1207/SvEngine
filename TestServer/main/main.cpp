@@ -1,13 +1,12 @@
 #include "pch.h"
-#include "GameSession.hpp"
 
 using namespace std;
 
 int main()
 {
-	auto ep = Endpoint(IpAddress::Any, 9999);
+	auto ep = Endpoint({IP_ADDRESS}, {PORT});
 	try {
-		auto server = Server::open<GameSession>();
+		auto server = Server::open<{SESSION_CLASS}>();
 		server->run(ep);
 
 		Console::Log("Server is running on " + ep.toString());

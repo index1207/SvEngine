@@ -65,7 +65,6 @@ using TFunction = std::function<T>;
 namespace sv {{ class Session; }}
 #endif
 
-#define HANDLE_PACKET(pckname, buffer) std::bind(pckname##PacketHandler, std::placeholders::_1, STATIC_POINTER_CAST(pckname, Packet::parseFrom<pckname>(buffer)));
 #define BIND_HANDLER(pckname, buffer) std::bind(pckname##PacketHandler, std::placeholders::_1, STATIC_POINTER_CAST(pckname, Packet::parseFrom<pckname>(buffer)));
 
 namespace {1}

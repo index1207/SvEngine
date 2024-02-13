@@ -191,30 +191,16 @@ python execute.py -s $(ProjectDir) -c "D:/Project/Unreal Project/Multiplay/Sourc
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="TestServer\GameSession.cpp" />
-    <ClCompile Include="Main\ServerPacketHandler.cpp" />
     <ClCompile Include="Main\main.cpp" />
-    <ClCompile Include="TestServer\Player.cpp" />
-    <ClCompile Include="TestServer\Room.cpp" />
     <ClCompile Include="Main\PCH\pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="TestServer\util\ObjectUtils.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="generated\Enum.gen.hpp" />
-    <ClInclude Include="generated\Packet.gen.hpp" />
-    <ClInclude Include="generated\Protocol.gen.hpp" />
-    <ClInclude Include="generated\ServerPacketHandler.gen.hpp" />
-    <ClInclude Include="generated\Struct.gen.hpp" />
-    <ClInclude Include="TestServer\GameSession.hpp" />
-    <ClInclude Include="TestServer\Player.hpp" />
-    <ClInclude Include="TestServer\Room.hpp" />
     <ClInclude Include="Main\PCH\pch.h" />
-    <ClInclude Include="TestServer\util\ObjectUtils.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="define\Enum.json" />

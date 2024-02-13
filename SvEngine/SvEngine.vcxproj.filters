@@ -18,6 +18,7 @@
     </ClCompile>
     <ClCompile Include="src\util\Action.cpp" />
     <ClCompile Include="PCH\pch.cpp" />
+    <ClCompile Include="JobSerializer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">
@@ -61,5 +62,6 @@
     <ClInclude Include="include\util\Action.hpp" />
     <ClInclude Include="PCH\pch.h" />
     <ClInclude Include="include\CoreHeader.hpp" />
+    <ClInclude Include="JobSerializer.hpp" />
   </ItemGroup>
 </Project>

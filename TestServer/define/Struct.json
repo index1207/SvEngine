@@ -3,56 +3,6 @@
 		"Enum.json"
 	],
 	"struct": [
-		{
-			"name": "Vec3",
-			"data": [
-				{
-					"type": "float",
-					"name": "x"
-				},
-				{
-					"type": "float",
-					"name": "y"
-				},
-				{
-					"type": "float",
-					"name": "z"
-				}
-			]
-		},
-		{
-			"name": "Status",
-			"data": [
-				{
-					"type": "Vec3",
-					"name": "location"
-				},
-				{
-					"type": "float",
-					"name": "yaw"
-				},
-				{
-					"type": "float",
-					"name": "speed"
-				},
-				{
-					"type": "EMoveState",
-					"name": "state"
-				}
-			]
-		},
-		{
-			"name": "PlayerInfo",
-			"data": [
-				{
-					"type": "uint64",
-					"name": "objectId"
-				},
-				{
-					"type": "Status",
-					"name": "status"
-				}
-			]
-		}
+		
 	]
 }
