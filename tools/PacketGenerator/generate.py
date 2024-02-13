@@ -75,13 +75,17 @@ namespace {1}
 	public:
 		static Handler getHandler(std::span<char> buffer)
         {{
-            gen::PacketId id = gen::PacketId::None;
+            gen::PacketId id = gen::PacketId::NONE;
 			std::memcpy(&id, buffer.data(), sizeof(unsigned short));
 			id = (gen::PacketId)ntohs((u_short)id);
             
             switch (id)
             {{
+            case PacketId::NONE:
+                break;
 {2}
+            default:
+                break;
             }}
             return nullptr;
         }}
@@ -401,7 +405,7 @@ if args.lang == 'cpp':
 template<class T> inline T& unmove(T&& t) {{ return static_cast<T&>(t); }}\n\n\
 namespace {0} {{\n\
     enum PacketId : uint16 {{\n\
-        None = 0,\n\
+        NONE = 0,\n\
 {1}\
     \n\t}};\n\
 \n}}'.format(args.namespace, ',\n'.join(str(f'\t\t{stringcase.constcase(value)} = {allMessageList.index(value)+1}') for value in allMessageList)))

@@ -14,3 +14,5 @@ bin/
 */Release
 
 */*/obj/*
+
+tools/PacketGenerator/generated

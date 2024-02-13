@@ -30,14 +30,6 @@
     <Compile Include="execute.py" />
     <Compile Include="generate.py" />
   </ItemGroup>
-  <ItemGroup>
-    <Content Include="generated\ClientPacketHandler.gen.hpp" />
-    <Content Include="generated\Enum.gen.hpp" />
-    <Content Include="generated\Packet.gen.hpp" />
-    <Content Include="generated\Protocol.gen.hpp" />
-    <Content Include="generated\ServerPacketHandler.gen.hpp" />
-    <Content Include="generated\Struct.gen.hpp" />
-  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in
        Visual Studio and specify your pre- and post-build commands in
