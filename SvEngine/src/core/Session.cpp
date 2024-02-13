@@ -10,6 +10,8 @@
 #include "net/Context.hpp"
 #include "net/Exception.hpp"
 
+#include "concurrent_queue.h"
+
 using namespace sv;
 
 Session::Session() : m_buffer(1024, '\0') {
@@ -34,6 +36,20 @@ void Session::onRecvCompleted(Context *context, bool isSuccess) {
     m_sock->receive(context);
 }
 
+void Session::flushQueue()
+{
+    while (true)
+    {
+        Packet pkt;
+        if (m_sendQue.try_pop(pkt))
+            m_sock->send(pkt.data());
+
+        m_sendCount.fetch_sub(1);
+        if (m_sendCount == 0)
+            return;
+    }
+}
+
 Session::~Session() {
 }
 
@@ -46,18 +62,17 @@ void Session::disconnect() {
     }
 }
 
-void Session::send(std::span<char> buffer) {
-    std::lock_guard lock(m_mtx);
-    if (!m_sock->send(buffer)) {
-        throw net::network_error("send()");
-    }
-}
-
 Socket Session::getSocket() {
     return *m_sock;
 }
 
 void Session::send(Packet* packet) {
+    auto prevCount = m_sendCount.fetch_add(1);
     packet->write();
-    send(packet->data());
+    m_sendQue.push(*packet);
+
+    if (prevCount == 0)
+    {
+        flushQueue();
+    }
 }

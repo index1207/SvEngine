@@ -10,6 +10,7 @@ namespace sv {
         friend Session;
         using HandlerFunc = std::function<void(std::shared_ptr<Session>)>;
     public:
+        Packet() = default;
         Packet(unsigned short id, int reserve = 1024);
         virtual ~Packet() {};
     public:

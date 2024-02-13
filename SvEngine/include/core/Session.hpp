@@ -27,7 +27,6 @@ namespace sv {
         Socket getSocket();
     public:
         void disconnect();
-        void send(std::span<char> buffer);
         void send(Packet* packet);
     public:
         virtual void onConnected() {};
@@ -38,12 +37,13 @@ namespace sv {
         std::unique_ptr<Socket> m_sock;
     private:
         void onRecvCompleted(Context *context, bool isSuccess);
+        void flushQueue();
     private:
+        concurrency::concurrent_queue<sv::Packet> m_sendQue;
+        std::atomic<int> m_sendCount;
         std::shared_ptr<Session> m_ref; // TEMP
         std::vector<char> m_buffer;
         net::Context m_recvCtx;
         std::atomic<bool> m_isDisconnected;
-        std::mutex m_mtx;
     };
-
 }
