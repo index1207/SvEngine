@@ -314,7 +314,8 @@ for filename in defList:
 
         if len(enumList) > 0:
             for enum in enumList:
-                enumClassList.append(cppFormat.enumFormat.format(enum['name'], ',\n\t\t'.join(enum['list'])))
+                if 'name' in enum:
+                    enumClassList.append(cppFormat.enumFormat.format(enum['name'], ',\n\t\t'.join(enum['list'])))
         
         if len(structList) > 0:
             for struct in structList:
