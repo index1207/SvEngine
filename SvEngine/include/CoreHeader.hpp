@@ -32,3 +32,7 @@
 #include <util/Console.hpp>
 #include <util/Action.hpp>
 #include <util/Types.hpp>
+#include <util/TLSStorage.hpp>
+
+extern class ThreadManager* GThreadManager;
+extern class GlobalQueue* GGlobalQueue;

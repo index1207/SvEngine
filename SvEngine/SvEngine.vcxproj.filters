@@ -18,7 +18,9 @@
     </ClCompile>
     <ClCompile Include="src\util\Action.cpp" />
     <ClCompile Include="PCH\pch.cpp" />
-    <ClCompile Include="JobSerializer.cpp" />
+    <ClCompile Include="src\core\JobSerializer.cpp" />
+    <ClCompile Include="src\util\TLSStorage.cpp" />
+    <ClCompile Include="src\core\ThreadManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">
@@ -62,6 +64,8 @@
     <ClInclude Include="include\util\Action.hpp" />
     <ClInclude Include="PCH\pch.h" />
     <ClInclude Include="include\CoreHeader.hpp" />
-    <ClInclude Include="JobSerializer.hpp" />
+    <ClInclude Include="include\core\JobSerializer.hpp" />
+    <ClInclude Include="include\util\TLSStorage.hpp" />
+    <ClInclude Include="include\core\ThreadManager.hpp" />
   </ItemGroup>
 </Project>
