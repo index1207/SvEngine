@@ -15,6 +15,8 @@
 #include <unordered_map>
 #include <unordered_set>
 #include <span>
+#include <sstream>
+#include <algorithm>
 
 #include <ppl.h>
 #include <concurrent_vector.h>
@@ -35,6 +37,6 @@
 
 extern class ThreadManager* GThreadManager;
 extern class GlobalQueue* GGlobalQueue;
+extern class DbConnectionPool* GDbConnectionPool;
 
-using namespace sv;
 using namespace net;

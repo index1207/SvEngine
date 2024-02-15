@@ -6,10 +6,9 @@
 
 #include "Thread/ThreadManager.hpp"
 #include "Thread/JobSerializer.hpp"
+#include "Database/DbConnectionPool.hpp"
 
-using namespace sv;
-
-sv::Engine::Engine()
+Engine::Engine()
 {
 	Console::Initialize();
 
@@ -18,10 +17,12 @@ sv::Engine::Engine()
 
 	GThreadManager = new ThreadManager;
 	GGlobalQueue = new GlobalQueue;
+	GDbConnectionPool = new DbConnectionPool;
 }
 
-sv::Engine::~Engine()
+Engine::~Engine()
 {
 	delete GGlobalQueue;
+	delete GDbConnectionPool;
 	delete GThreadManager;
 }

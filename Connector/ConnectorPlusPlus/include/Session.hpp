@@ -25,11 +25,11 @@ namespace sv {
         Session();
         virtual ~Session();
     public:
-        void run(std::unique_ptr<Socket> sock);
-        Socket getSocket();
+        void Run(std::unique_ptr<Socket> sock);
+        Socket GetSocket();
     public:
-        void disconnect();
-        void send(std::span<char> buffer);
+        void Disconnect();
+        void Send(std::span<char> buffer);
     public:
         virtual void onConnected() {};
         virtual void onDisconnected() {};
@@ -38,7 +38,7 @@ namespace sv {
     protected:
         std::unique_ptr<Socket> m_sock;
     private:
-        void onRecvCompleted(Context *context, bool isSuccess);
+        void OnRecvCompleted(Context *context, bool isSuccess);
     private:
         std::shared_ptr<Session> m_ref; // TEMP
         std::vector<char> m_buffer;

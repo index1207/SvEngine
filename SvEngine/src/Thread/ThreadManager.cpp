@@ -4,25 +4,25 @@
 
 ThreadManager::ThreadManager()
 {
-	initialize();
+	Initialize();
 }
 
 ThreadManager::~ThreadManager()
 {
-	join();
+	Join();
 }
 
-void ThreadManager::launch(CallbackType callback)
+void ThreadManager::Launch(CallbackType callback)
 {
 	m_threads.push_back(std::thread([=]()
 	{
-		initialize();
+		Initialize();
 		callback();
-		finalize();
+		Finalize();
 	}));
 }
 
-void ThreadManager::join()
+void ThreadManager::Join()
 {
 	for (auto& t : m_threads)
 		if (t.joinable()) t.join();
@@ -30,17 +30,17 @@ void ThreadManager::join()
 	m_threads.clear();
 }
 
-void ThreadManager::initialize()
+void ThreadManager::Initialize()
 {
 	static std::atomic<uint16> s_threadId = 1;
 	LThreadId = s_threadId.fetch_add(1);
 }
 
-void ThreadManager::finalize()
+void ThreadManager::Finalize()
 {
 }
 
-void ThreadManager::executeGlobalJobSerializer()
+void ThreadManager::Execute()
 {
 	while (true)
 	{
@@ -52,6 +52,6 @@ void ThreadManager::executeGlobalJobSerializer()
 		if (!jobSerializer)
 			break;
 
-		jobSerializer->flush();
+		jobSerializer->Flush();
 	}
 }

@@ -20,18 +20,18 @@ class JobSerializer : public std::enable_shared_from_this<JobSerializer>
 {
 	using CallbackType = std::function<void()>;
 public:
-	inline void launch(CallbackType&& callback);
+	inline void Launch(CallbackType&& callback);
 	
 	template<class T, class _Ret, class ...Args>
-	inline void launch(_Ret(T::*method)(Args...), Args&&... args)
+	inline void Launch(_Ret(T::*method)(Args...), Args&&... args)
 	{
 		auto owner = std::static_pointer_cast<T>(shared_from_this());
-		push(std::make_shared<Job>(owner, method, std::forward<Args>(args)...));
+		Push(std::make_shared<Job>(owner, method, std::forward<Args>(args)...));
 	}
 
-	inline void push(std::shared_ptr<Job> jobPtr);
+	inline void Push(std::shared_ptr<Job> jobPtr);
 
-	void flush();
+	void Flush();
 private:
 	ConcurrencyQueue<std::shared_ptr<Job>> m_jobQue;
 	std::atomic<uint32> m_jobCount;

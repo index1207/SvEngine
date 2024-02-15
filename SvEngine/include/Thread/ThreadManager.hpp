@@ -7,12 +7,12 @@ public:
 	ThreadManager();
 	~ThreadManager();
 public:
-	void launch(CallbackType callback);
-	void join();
+	void Launch(CallbackType callback);
+	void Join();
 public:
-	static void initialize();
-	static void finalize();
-	static void executeGlobalJobSerializer();
+	static void Initialize();
+	static void Finalize();
+	static void Execute();
 private:
 	ConcurrencyVector<std::thread> m_threads;
 };

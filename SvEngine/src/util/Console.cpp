@@ -6,11 +6,9 @@
 #include "util/Console.hpp"
 #include "Windows.h"
 
-using namespace sv;
-
 HANDLE Console::m_consoleHandle;
 
-void sv::Console::SetOutputEncoding()
+void Console::SetOutputEncoding()
 {
 
 }
@@ -24,5 +22,7 @@ void Console::Initialize() {
     m_consoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
     SetConsoleOutputCP(CP_UTF8);
     #endif
+
+    std::cout.imbue(std::locale("kor"));
 }
     

@@ -8,37 +8,35 @@
 #include "net/Context.hpp"
 #include "net/Exception.hpp"
 
-using namespace sv;
-
 Session::Session() : m_buffer(1024, '\0') {
 }
 
-void Session::run(std::unique_ptr<Socket> sock) {
+void Session::Run(std::unique_ptr<Socket> sock) {
     m_sock = std::move(sock);
 
-    m_recvCtx.completed = bind(&Session::onRecvCompleted, this, std::placeholders::_1, std::placeholders::_2);
+    m_recvCtx.completed = bind(&Session::OnRecvCompleted, this, std::placeholders::_1, std::placeholders::_2);
     m_recvCtx.buffer = m_buffer;
 
     m_sock->receive(&m_recvCtx);
     m_ref = shared_from_this();
 }
 
-void Session::onRecvCompleted(Context *context, bool isSuccess) {
+void Session::OnRecvCompleted(Context *context, bool isSuccess) {
     if(!isSuccess || context->length == 0) {
-        disconnect();
+        Disconnect();
         return;
     }
     onReceive(context->buffer.subspan(0, context->length), context->length);
     m_sock->receive(context);
 }
 
-void Session::flushQueue()
+void Session::FlushQueue()
 {
     while (true)
     {
         Packet pkt;
         if (m_sendQue.try_pop(pkt))
-            m_sock->send(pkt.data());
+            m_sock->send(pkt.Data());
 
         m_sendCount.fetch_sub(1);
         if (m_sendCount == 0)
@@ -49,7 +47,7 @@ void Session::flushQueue()
 Session::~Session() {
 }
 
-void Session::disconnect() {
+void Session::Disconnect() {
     if (!m_isDisconnected)
     {
         m_isDisconnected = true;
@@ -58,17 +56,17 @@ void Session::disconnect() {
     }
 }
 
-Socket Session::getSocket() {
+Socket Session::GetSocket() {
     return *m_sock;
 }
 
-void Session::send(Packet* packet) {
+void Session::Send(Packet* packet) {
     auto prevCount = m_sendCount.fetch_add(1);
-    packet->write();
+    packet->Write();
     m_sendQue.push(*packet);
 
     if (prevCount == 0)
     {
-        flushQueue();
+        FlushQueue();
     }
 }

@@ -12,10 +12,10 @@ namespace sv {
     public:
         ~Client();
     public:
-        void run(net::Endpoint endpoint);
+        void Run(net::Endpoint endpoint);
     public:
         template<class T = sv::Session>
-        static inline std::shared_ptr<Client> open()
+        static inline std::shared_ptr<Client> Open()
         {
             auto client = std::shared_ptr(new Client);
             client.m_serverFactory = []{

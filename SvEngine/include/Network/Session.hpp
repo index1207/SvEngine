@@ -8,47 +8,45 @@ using namespace net;
 
 #include <Network/Packet.hpp>
 
-namespace sv {
-    class Packet;
+class Packet;
 
-    enum class Failure
-    {
-        None,
-        Connect
-    };
+enum class Failure
+{
+    None,
+    Connect
+};
 
-    class Session : public std::enable_shared_from_this<Session>
-    {
-        friend class Server;
-        using serverFactory = std::function<std::shared_ptr<Session>()>;
-    public:
-        Session();
-        virtual ~Session();
-    public:
-        void run(std::unique_ptr<Socket> sock);
-        Socket getSocket();
-    public:
-        void disconnect();
-        void send(Packet* packet);
-    public:
-        virtual void onConnected() {};
-        virtual void onDisconnected() {};
-        virtual void onReceive(std::span<char>, int) {};
-        virtual void onFail(Failure) {};
-    protected:
-        std::unique_ptr<Socket> m_sock;
-    private:
-        void onRecvCompleted(Context *context, bool isSuccess);
-        void flushQueue();
-    private:
-        concurrency::concurrent_queue<sv::Packet> m_sendQue;
-        std::atomic<int> m_sendCount;
+class Session : public std::enable_shared_from_this<Session>
+{
+    friend class Server;
+    using serverFactory = std::function<std::shared_ptr<Session>()>;
+public:
+    Session();
+    virtual ~Session();
+public:
+    void Run(std::unique_ptr<Socket> sock);
+    Socket GetSocket();
+public:
+    void Disconnect();
+    void Send(Packet* packet);
+public:
+    virtual void onConnected() {};
+    virtual void onDisconnected() {};
+    virtual void onReceive(std::span<char>, int) {};
+    virtual void onFail(Failure) {};
+protected:
+    std::unique_ptr<Socket> m_sock;
+private:
+    void OnRecvCompleted(Context* context, bool isSuccess);
+    void FlushQueue();
+private:
+    concurrency::concurrent_queue<Packet> m_sendQue;
+    std::atomic<int> m_sendCount;
 
-        std::shared_ptr<Session> m_ref; // TEMP
+    std::shared_ptr<Session> m_ref; // TEMP
 
-        std::vector<char> m_buffer;
-        net::Context m_recvCtx;
+    std::vector<char> m_buffer;
+    net::Context m_recvCtx;
 
-        std::atomic<bool> m_isDisconnected;
-    };
-}
+    std::atomic<bool> m_isDisconnected;
+};

@@ -8,19 +8,19 @@ using namespace sv;
 Session::Session() : m_buffer(1024, '\0') {
 }
 
-void Session::run(std::unique_ptr<Socket> sock) {
+void Session::Run(std::unique_ptr<Socket> sock) {
     m_sock = std::move(sock);
 
-    m_recvCtx.completed = bind(&Session::onRecvCompleted, this, std::placeholders::_1, std::placeholders::_2);
+    m_recvCtx.completed = bind(&Session::OnRecvCompleted, this, std::placeholders::_1, std::placeholders::_2);
     m_recvCtx.buffer = m_buffer;
 
     m_sock->receive(&m_recvCtx);
     m_ref = shared_from_this();
 }
 
-void Session::onRecvCompleted(Context *context, bool isSuccess) {
+void Session::OnRecvCompleted(Context *context, bool isSuccess) {
     if(!isSuccess || context->length == 0) {
-        disconnect();
+        Disconnect();
         return;
     }
     onReceive(context->buffer.subspan(0, context->length), context->length);
@@ -30,7 +30,7 @@ void Session::onRecvCompleted(Context *context, bool isSuccess) {
 Session::~Session() {
 }
 
-void Session::disconnect() {
+void Session::Disconnect() {
     if (!m_isDisconnected)
     {
         m_isDisconnected = true;
@@ -39,13 +39,13 @@ void Session::disconnect() {
     }
 }
 
-void Session::send(std::span<char> buffer) {
+void Session::Send(std::span<char> buffer) {
     std::lock_guard lock(m_mtx);
-    if (!m_sock->send(buffer)) {
+    if (!m_sock->Send(buffer)) {
         throw net::network_error("send()");
     }
 }
 
-Socket Session::getSocket() {
+Socket Session::GetSocket() {
     return *m_sock;
 }

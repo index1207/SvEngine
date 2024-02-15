@@ -1,12 +1,12 @@
 #include "pch.h"
 #include "Thread/JobSerializer.hpp"
 
-void JobSerializer::launch(CallbackType&& callback)
+void JobSerializer::Launch(CallbackType&& callback)
 {
-	push(std::make_shared<Job>(std::move(callback)));
+	Push(std::make_shared<Job>(std::move(callback)));
 }
 
-void JobSerializer::push(std::shared_ptr<Job> jobPtr)
+void JobSerializer::Push(std::shared_ptr<Job> jobPtr)
 {
 	auto prevCount = m_jobCount.fetch_add(1);
 	m_jobQue.push(jobPtr);
@@ -15,7 +15,7 @@ void JobSerializer::push(std::shared_ptr<Job> jobPtr)
 	{
 		if (LCurrentJobQueue == nullptr)
 		{
-			flush();
+			Flush();
 		}
 		else
 		{
@@ -24,7 +24,7 @@ void JobSerializer::push(std::shared_ptr<Job> jobPtr)
 	}
 }
 
-void JobSerializer::flush()
+void JobSerializer::Flush()
 {
 	LCurrentJobQueue = this;
 

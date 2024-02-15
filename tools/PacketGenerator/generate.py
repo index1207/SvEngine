@@ -102,7 +102,7 @@ namespace {1}
 '''
 
 cppFormat.classFormat = '''class {0}
-            : public sv::Packet {{
+            : public Packet {{
     public:
         {0}() : Packet(static_cast<unsigned short>(PacketId::{1})) {{
         }}
@@ -110,12 +110,12 @@ cppFormat.classFormat = '''class {0}
     
         }}
     protected:
-        virtual void read() override
+        virtual void Read() override
         {{
             Packet::read();
             {2}
         }}
-        virtual void write() override
+        virtual void Write() override
         {{
             {3}
             finish();
@@ -124,12 +124,12 @@ cppFormat.classFormat = '''class {0}
         {4}
     }};
     
-    inline sv::Packet& operator>>(sv::Packet& pk, {5}) {{
+    inline Packet& operator>>(sv::Packet& pk, {5}) {{
         {6}
         return pk;
     }}
 
-    inline sv::Packet& operator<<(sv::Packet& pk, const {5}) {{
+    inline Packet& operator<<(sv::Packet& pk, const {5}) {{
         {7}
         return pk;
     }}
