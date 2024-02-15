@@ -3,7 +3,8 @@
 //
 
 #pragma once
-#include <vector>
+
+#include <Network/Session.hpp>
 
 namespace sv {
     class Server {

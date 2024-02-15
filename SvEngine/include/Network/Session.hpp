@@ -6,6 +6,8 @@
 
 using namespace net;
 
+#include <Network/Packet.hpp>
+
 namespace sv {
     class Packet;
 

@@ -3,12 +3,10 @@
 //
 #include "pch.h"
 
-#include "core/Server.hpp"
-#include "core/Session.hpp"
-#include "util/Console.hpp"
+#include "Network/Server.hpp"
+#include "Network/Packet.hpp"
 
 #include "net/IoSystem.hpp"
-
 #include "net/Exception.hpp"
 
 using namespace sv;

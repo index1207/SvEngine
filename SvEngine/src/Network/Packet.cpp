@@ -3,10 +3,7 @@
 //
 #include "pch.h"
 
-#include <winsock2.h>
-
-#include "core/Packet.hpp"
-#include <core/Session.hpp>
+#include "Network/Packet.hpp"
 
 using namespace sv;
 

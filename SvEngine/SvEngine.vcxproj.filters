@@ -1,26 +1,27 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="src\core\Engine.cpp">
+    <ClCompile Include="src\Engine.cpp">
       <Filter>src\core</Filter>
     </ClCompile>
-    <ClCompile Include="src\core\Packet.cpp">
+    <ClCompile Include="src\Network\Packet.cpp">
       <Filter>src\core</Filter>
     </ClCompile>
-    <ClCompile Include="src\core\Server.cpp">
+    <ClCompile Include="src\Network\Server.cpp">
       <Filter>src\core</Filter>
     </ClCompile>
-    <ClCompile Include="src\core\Session.cpp">
+    <ClCompile Include="src\Network\Session.cpp">
       <Filter>src\core</Filter>
     </ClCompile>
-    <ClCompile Include="src\util\Console.cpp">
+    <ClCompile Include="src\Util\Console.cpp">
       <Filter>src\util</Filter>
     </ClCompile>
-    <ClCompile Include="src\util\Action.cpp" />
+    <ClCompile Include="src\Util\Action.cpp" />
     <ClCompile Include="PCH\pch.cpp" />
-    <ClCompile Include="src\core\JobSerializer.cpp" />
-    <ClCompile Include="src\util\TLSStorage.cpp" />
-    <ClCompile Include="src\core\ThreadManager.cpp" />
+    <ClCompile Include="src\Thread\JobSerializer.cpp" />
+    <ClCompile Include="src\Thread\ThreadManager.cpp" />
+    <ClCompile Include="src\Thread\TLSStorage.cpp" />
+    <ClCompile Include="src\Database\DbConnectionPool.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">
@@ -43,29 +44,30 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\util\Console.hpp">
+    <ClInclude Include="include\Util\Console.hpp">
       <Filter>include\util</Filter>
     </ClInclude>
-    <ClInclude Include="include\core\Engine.hpp">
+    <ClInclude Include="include\Engine.hpp">
       <Filter>include\core</Filter>
     </ClInclude>
-    <ClInclude Include="include\core\Packet.hpp">
+    <ClInclude Include="include\Network\Packet.hpp">
       <Filter>include\core</Filter>
     </ClInclude>
-    <ClInclude Include="include\core\Server.hpp">
+    <ClInclude Include="include\Network\Server.hpp">
       <Filter>include\core</Filter>
     </ClInclude>
-    <ClInclude Include="include\core\Session.hpp">
+    <ClInclude Include="include\Network\Session.hpp">
       <Filter>include\core</Filter>
     </ClInclude>
-    <ClInclude Include="include\util\Types.hpp">
+    <ClInclude Include="include\Util\Types.hpp">
       <Filter>include\util</Filter>
     </ClInclude>
-    <ClInclude Include="include\util\Action.hpp" />
+    <ClInclude Include="include\Util\Action.hpp" />
     <ClInclude Include="PCH\pch.h" />
     <ClInclude Include="include\CoreHeader.hpp" />
-    <ClInclude Include="include\core\JobSerializer.hpp" />
-    <ClInclude Include="include\util\TLSStorage.hpp" />
-    <ClInclude Include="include\core\ThreadManager.hpp" />
+    <ClInclude Include="include\Thread\JobSerializer.hpp" />
+    <ClInclude Include="include\Thread\ThreadManager.hpp" />
+    <ClInclude Include="include\Thread\TLSStorage.hpp" />
+    <ClInclude Include="include\Database\DbConnectionPool.hpp" />
   </ItemGroup>
 </Project>

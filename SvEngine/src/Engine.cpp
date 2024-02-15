@@ -2,11 +2,10 @@
 // Created by han93 on 2023-12-20.
 //
 #include "pch.h"
-#include "core/Engine.hpp"
-#include "util/Console.hpp"
+#include "Engine.hpp"
 
-#include "core/ThreadManager.hpp"
-#include "core/JobSerializer.hpp"
+#include "Thread/ThreadManager.hpp"
+#include "Thread/JobSerializer.hpp"
 
 using namespace sv;
 

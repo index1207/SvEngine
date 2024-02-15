@@ -25,14 +25,16 @@
 
 #include <net/netcpp.hpp>
 
-#include <core/Server.hpp>
-#include <core/Session.hpp>
-#include <core/Packet.hpp>
-#include <core/Engine.hpp>
-#include <util/Console.hpp>
-#include <util/Action.hpp>
-#include <util/Types.hpp>
-#include <util/TLSStorage.hpp>
+#include "sqltypes.h"
+#include "sql.h"
+#include "sqlext.h"
+
+#include "Util/Types.hpp"
+#include "Util/Console.hpp"
+#include "Thread/TLSStorage.hpp"
 
 extern class ThreadManager* GThreadManager;
 extern class GlobalQueue* GGlobalQueue;
+
+using namespace sv;
+using namespace net;

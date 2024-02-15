@@ -1,6 +1,6 @@
 #include "pch.h"
-#include "core/ThreadManager.hpp"
-#include "core/JobSerializer.hpp"
+#include "Thread/ThreadManager.hpp"
+#include "Thread/JobSerializer.hpp"
 
 ThreadManager::ThreadManager()
 {

@@ -1,5 +1,5 @@
 #include "pch.h"
-#include "core/JobSerializer.hpp"
+#include "Thread/JobSerializer.hpp"
 
 void JobSerializer::launch(CallbackType&& callback)
 {

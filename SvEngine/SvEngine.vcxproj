@@ -179,35 +179,37 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="src\core\JobSerializer.cpp" />
+    <ClCompile Include="src\Database\DbConnectionPool.cpp" />
+    <ClCompile Include="src\Thread\JobSerializer.cpp" />
     <ClCompile Include="PCH\pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="src\util\Action.cpp" />
-    <ClCompile Include="src\core\Engine.cpp" />
-    <ClCompile Include="src\core\Packet.cpp" />
-    <ClCompile Include="src\core\Server.cpp" />
-    <ClCompile Include="src\core\Session.cpp" />
-    <ClCompile Include="src\util\Console.cpp" />
-    <ClCompile Include="src\util\TLSStorage.cpp" />
-    <ClCompile Include="src\core\ThreadManager.cpp" />
+    <ClCompile Include="src\Thread\TLSStorage.cpp" />
+    <ClCompile Include="src\Util\Action.cpp" />
+    <ClCompile Include="src\Engine.cpp" />
+    <ClCompile Include="src\Network\Packet.cpp" />
+    <ClCompile Include="src\Network\Server.cpp" />
+    <ClCompile Include="src\Network\Session.cpp" />
+    <ClCompile Include="src\Util\Console.cpp" />
+    <ClCompile Include="src\Thread\ThreadManager.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\Database\DbConnectionPool.hpp" />
     <ClInclude Include="include\CoreHeader.hpp" />
-    <ClInclude Include="include\util\TLSStorage.hpp" />
-    <ClInclude Include="include\util\Action.hpp" />
-    <ClInclude Include="include\core\Engine.hpp" />
-    <ClInclude Include="include\core\Packet.hpp" />
-    <ClInclude Include="include\core\Server.hpp" />
-    <ClInclude Include="include\core\Session.hpp" />
-    <ClInclude Include="include\util\Console.hpp" />
-    <ClInclude Include="include\util\Types.hpp" />
-    <ClInclude Include="include\core\JobSerializer.hpp" />
+    <ClInclude Include="include\Thread\TLSStorage.hpp" />
+    <ClInclude Include="include\Util\Action.hpp" />
+    <ClInclude Include="include\Engine.hpp" />
+    <ClInclude Include="include\Network\Packet.hpp" />
+    <ClInclude Include="include\Network\Server.hpp" />
+    <ClInclude Include="include\Network\Session.hpp" />
+    <ClInclude Include="include\Util\Console.hpp" />
+    <ClInclude Include="include\Util\Types.hpp" />
+    <ClInclude Include="include\Thread\JobSerializer.hpp" />
     <ClInclude Include="PCH\pch.h" />
-    <ClInclude Include="include\core\ThreadManager.hpp" />
+    <ClInclude Include="include\Thread\ThreadManager.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

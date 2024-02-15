@@ -16,3 +16,6 @@ bin/
 */*/obj/*
 
 tools/PacketGenerator/generated
+
+*Server
+*.sln
