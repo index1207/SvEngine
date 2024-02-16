@@ -1,5 +1,7 @@
 #pragma once
 
+#include <thread>
+
 class ThreadManager
 {
 	using CallbackType = std::function<void()>;
@@ -12,7 +14,6 @@ public:
 public:
 	static void Initialize();
 	static void Finalize();
-	static void Execute();
 private:
 	ConcurrencyVector<std::thread> m_threads;
 };

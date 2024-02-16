@@ -19,7 +19,7 @@ void JobSerializer::Push(std::shared_ptr<Job> jobPtr)
 		}
 		else
 		{
-			GGlobalQueue->Push(shared_from_this());
+			GEngine->GetJobQueue()->Push(shared_from_this());
 		}
 	}
 }
@@ -47,26 +47,26 @@ void JobSerializer::Flush()
 		if (now > LEndTickCount)
 		{
 			LCurrentJobQueue = nullptr;
-			GGlobalQueue->Push(shared_from_this());
+			GEngine->GetJobQueue()->Push(shared_from_this());
 			return;
 		}
 	}
 }
 
-GlobalQueue::GlobalQueue()
+JobQueue::JobQueue()
 {
 }
 
-GlobalQueue::~GlobalQueue()
+JobQueue::~JobQueue()
 {
 }
 
-void GlobalQueue::Push(std::shared_ptr<JobSerializer> jobSerializer)
+void JobQueue::Push(std::shared_ptr<JobSerializer> jobSerializer)
 {
 	m_jobSerializerQue.push(jobSerializer);
 }
 
-std::shared_ptr<JobSerializer> GlobalQueue::Pop()
+std::shared_ptr<JobSerializer> JobQueue::Pop()
 {
 	std::shared_ptr<JobSerializer> ret = nullptr;
 	if (m_jobSerializerQue.try_pop(ret))

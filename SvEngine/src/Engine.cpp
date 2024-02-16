@@ -4,9 +4,7 @@
 #include "pch.h"
 #include "Engine.hpp"
 
-#include "Thread/ThreadManager.hpp"
-#include "Thread/JobSerializer.hpp"
-#include "Database/DbConnectionPool.hpp"
+Engine* GEngine = new Engine;
 
 Engine::Engine()
 {
@@ -15,14 +13,35 @@ Engine::Engine()
 	net::Option::Autorun = false;
 	net::Option::Timeout = 10;
 
-	GThreadManager = new ThreadManager;
-	GGlobalQueue = new GlobalQueue;
-	GDbConnectionPool = new DbConnectionPool;
+	m_threadManager = new ThreadManager;
+	m_jobQue = new JobQueue;
 }
 
 Engine::~Engine()
 {
-	delete GGlobalQueue;
-	delete GDbConnectionPool;
-	delete GThreadManager;
+	delete m_threadManager;
+	delete m_jobQue;
+}
+
+void Engine::ExecuteIocpLogic()
+{
+	while (true)
+	{
+		LEndTickCount = GetTickCount64() + WORK_TICK; // Wait for WORK_TICK
+
+		IoSystem::instance().worker(); // IOCP I/O
+
+		while (true)
+		{
+			auto now = GetTickCount64();
+			if (now > LEndTickCount)
+				break;
+
+			auto jobSerializer = m_jobQue->Pop();
+			if (!jobSerializer)
+				break;
+
+			jobSerializer->Flush();
+		}
+	}
 }

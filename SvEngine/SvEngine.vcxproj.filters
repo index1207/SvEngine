@@ -21,7 +21,6 @@
     <ClCompile Include="src\Thread\JobSerializer.cpp" />
     <ClCompile Include="src\Thread\ThreadManager.cpp" />
     <ClCompile Include="src\Thread\TLSStorage.cpp" />
-    <ClCompile Include="src\Database\DbConnectionPool.cpp" />
     <ClCompile Include="src\Database\DbConnection.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -69,7 +68,6 @@
     <ClInclude Include="include\Thread\JobSerializer.hpp" />
     <ClInclude Include="include\Thread\ThreadManager.hpp" />
     <ClInclude Include="include\Thread\TLSStorage.hpp" />
-    <ClInclude Include="include\Database\DbConnectionPool.hpp" />
     <ClInclude Include="include\Database\DbConnection.hpp" />
   </ItemGroup>
 </Project>

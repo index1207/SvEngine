@@ -180,7 +180,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\Database\DbConnection.cpp" />
-    <ClCompile Include="src\Database\DbConnectionPool.cpp" />
     <ClCompile Include="src\Thread\JobSerializer.cpp" />
     <ClCompile Include="PCH\pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -199,7 +198,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Database\DbConnection.hpp" />
-    <ClInclude Include="include\Database\DbConnectionPool.hpp" />
     <ClInclude Include="include\CoreHeader.hpp" />
     <ClInclude Include="include\Thread\TLSStorage.hpp" />
     <ClInclude Include="include\Util\Action.hpp" />

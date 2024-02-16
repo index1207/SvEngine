@@ -39,19 +39,3 @@ void ThreadManager::Initialize()
 void ThreadManager::Finalize()
 {
 }
-
-void ThreadManager::Execute()
-{
-	while (true)
-	{
-		auto now = GetTickCount64();
-		if (now > LEndTickCount)
-			break;
-
-		auto jobSerializer = GGlobalQueue->Pop();
-		if (!jobSerializer)
-			break;
-
-		jobSerializer->Flush();
-	}
-}

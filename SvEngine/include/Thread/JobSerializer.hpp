@@ -37,11 +37,11 @@ private:
 	std::atomic<uint32> m_jobCount;
 };
 
-class GlobalQueue
+class JobQueue
 {
 public:
-	GlobalQueue();
-	~GlobalQueue();
+	JobQueue();
+	~JobQueue();
 
 	void Push(std::shared_ptr<JobSerializer> jobSerializer);
 	std::shared_ptr<JobSerializer> Pop();

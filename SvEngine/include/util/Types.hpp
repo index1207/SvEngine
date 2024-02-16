@@ -1,4 +1,12 @@
 #pragma once
+
+#include <ppl.h>
+#include <concurrent_vector.h>
+#include <concurrent_queue.h>
+#include <concurrent_priority_queue.h>
+#include <concurrent_unordered_map.h>
+#include <concurrent_unordered_set.h>
+
 using int8 = char;
 using int16 = short;
 using int32 = int;
@@ -46,3 +54,5 @@ using HashSet = std::unordered_set<Value>;
 
 template<class Value>
 using ConcurrencyHashSet = concurrency::concurrent_unordered_set<Value>;
+
+#define ASSERT_CRASH(exp) if(!(exp)) { int* ptr = nullptr; *ptr = 1234; }
