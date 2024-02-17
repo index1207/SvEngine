@@ -16,7 +16,7 @@ void sv::Client::Run(Endpoint endpoint) {
     auto connectContext = new Context;
     connectContext->endpoint = std::make_unique<Endpoint>(endpoint);
     connectContext->completed = bind(&Client::onConnectCompleted, this, std::placeholders::_1, std::placeholders::_2);
-    m_sock.Connect(connectContext);
+    m_sock.connect(connectContext);
 }
 
 void sv::Client::onConnectCompleted(Context *context, bool isSuccess) {

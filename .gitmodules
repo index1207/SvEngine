@@ -1,3 +1,6 @@
 [submodule "lib/netcpp"]
 	path = lib/netcpp
 	url = https://github.com/index1207/netcpp.git
+[submodule "lib/color-console"]
+	path = lib/color-console
+	url = https://github.com/aafulei/color-console

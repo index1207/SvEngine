@@ -6,15 +6,44 @@
 #include "util/Console.hpp"
 #include "Windows.h"
 
+#include "color.hpp"
+
 HANDLE Console::m_consoleHandle;
 
 void Console::SetOutputEncoding()
 {
-
 }
 
 void Console::Log(std::string_view message, LogType type) {
-    std::osyncstream(std::cout) << message << std::endl;
+    switch (type)
+    {
+    case LogType::Display:
+        LogDisplay(message);
+        break;
+    case LogType::Debug:
+        LogDebug(message);
+        break;
+    case LogType::Error:
+        LogCategory(message);
+        break;
+    default:
+        break;
+    }
+}
+
+void Console::LogDisplay(std::string_view message)
+{
+    std::osyncstream(std::cout) << hue::bright_white << message << std::endl;
+}
+
+void Console::LogDebug(std::string_view message)
+{
+    std::osyncstream(std::cout) << hue::light_green << message << std::endl;
+}
+
+void Console::LogCategory(std::string_view message)
+{
+    std::osyncstream(std::cout) << hue::light_red << message << std::endl;
 }
 
 void Console::Initialize() {

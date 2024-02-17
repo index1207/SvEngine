@@ -56,3 +56,4 @@ template<class Value>
 using ConcurrencyHashSet = concurrency::concurrent_unordered_set<Value>;
 
 #define ASSERT_CRASH(exp) if(!(exp)) { int* ptr = nullptr; *ptr = 1234; }
+#define MAKE_LOG_CATEGORY(name) static struct LogCategory Log##name(#name)

@@ -4,6 +4,12 @@
 #include "pch.h"
 #include "Engine.hpp"
 
+#include "Thread/ThreadManager.hpp"
+#include "Thread/JobSerializer.hpp"
+#include "Database/DBManager.hpp"
+
+#include "mysql.h"
+
 Engine* GEngine = new Engine;
 
 Engine::Engine()
@@ -15,15 +21,40 @@ Engine::Engine()
 
 	m_threadManager = new ThreadManager;
 	m_jobQue = new JobQueue;
+	m_dbManager = new DBManager;
 }
 
 Engine::~Engine()
 {
 	delete m_threadManager;
 	delete m_jobQue;
+	delete m_dbManager;
 }
 
-void Engine::ExecuteIocpLogic()
+void Engine::ExecuteIocpLogic(int32 threadCount, bool useMainThrd)
+{
+	for (int i = 0; i < threadCount; ++i)
+	{
+		m_threadManager->Launch([=]()
+		{
+			ExecuteWorker();
+		});
+	}
+
+	if (useMainThrd) ExecuteWorker();
+
+	m_threadManager->Join();
+}
+
+void Engine::HandleError(LogCategory category)
+{
+	if (category.categoryName == LogMYSQL.categoryName)
+	{
+		Console::Log(std::format("[{}][ERROR] ({}) {}", category.categoryName, mysql_errno(m_dbManager->GetHandle()), mysql_error(m_dbManager->GetHandle())), Error);
+	}
+}
+
+void Engine::ExecuteWorker()
 {
 	while (true)
 	{
