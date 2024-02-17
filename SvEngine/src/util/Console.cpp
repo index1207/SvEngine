@@ -8,13 +8,14 @@
 
 #include "color.hpp"
 
-HANDLE Console::m_consoleHandle;
+HANDLE Console::s_handle;
 
 void Console::SetOutputEncoding()
 {
 }
 
-void Console::Log(std::string_view message, LogType type) {
+void Console::Log(std::string message, std::string category, LogType type) {
+    message = "[" + category + "] " + message;
     switch (type)
     {
     case LogType::Display:
@@ -24,7 +25,7 @@ void Console::Log(std::string_view message, LogType type) {
         LogDebug(message);
         break;
     case LogType::Error:
-        LogCategory(message);
+        LogError(message);
         break;
     default:
         break;
@@ -33,22 +34,22 @@ void Console::Log(std::string_view message, LogType type) {
 
 void Console::LogDisplay(std::string_view message)
 {
-    std::osyncstream(std::cout) << hue::bright_white << message << std::endl;
+    std::cout << hue::bright_white << message << std::endl;
 }
 
 void Console::LogDebug(std::string_view message)
 {
-    std::osyncstream(std::cout) << hue::light_green << message << std::endl;
+    std::cout << hue::light_green << message << std::endl;
 }
 
-void Console::LogCategory(std::string_view message)
+void Console::LogError(std::string_view message)
 {
-    std::osyncstream(std::cout) << hue::light_red << message << std::endl;
+    std::cout << hue::light_red << message << std::endl;
 }
 
 void Console::Initialize() {
     #ifdef WIN32
-    m_consoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
+    s_handle = GetStdHandle(STD_OUTPUT_HANDLE);
     SetConsoleOutputCP(CP_UTF8);
     #endif
 

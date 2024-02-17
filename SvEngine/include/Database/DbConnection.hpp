@@ -1,16 +1,23 @@
 #pragma once
-
-struct MYSQL;
+#include <sql.h>
+#include <sqlext.h>
 
 class DBConnection
 {
 public:
-	DBConnection(MYSQL* connection);
-	~DBConnection();
+	bool Connect(SQLHENV henv, std::string_view connectionString);
+	void Clear();
+
+	bool Execute(std::string_view query);
+	bool Fetch();
+	int32 GetRowCount();
+	void Unbind();
 public:
-	void Execute(std::string_view query);
+	bool BindParam(SQLUSMALLINT paramIndex, SQLSMALLINT cType, SQLSMALLINT sqlType, SQLULEN len, SQLPOINTER ptr, SQLLEN* index);
+	bool BindCol(SQLUSMALLINT columnIndex, SQLSMALLINT cType, SQLULEN len, SQLPOINTER value, SQLLEN* index);
+	void HandleError(SQLRETURN ret);
 private:
-private:
-	MYSQL* m_connection;
+	SQLHDBC m_connection = SQL_NULL_HANDLE;
+	SQLHSTMT m_statement = SQL_NULL_HANDLE;
 };
 

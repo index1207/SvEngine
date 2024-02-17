@@ -22,7 +22,7 @@
     <ClCompile Include="src\Thread\ThreadManager.cpp" />
     <ClCompile Include="src\Thread\TLSStorage.cpp" />
     <ClCompile Include="src\Database\DbConnection.cpp" />
-    <ClCompile Include="src\Database\DBManager.cpp" />
+    <ClCompile Include="src\Database\DBConnectionPool.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">
@@ -70,6 +70,6 @@
     <ClInclude Include="include\Thread\ThreadManager.hpp" />
     <ClInclude Include="include\Thread\TLSStorage.hpp" />
     <ClInclude Include="include\Database\DBConnection.hpp" />
-    <ClInclude Include="include\Database\DBManager.hpp" />
+    <ClInclude Include="include\Database\DBConnectionPool.hpp" />
   </ItemGroup>
 </Project>

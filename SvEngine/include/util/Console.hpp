@@ -7,13 +7,11 @@
 #include <iostream>
 #include <syncstream>
 
-using HANDLE = void*;
+MAKE_LOG_CATEGORY(Server);
+MAKE_LOG_CATEGORY(Netcpp);
+MAKE_LOG_CATEGORY(Database);
 
-struct LogCategory
-{
-    LogCategory(std::string_view str) : categoryName(str) {}
-    std::string categoryName;
-};
+using HANDLE = void*;
 
 enum LogType {
     Display, // white
@@ -31,13 +29,11 @@ class Console {
     static void Initialize();
 public:
     static void SetOutputEncoding();
-    static void Log(std::string_view message, LogType type = Display);
+    static void Log(std::string message, std::string category = LogServer, LogType type = Display);
+private:
     static void LogDisplay(std::string_view message);
     static void LogDebug(std::string_view message);
-    static void LogCategory(std::string_view message);
+    static void LogError(std::string_view message);
 private:
-    static HANDLE m_consoleHandle;
+    static HANDLE s_handle;
 };
-
-MAKE_LOG_CATEGORY(Netcpp);
-MAKE_LOG_CATEGORY(MYSQL);

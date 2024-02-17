@@ -101,7 +101,7 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)lib\netcpp\include;$(ProjectDir)include;$(ProjectDir)PCH;$(SolutionDir)lib\mysql-connector\include;$(SolutionDir)lib\color-console\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)lib\netcpp\include;$(ProjectDir)include;$(ProjectDir)PCH;$(SolutionDir)lib\color-console\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
@@ -126,7 +126,7 @@
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)lib\netcpp\include;$(ProjectDir)include;$(ProjectDir)PCH;$(SolutionDir)lib\mysql-connector\include;$(SolutionDir)lib\color-console\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)lib\netcpp\include;$(ProjectDir)include;$(ProjectDir)PCH;$(SolutionDir)lib\color-console\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
@@ -151,7 +151,7 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)lib\netcpp\include;$(ProjectDir)include;$(ProjectDir)PCH;$(SolutionDir)lib\mysql-connector\include;$(SolutionDir)lib\color-console\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)lib\netcpp\include;$(ProjectDir)include;$(ProjectDir)PCH;$(SolutionDir)lib\color-console\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
@@ -176,7 +176,7 @@
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)lib\netcpp\include;$(ProjectDir)include;$(ProjectDir)PCH;$(SolutionDir)lib\mysql-connector\include;$(SolutionDir)lib\color-console\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)lib\netcpp\include;$(ProjectDir)include;$(ProjectDir)PCH;$(SolutionDir)lib\color-console\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
@@ -195,8 +195,8 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="src\Database\DBManager.cpp" />
     <ClCompile Include="src\Database\DbConnection.cpp" />
+    <ClCompile Include="src\Database\DBConnectionPool.cpp" />
     <ClCompile Include="src\Thread\JobSerializer.cpp" />
     <ClCompile Include="PCH\pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -214,9 +214,9 @@
     <ClCompile Include="src\Thread\ThreadManager.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\Database\DBManager.hpp" />
     <ClInclude Include="include\Database\DBConnection.hpp" />
     <ClInclude Include="include\CoreHeader.hpp" />
+    <ClInclude Include="include\Database\DBConnectionPool.hpp" />
     <ClInclude Include="include\Thread\TLSStorage.hpp" />
     <ClInclude Include="include\Util\Action.hpp" />
     <ClInclude Include="include\Engine.hpp" />
