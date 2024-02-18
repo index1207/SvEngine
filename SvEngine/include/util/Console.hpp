@@ -14,7 +14,7 @@ MAKE_LOG_CATEGORY(Database);
 using HANDLE = void*;
 
 enum LogType {
-    Display, // white
+    Log, // white
     Debug,   // green
     Error    // red
 };
@@ -29,11 +29,11 @@ class Console {
     static void Initialize();
 public:
     static void SetOutputEncoding();
-    static void Log(std::string message, std::string category = LogServer, LogType type = Display);
+    static void Log(std::wstring category, LogType type, std::wstring message);
 private:
-    static void LogDisplay(std::string_view message);
-    static void LogDebug(std::string_view message);
-    static void LogError(std::string_view message);
+    static void LogDisplay(std::wstring_view message);
+    static void LogDebug(std::wstring_view message);
+    static void LogError(std::wstring_view message);
 private:
     static HANDLE s_handle;
 };

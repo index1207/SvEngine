@@ -1,23 +1,23 @@
 #include "pch.h"
 #include "Database/DBConnection.hpp"
 
-bool DBConnection::Connect(SQLHENV henv, std::string_view connectionString)
+bool DBConnection::Connect(SQLHENV henv, std::wstring_view connectionString)
 {
 	if (::SQLAllocHandle(SQL_HANDLE_DBC, henv, &m_connection) != SQL_SUCCESS)
 		return false;
 
-	CHAR stringBuffer[MAX_PATH] = { 0 };
+	WCHAR stringBuffer[MAX_PATH] = { 0 };
 	std::copy(connectionString.begin(), connectionString.end(), stringBuffer);
 
-	CHAR resultString[MAX_PATH] = { 0 };
+	WCHAR resultString[MAX_PATH] = { 0 };
 	SQLSMALLINT resultStringLen = 0;
 
-	SQLRETURN ret = ::SQLDriverConnect(
+	SQLRETURN ret = ::SQLDriverConnectW(
 		m_connection,
 		NULL,
-		reinterpret_cast<SQLCHAR*>(stringBuffer),
+		reinterpret_cast<SQLWCHAR*>(stringBuffer),
 		_countof(stringBuffer),
-		OUT reinterpret_cast<SQLCHAR*>(resultString),
+		OUT reinterpret_cast<SQLWCHAR*>(resultString),
 		_countof(resultString),
 		OUT & resultStringLen,
 		SQL_DRIVER_NOPROMPT
@@ -44,9 +44,9 @@ void DBConnection::Clear()
 	}
 }
 
-bool DBConnection::Execute(std::string_view query)
+bool DBConnection::Execute(std::wstring_view query)
 {
-	SQLRETURN ret = ::SQLExecDirect(m_statement, (SQLCHAR*)query.data(), SQL_NTSL);
+	SQLRETURN ret = ::SQLExecDirectW(m_statement, (SQLWCHAR*)query.data(), SQL_NTSL);
 	if (ret == SQL_SUCCESS || ret == SQL_SUCCESS_WITH_INFO)
 		return true;
 
@@ -91,9 +91,124 @@ void DBConnection::Unbind()
 	::SQLFreeStmt(m_statement, SQL_CLOSE);
 }
 
-bool DBConnection::BindParam(SQLUSMALLINT paramIndex, SQLSMALLINT cType, SQLSMALLINT sqlType, SQLULEN len, SQLPOINTER ptr, SQLLEN* index)
+bool DBConnection::BindParam(int32 paramIdx, bool* value, SQLLEN* idx)
 {
-	SQLRETURN ret = ::SQLBindParameter(m_statement, paramIndex, SQL_PARAM_INPUT, cType, sqlType, len, 0, ptr, 0, index);
+	return BindParam(paramIdx, SQL_C_TINYINT, SQL_TINYINT, sizeof(bool), value, idx);
+}
+
+bool DBConnection::BindParam(int32 paramIdx, float* value, SQLLEN* idx)
+{
+	return BindParam(paramIdx, SQL_C_FLOAT, SQL_FLOAT, 0, value, idx);
+}
+
+bool DBConnection::BindParam(int32 paramIdx, double* value, SQLLEN* idx)
+{
+	return BindParam(paramIdx, SQL_C_DOUBLE, SQL_DOUBLE, 0, value, idx);
+}
+
+bool DBConnection::BindParam(int32 paramIdx, int8* value, SQLLEN* idx)
+{
+	return BindParam(paramIdx, SQL_C_TINYINT, SQL_TINYINT, sizeof(int8), value, idx);
+}
+
+bool DBConnection::BindParam(int32 paramIdx, int16* value, SQLLEN* idx)
+{
+	return BindParam(paramIdx, SQL_C_SHORT, SQL_SMALLINT, sizeof(int16), value, idx);
+}
+
+bool DBConnection::BindParam(int32 paramIdx, int32* value, SQLLEN* idx)
+{
+	return BindParam(paramIdx, SQL_C_LONG, SQL_INTEGER, sizeof(int32), value, idx);
+}
+
+bool DBConnection::BindParam(int32 paramIdx, int64* value, SQLLEN* idx)
+{
+	return BindParam(paramIdx, SQL_C_SBIGINT, SQL_BIGINT, sizeof(int64), value, idx);
+}
+
+bool DBConnection::BindParam(int32 paramIdx, TIMESTAMP_STRUCT* value, SQLLEN* idx)
+{
+	return BindParam(paramIdx, SQL_C_TIMESTAMP, SQL_TIMESTAMP, sizeof(TIMESTAMP_STRUCT), value, idx);
+}
+
+bool DBConnection::BindParam(int32 paramIdx, const WCHAR* str, SQLLEN* idx)
+{
+	SQLLEN size = (wcslen(str)+1) * 2;
+	*idx = SQL_NTSL;
+
+	if (size > WVARCHAR_MAX)
+		return BindParam(paramIdx, SQL_C_WCHAR, SQL_WLONGVARCHAR, size, (SQLPOINTER)str, idx);
+	return BindParam(paramIdx, SQL_C_WCHAR, SQL_WVARCHAR, size, (SQLPOINTER)str, idx);
+}
+
+bool DBConnection::BindParam(int32 paramIdx, const BYTE* bin, int32 size, SQLLEN* idx)
+{
+	if (bin == nullptr)
+	{
+		*idx = SQL_NULL_DATA;
+		size = 1;
+	}
+	else
+		*idx = size;
+
+	if (size > BINARY_MAX)
+		return BindParam(paramIdx, SQL_C_BINARY, SQL_LONGVARBINARY, size, const_cast<BYTE*>(bin), idx);
+	return BindParam(paramIdx, SQL_C_BINARY, SQL_VARBINARY, size, const_cast<BYTE*>(bin), idx);
+}
+
+bool DBConnection::BindCol(int32 columnIdx, bool* value, SQLLEN* idx)
+{
+	return BindCol(columnIdx, SQL_C_TINYINT, sizeof(bool), value, idx);
+}
+
+bool DBConnection::BindCol(int32 columnIdx, float* value, SQLLEN* idx)
+{
+	return BindCol(columnIdx, SQL_C_FLOAT, sizeof(float), value, idx);
+}
+
+bool DBConnection::BindCol(int32 columnIdx, double* value, SQLLEN* idx)
+{
+	return BindCol(columnIdx, SQL_C_DOUBLE, sizeof(double), value, idx);
+}
+
+bool DBConnection::BindCol(int32 columnIdx, int8* value, SQLLEN* idx)
+{
+	return BindCol(columnIdx, SQL_C_TINYINT, sizeof(int8), value, idx);
+}
+
+bool DBConnection::BindCol(int32 columnIdx, int16* value, SQLLEN* idx)
+{
+	return BindCol(columnIdx, SQL_C_SHORT, sizeof(int16), value, idx);
+}
+
+bool DBConnection::BindCol(int32 columnIdx, int32* value, SQLLEN* idx)
+{
+	return BindCol(columnIdx, SQL_C_LONG, sizeof(int32), value, idx);
+}
+
+bool DBConnection::BindCol(int32 columnIdx, int64* value, SQLLEN* idx)
+{
+	return BindCol(columnIdx, SQL_C_SBIGINT, sizeof(int64), value, idx);
+}
+
+bool DBConnection::BindCol(int32 columnIdx, TIMESTAMP_STRUCT* value, SQLLEN* idx)
+{
+	return BindCol(columnIdx, SQL_C_TIMESTAMP, sizeof(TIMESTAMP_STRUCT), value, idx);
+}
+
+bool DBConnection::BindCol(int32 columnIdx, WCHAR* buffer, int32 size, SQLLEN* idx)
+{
+	return BindCol(columnIdx, SQL_C_WCHAR, size, buffer, idx);
+}
+
+bool DBConnection::BindCol(int32 columnIdx, BYTE* buffer, int32 size, SQLLEN* idx)
+{
+	return BindCol(columnIdx, SQL_C_BINARY, size, buffer, idx);
+}
+
+bool DBConnection::BindParam(int32 paramIndex, SQLSMALLINT cType, SQLSMALLINT sqlType, SQLULEN len, SQLPOINTER ptr, SQLLEN* index)
+{
+	SQLRETURN ret = ::SQLBindParameter(m_statement, static_cast<SQLUSMALLINT>(paramIndex), SQL_PARAM_INPUT, cType, sqlType, len, 0, ptr, 0, index);
 	if (ret != SQL_SUCCESS && ret != SQL_SUCCESS_WITH_INFO)
 	{
 		HandleError(ret);
@@ -103,9 +218,9 @@ bool DBConnection::BindParam(SQLUSMALLINT paramIndex, SQLSMALLINT cType, SQLSMAL
 	return true;
 }
 
-bool DBConnection::BindCol(SQLUSMALLINT columnIndex, SQLSMALLINT cType, SQLULEN len, SQLPOINTER value, SQLLEN* index)
+bool DBConnection::BindCol(int32 columnIndex, SQLSMALLINT cType, SQLULEN len, SQLPOINTER value, SQLLEN* index)
 {
-	SQLRETURN ret = ::SQLBindCol(m_statement, columnIndex, cType, value, len, index);
+	SQLRETURN ret = ::SQLBindCol(m_statement, static_cast<SQLUSMALLINT>(columnIndex), cType, value, len, index);
 	if (ret != SQL_SUCCESS && ret != SQL_SUCCESS_WITH_INFO)
 	{
 		HandleError(ret);
@@ -121,15 +236,15 @@ void DBConnection::HandleError(SQLRETURN ret)
 		return;
 
 	SQLSMALLINT index = 1;
-	SQLCHAR sqlState[MAX_PATH] = { 0 };
+	SQLWCHAR sqlState[MAX_PATH] = { 0 };
 	SQLINTEGER nativeErr = 0;
-	SQLCHAR errMsg[MAX_PATH] = { 0 };
+	SQLWCHAR errMsg[MAX_PATH] = { 0 };
 	SQLSMALLINT msgLen = 0;
 	SQLRETURN errorRet = 0;
 
 	while (true)
 	{
-		errorRet = ::SQLGetDiagRec(
+		errorRet = ::SQLGetDiagRecW(
 			SQL_HANDLE_STMT,
 			m_statement,
 			index,
@@ -146,7 +261,7 @@ void DBConnection::HandleError(SQLRETURN ret)
 		if (errorRet != SQL_SUCCESS && errorRet != SQL_SUCCESS_WITH_INFO)
 			break;
 
-		Console::Log((const char*)errMsg, LogDatabase, Error);
+		Console::Log(LogDatabase, Error, errMsg);
 
 		index++;
 	}

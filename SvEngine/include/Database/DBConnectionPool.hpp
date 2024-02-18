@@ -7,7 +7,7 @@ public:
 	DBConnectionPool();
 	~DBConnectionPool();
 
-	bool Connect(int32 connectionCount, std::string_view connectionString);
+	bool Connect(int32 connectionCount, std::wstring_view connectionString);
 	void Clear();
 
 	DBConnection* Pop();

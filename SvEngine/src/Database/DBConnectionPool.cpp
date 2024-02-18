@@ -11,7 +11,7 @@ DBConnectionPool::~DBConnectionPool()
 	Clear();
 }
 
-bool DBConnectionPool::Connect(int32 connectionCount, std::string_view connectionString)
+bool DBConnectionPool::Connect(int32 connectionCount, std::wstring_view connectionString)
 {
 	std::lock_guard lock(m_mtx);
 

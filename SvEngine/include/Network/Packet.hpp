@@ -26,7 +26,7 @@ public:
     Packet& operator<<(long long Data);
     Packet& operator<<(float Data);
     Packet& operator<<(double Data);
-    Packet& operator<<(std::string_view Data);
+    Packet& operator<<(std::wstring_view Data);
 
     template<class T>
     Packet& operator<<(std::vector<T> Data) {
@@ -49,7 +49,7 @@ public:
     Packet& operator>>(long& Data);
     Packet& operator>>(float& Data);
     Packet& operator>>(double& Data);
-    Packet& operator>>(std::string& Data);
+    Packet& operator>>(std::wstring& Data);
 
     template<class T>
     Packet& operator>>(std::vector<T>& Data) {

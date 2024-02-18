@@ -14,11 +14,11 @@ void Console::SetOutputEncoding()
 {
 }
 
-void Console::Log(std::string message, std::string category, LogType type) {
-    message = "[" + category + "] " + message;
+void Console::Log(std::wstring category, LogType type, std::wstring message) {
+    message = L"[" + category + L"] " + message;
     switch (type)
     {
-    case LogType::Display:
+    case LogType::Log:
         LogDisplay(message);
         break;
     case LogType::Debug:
@@ -32,19 +32,22 @@ void Console::Log(std::string message, std::string category, LogType type) {
     }
 }
 
-void Console::LogDisplay(std::string_view message)
+void Console::LogDisplay(std::wstring_view message)
 {
-    std::cout << hue::bright_white << message << std::endl;
+    std::osyncstream(std::cout) << hue::bright_white;
+    std::wosyncstream(std::wcout) << "[Log]" << message << std::endl;
 }
 
-void Console::LogDebug(std::string_view message)
+void Console::LogDebug(std::wstring_view message)
 {
-    std::cout << hue::light_green << message << std::endl;
+    std::osyncstream(std::cout) << hue::light_green;
+    std::wosyncstream(std::wcout) << "[Debug]" << message << std::endl;
 }
 
-void Console::LogError(std::string_view message)
+void Console::LogError(std::wstring_view message)
 {
-    std::cout << hue::light_red << message << std::endl;
+    std::osyncstream(std::cout) << hue::light_red;
+    std::wosyncstream(std::wcout) << "[Error]" << message << std::endl;
 }
 
 void Console::Initialize() {
@@ -53,6 +56,6 @@ void Console::Initialize() {
     SetConsoleOutputCP(CP_UTF8);
     #endif
 
-    std::cout.imbue(std::locale("kor"));
+    setlocale(LC_ALL, "");
 }
     

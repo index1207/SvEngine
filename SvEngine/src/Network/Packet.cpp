@@ -110,8 +110,8 @@ Packet& Packet::operator<<(double Data) {
     return *this;
 }
 
-Packet& Packet::operator<<(std::string_view Data) {
-    *this << static_cast<unsigned short>(Data.length());
+Packet& Packet::operator<<(std::wstring_view Data) {
+    *this << static_cast<unsigned short>(Data.length()+1)*2;
     m_buffer.insert(m_buffer.end(), Data.begin(), Data.end());
     return *this;
 }
@@ -221,7 +221,7 @@ Packet& Packet::operator>>(double& Data)
     return *this;
 }
 
-Packet& Packet::operator>>(std::string& Data)
+Packet& Packet::operator>>(std::wstring& Data)
 {
     unsigned short len;
     *this >> len;
