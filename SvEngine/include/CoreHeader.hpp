@@ -20,11 +20,14 @@
 
 #include <net/netcpp.hpp>
 
+#include <sql.h>
+#include <sqlext.h>
+
 #include "Util/Types.hpp"
+#include "Util/Action.hpp"
 #include "Util/Console.hpp"
 #include "Thread/TLSStorage.hpp"
 #include "Network/Packet.hpp"
-
 #include "Engine.hpp"
 
 using namespace net;

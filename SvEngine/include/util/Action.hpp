@@ -4,6 +4,13 @@
 
 namespace action
 {
+	inline String ToUnicode(std::string_view str)
+	{
+		String ws;
+		ws.assign(str.begin(), str.end());
+		return ws;
+	}
+
 	class Random
 	{
 	public:

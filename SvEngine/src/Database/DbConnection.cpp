@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "Database/DBConnection.hpp"
 
-bool DBConnection::Connect(SQLHENV henv, std::wstring_view connectionString)
+bool DBConnection::Connect(SQLHENV henv, String connectionString)
 {
 	if (::SQLAllocHandle(SQL_HANDLE_DBC, henv, &m_connection) != SQL_SUCCESS)
 		return false;
@@ -44,7 +44,7 @@ void DBConnection::Clear()
 	}
 }
 
-bool DBConnection::Execute(std::wstring_view query)
+bool DBConnection::Execute(String query)
 {
 	SQLRETURN ret = ::SQLExecDirectW(m_statement, (SQLWCHAR*)query.data(), SQL_NTSL);
 	if (ret == SQL_SUCCESS || ret == SQL_SUCCESS_WITH_INFO)

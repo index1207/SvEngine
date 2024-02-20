@@ -29,11 +29,11 @@ class Console {
     static void Initialize();
 public:
     static void SetOutputEncoding();
-    static void Log(std::wstring category, LogType type, std::wstring message);
+    static void Log(String category, LogType type, String message);
 private:
-    static void LogDisplay(std::wstring_view message);
-    static void LogDebug(std::wstring_view message);
-    static void LogError(std::wstring_view message);
+    static void LogDisplay(String message);
+    static void LogDebug(String message);
+    static void LogError(String message);
 private:
     static HANDLE s_handle;
 };

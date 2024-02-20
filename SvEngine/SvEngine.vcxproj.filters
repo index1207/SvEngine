@@ -23,6 +23,7 @@
     <ClCompile Include="src\Thread\TLSStorage.cpp" />
     <ClCompile Include="src\Database\DbConnection.cpp" />
     <ClCompile Include="src\Database\DBConnectionPool.cpp" />
+    <ClCompile Include="src\Database\Statement.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">
@@ -71,5 +72,6 @@
     <ClInclude Include="include\Thread\TLSStorage.hpp" />
     <ClInclude Include="include\Database\DBConnection.hpp" />
     <ClInclude Include="include\Database\DBConnectionPool.hpp" />
+    <ClInclude Include="include\Database\Statement.hpp" />
   </ItemGroup>
 </Project>

@@ -11,10 +11,10 @@ enum
 class DBConnection
 {
 public:
-	bool Connect(SQLHENV henv, std::wstring_view connectionString);
+	bool Connect(SQLHENV henv, String connectionString);
 	void Clear();
 
-	bool Execute(std::wstring_view query);
+	bool Execute(String query);
 	bool Fetch();
 	int32 GetRowCount();
 	void Unbind();

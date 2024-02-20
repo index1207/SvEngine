@@ -55,5 +55,8 @@ using HashSet = std::unordered_set<Value>;
 template<class Value>
 using ConcurrencyHashSet = concurrency::concurrent_unordered_set<Value>;
 
+using String = std::wstring;
+using StringView = std::wstring_view;
+
 #define ASSERT_CRASH(exp) if(!(exp)) { int* ptr = nullptr; *ptr = 1234; }
-#define MAKE_LOG_CATEGORY(name) static std::wstring Log##name(L#name)
+#define MAKE_LOG_CATEGORY(name) static String Log##name(L#name)

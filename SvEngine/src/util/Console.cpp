@@ -14,7 +14,7 @@ void Console::SetOutputEncoding()
 {
 }
 
-void Console::Log(std::wstring category, LogType type, std::wstring message) {
+void Console::Log(String category, LogType type, String message) {
     message = L"[" + category + L"] " + message;
     switch (type)
     {
@@ -32,19 +32,19 @@ void Console::Log(std::wstring category, LogType type, std::wstring message) {
     }
 }
 
-void Console::LogDisplay(std::wstring_view message)
+void Console::LogDisplay(String message)
 {
     std::osyncstream(std::cout) << hue::bright_white;
     std::wosyncstream(std::wcout) << "[Log]" << message << std::endl;
 }
 
-void Console::LogDebug(std::wstring_view message)
+void Console::LogDebug(String message)
 {
     std::osyncstream(std::cout) << hue::light_green;
     std::wosyncstream(std::wcout) << "[Debug]" << message << std::endl;
 }
 
-void Console::LogError(std::wstring_view message)
+void Console::LogError(String message)
 {
     std::osyncstream(std::cout) << hue::light_red;
     std::wosyncstream(std::wcout) << "[Error]" << message << std::endl;

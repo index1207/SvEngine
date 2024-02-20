@@ -101,7 +101,7 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)lib\netcpp\include;$(ProjectDir)include;$(ProjectDir)PCH;$(SolutionDir)lib\color-console\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)lib\netcpp\include;$(ProjectDir)include;$(ProjectDir)PCH;$(SolutionDir)lib\color-console\include;$(SolutionDir)lib\rapidxml;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
@@ -126,7 +126,7 @@
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)lib\netcpp\include;$(ProjectDir)include;$(ProjectDir)PCH;$(SolutionDir)lib\color-console\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)lib\netcpp\include;$(ProjectDir)include;$(ProjectDir)PCH;$(SolutionDir)lib\color-console\include;$(SolutionDir)lib\rapidxml;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
@@ -151,7 +151,7 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)lib\netcpp\include;$(ProjectDir)include;$(ProjectDir)PCH;$(SolutionDir)lib\color-console\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)lib\netcpp\include;$(ProjectDir)include;$(ProjectDir)PCH;$(SolutionDir)lib\color-console\include;$(SolutionDir)lib\rapidxml;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
@@ -176,7 +176,7 @@
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)lib\netcpp\include;$(ProjectDir)include;$(ProjectDir)PCH;$(SolutionDir)lib\color-console\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)lib\netcpp\include;$(ProjectDir)include;$(ProjectDir)PCH;$(SolutionDir)lib\color-console\include;$(SolutionDir)lib\rapidxml;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
@@ -212,6 +212,7 @@
     <ClCompile Include="src\Network\Session.cpp" />
     <ClCompile Include="src\Util\Console.cpp" />
     <ClCompile Include="src\Thread\ThreadManager.cpp" />
+    <ClCompile Include="src\Database\Statement.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Database\DBConnection.hpp" />
@@ -228,6 +229,7 @@
     <ClInclude Include="include\Thread\JobSerializer.hpp" />
     <ClInclude Include="PCH\pch.h" />
     <ClInclude Include="include\Thread\ThreadManager.hpp" />
+    <ClInclude Include="include\Database\Statement.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
