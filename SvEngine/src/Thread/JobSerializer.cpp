@@ -1,19 +1,26 @@
 #include "pch.h"
 #include "Thread/JobSerializer.hpp"
 
-void JobSerializer::Launch(CallbackType&& callback)
+void JobSerializer::Launch(CallbackType callback)
 {
 	Push(std::make_shared<Job>(std::move(callback)));
 }
 
-void JobSerializer::Push(std::shared_ptr<Job> jobPtr)
+void JobSerializer::Launch(uint64 delay, CallbackType&& callback)
+{
+	auto job = std::make_shared<Job>(std::move(callback));
+	if (auto* jobTimer = GEngine->GetJobTimer())
+		jobTimer->Reserve(delay, shared_from_this(), job);
+}
+
+void JobSerializer::Push(std::shared_ptr<Job> jobPtr, bool pushOnly)
 {
 	auto prevCount = m_jobCount.fetch_add(1);
 	m_jobQue.push(jobPtr);
 
 	if (prevCount == 0)
 	{
-		if (LCurrentJobQueue == nullptr)
+		if (LCurrentJobQueue == nullptr && !pushOnly)
 		{
 			Flush();
 		}
@@ -35,7 +42,7 @@ void JobSerializer::Flush()
 
 		const auto jobCount = static_cast<uint32>(jobs.size());
 		for (uint32 i = 0; i < jobCount; ++i)
-			(*jobs[jobCount])();
+			(*jobs[i])();
 		
 		if (m_jobCount.fetch_sub(jobCount) == jobCount)
 		{

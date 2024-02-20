@@ -29,6 +29,9 @@ template<class T>
 using Queue = std::stack<T>;
 
 template<class T>
+using PriorityQueue = std::priority_queue<T>;
+
+template<class T>
 using ConcurrencyVector = concurrency::concurrent_vector<T>;
 
 template<class T>

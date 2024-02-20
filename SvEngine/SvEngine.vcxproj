@@ -114,7 +114,7 @@
     </Link>
     <Lib>
       <AdditionalLibraryDirectories>$(SolutionDir)lib\bin\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>libmysql.lib;netcpp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>netcpp.lib;ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -141,7 +141,7 @@
     </Link>
     <Lib>
       <AdditionalLibraryDirectories>$(SolutionDir)lib\bin\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>libmysql.lib;netcpp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>netcpp.lib;ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -164,7 +164,7 @@
     </Link>
     <Lib>
       <AdditionalLibraryDirectories>$(SolutionDir)lib\bin\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>libmysql.lib;netcpp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>netcpp.lib;ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -191,10 +191,12 @@
     </Link>
     <Lib>
       <AdditionalLibraryDirectories>$(SolutionDir)lib\bin\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>libmysql.lib;netcpp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>netcpp.lib;ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Thread\JobTimer.cpp" />
+    <ClCompile Include="src\Util\File.cpp" />
     <ClCompile Include="src\Database\DbConnection.cpp" />
     <ClCompile Include="src\Database\DBConnectionPool.cpp" />
     <ClCompile Include="src\Thread\JobSerializer.cpp" />
@@ -206,30 +208,34 @@
     </ClCompile>
     <ClCompile Include="src\Thread\TLSStorage.cpp" />
     <ClCompile Include="src\Util\Action.cpp" />
-    <ClCompile Include="src\Engine.cpp" />
+    <ClCompile Include="src\Subsystem\Engine.cpp" />
     <ClCompile Include="src\Network\Packet.cpp" />
     <ClCompile Include="src\Network\Server.cpp" />
     <ClCompile Include="src\Network\Session.cpp" />
     <ClCompile Include="src\Util\Console.cpp" />
     <ClCompile Include="src\Thread\ThreadManager.cpp" />
     <ClCompile Include="src\Database\Statement.cpp" />
+    <ClCompile Include="src\Util\XmlParser.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\Util\File.hpp" />
     <ClInclude Include="include\Database\DBConnection.hpp" />
     <ClInclude Include="include\CoreHeader.hpp" />
     <ClInclude Include="include\Database\DBConnectionPool.hpp" />
     <ClInclude Include="include\Thread\TLSStorage.hpp" />
     <ClInclude Include="include\Util\Action.hpp" />
-    <ClInclude Include="include\Engine.hpp" />
+    <ClInclude Include="include\Subsystem\Engine.hpp" />
     <ClInclude Include="include\Network\Packet.hpp" />
     <ClInclude Include="include\Network\Server.hpp" />
     <ClInclude Include="include\Network\Session.hpp" />
     <ClInclude Include="include\Util\Console.hpp" />
     <ClInclude Include="include\Util\Types.hpp" />
     <ClInclude Include="include\Thread\JobSerializer.hpp" />
+    <ClInclude Include="include\Thread\JobTimer.hpp" />
     <ClInclude Include="PCH\pch.h" />
     <ClInclude Include="include\Thread\ThreadManager.hpp" />
     <ClInclude Include="include\Database\Statement.hpp" />
+    <ClInclude Include="include\Util\XmlParser.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

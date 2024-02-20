@@ -2,13 +2,12 @@
 // Created by han93 on 2023-12-20.
 //
 #include "pch.h"
-#include "Engine.hpp"
+#include "Subsystem/Engine.hpp"
 
 #include "Thread/ThreadManager.hpp"
 #include "Thread/JobSerializer.hpp"
 #include "Database/DBConnectionPool.hpp"
-
-Engine* GEngine = new Engine;
+#include "Thread/JobTimer.hpp"
 
 Engine::Engine()
 {
@@ -17,6 +16,7 @@ Engine::Engine()
 	net::Option::Autorun = false;
 	net::Option::Timeout = 10;
 
+	m_jobTimer = new JobTimer;
 	m_threadManager = new ThreadManager;
 	m_jobQue = new JobQueue;
 	m_dbConnectionPool = new DBConnectionPool;
@@ -27,6 +27,7 @@ Engine::~Engine()
 	delete m_threadManager;
 	delete m_jobQue;
 	delete m_dbConnectionPool;
+	delete m_jobTimer;
 }
 
 void Engine::ExecuteIocpLogic(int32 threadCount, bool useMainThrd)
@@ -52,6 +53,8 @@ void Engine::ExecuteWorker()
 
 		IoSystem::instance().worker(); // IOCP I/O
 
+		DistributeDeferredJob();
+
 		while (true)
 		{
 			auto now = GetTickCount64();
@@ -65,4 +68,9 @@ void Engine::ExecuteWorker()
 			jobSerializer->Flush();
 		}
 	}
+}
+
+void Engine::DistributeDeferredJob()
+{
+	m_jobTimer->Distribute(GetTickCount64());
 }
