@@ -4,3 +4,6 @@
 [submodule "lib/rapidxml"]
 	path = lib/rapidxml
 	url = https://github.com/dwd/rapidxml
+[submodule "lib/netcpp"]
+	path = lib/netcpp
+	url = https://github.com/index1207/netcpp
