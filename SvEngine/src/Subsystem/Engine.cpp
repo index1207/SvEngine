@@ -32,6 +32,8 @@ Engine::~Engine()
 
 void Engine::ExecuteIocpLogic(int32 threadCount, bool useMainThrd)
 {
+	if (!useMainThrd)
+		--threadCount;
 	for (int i = 0; i < threadCount; ++i)
 	{
 		m_threadManager->Launch([=]()

@@ -26,8 +26,8 @@ cppFormat.file = '''#pragma once
 #ifdef __UNREAL__
 #include "Network/Packet.h"
 #elif __SERVER__
-#include "core/Packet.hpp"
-#include "util/Types.hpp"
+#include "Network/Packet.hpp"
+#include "Util/Types.hpp"
 #endif
 
 #include <vector>
@@ -44,8 +44,6 @@ namespace {1} {{
 cppFormat.handler = '''#pragma once
 #include "Packet.gen.hpp"
 {0}
-
-using namespace sv;
                          
 #ifdef __UNREAL__
 #include "winsock2.h"
@@ -54,7 +52,9 @@ using namespace sv;
 using Session = class FSession;
 
 #define STATIC_POINTER_CAST(to, from) StaticCastSharedPtr<to>(from)
+
 #else
+
 template<typename T>
 using TSharedPtr = std::shared_ptr<T>;
 template<typename T>
@@ -62,7 +62,7 @@ using TFunction = std::function<T>;
 
 #define STATIC_POINTER_CAST(to, from) std::static_pointer_cast<to>(from)
 
-namespace sv {{ class Session; }}
+class Session;
 #endif
 
 #define BIND_HANDLER(pckname, buffer) std::bind(pckname##PacketHandler, std::placeholders::_1, STATIC_POINTER_CAST(pckname, Packet::parseFrom<pckname>(buffer)));
@@ -124,12 +124,12 @@ cppFormat.classFormat = '''class {0}
         {4}
     }};
     
-    inline Packet& operator>>(sv::Packet& pk, {5}) {{
+    inline Packet& operator>>(Packet& pk, {5}) {{
         {6}
         return pk;
     }}
 
-    inline Packet& operator<<(sv::Packet& pk, const {5}) {{
+    inline Packet& operator<<(Packet& pk, const {5}) {{
         {7}
         return pk;
     }}

@@ -21,6 +21,9 @@ void Console::Log(String category, LogType type, String message) {
     case LogType::Log:
         LogDisplay(message);
         break;
+    case LogType::Warning:
+        LogWarning(message);
+        break;
     case LogType::Debug:
         LogDebug(message);
         break;
@@ -36,6 +39,12 @@ void Console::LogDisplay(String message)
 {
     std::osyncstream(std::cout) << hue::bright_white;
     std::wosyncstream(std::wcout) << "[Log]" << message << std::endl;
+}
+
+void Console::LogWarning(String message)
+{
+    std::osyncstream(std::cout) << hue::yellow;
+    std::wosyncstream(std::wcout) << "[Warning]" << message << std::endl;
 }
 
 void Console::LogDebug(String message)

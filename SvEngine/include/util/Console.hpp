@@ -15,6 +15,7 @@ using HANDLE = void*;
 
 enum LogType {
     Log, // white
+    Warning,
     Debug,   // green
     Error    // red
 };
@@ -32,6 +33,7 @@ public:
     static void Log(String category, LogType type, String message);
 private:
     static void LogDisplay(String message);
+    static void LogWarning(String message);
     static void LogDebug(String message);
     static void LogError(String message);
 private:

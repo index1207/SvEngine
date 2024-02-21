@@ -8,7 +8,7 @@ parser.add_argument('-s', '--server_path', default='./', action='store', dest='s
 parser.add_argument('-c', '--client_path', default='./', action='store', dest='client_path', help='client project directory path')
 args = parser.parse_args()
 
-subprocess.call(['python', 'generate.py', '-l', 'cpp', '-p', args.server_path+'define/'], shell=True)
+subprocess.call(['python', 'generate.py', '-l', 'cpp', '-p', args.server_path+'message/'], shell=True)
 #subprocess.call(['python', 'generate.py', '-l', 'csharp'], shell=True)
 
 if args.server_path != '':

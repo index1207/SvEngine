@@ -40,7 +40,7 @@ private:
     void OnRecvCompleted(Context* context, bool isSuccess);
     void FlushQueue();
 private:
-    concurrency::concurrent_queue<Packet> m_sendQue;
+    ConcurrencyQueue<Packet> m_sendQue;
     std::atomic<int> m_sendCount;
 
     std::shared_ptr<Session> m_ref; // TEMP
