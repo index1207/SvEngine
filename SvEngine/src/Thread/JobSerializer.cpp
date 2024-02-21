@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "Thread/JobSerializer.hpp"
 
-void JobSerializer::Launch(CallbackType callback)
+void JobSerializer::Launch(CallbackType&& callback)
 {
 	Push(std::make_shared<Job>(std::move(callback)));
 }
@@ -37,7 +37,7 @@ void JobSerializer::Flush()
 
 	while (true)
 	{
-		std::vector<std::shared_ptr<Job>> jobs(m_jobQue.unsafe_begin(), m_jobQue.unsafe_end());
+		Vector<std::shared_ptr<Job>> jobs(m_jobQue.unsafe_begin(), m_jobQue.unsafe_end());
 		m_jobQue.clear();
 
 		const auto jobCount = static_cast<uint32>(jobs.size());

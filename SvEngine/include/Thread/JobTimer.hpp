@@ -13,7 +13,7 @@ struct TimerItem
 {
 	bool operator<(const TimerItem& other) const
 	{
-		return executeTick < other.executeTick;
+		return executeTick > other.executeTick;
 	}
 	uint64 executeTick = 0;
 	JobData* jobData = nullptr;

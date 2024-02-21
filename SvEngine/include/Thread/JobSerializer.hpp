@@ -21,7 +21,7 @@ class JobSerializer : public std::enable_shared_from_this<JobSerializer>
 {
 	using CallbackType = std::function<void()>;
 public:
-	void Launch(CallbackType callback);
+	void Launch(CallbackType&& callback);
 	void Launch(uint64 delay, CallbackType&& callback);
 	
 	template<uint64 _Dly = 0, class T, class _Ret, class ...Args>

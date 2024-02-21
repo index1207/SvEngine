@@ -8,7 +8,7 @@
 #include "net/Context.hpp"
 #include "net/Exception.hpp"
 
-Session::Session() : m_buffer(1024, '\0') {
+Session::Session() : m_buffer(1024, '\0'), m_isDisconnected(false) {
 }
 
 void Session::Run(std::unique_ptr<Socket> sock) {
@@ -34,12 +34,13 @@ void Session::FlushQueue()
 {
     while (true)
     {
-        Packet pkt;
-        if (m_sendQue.try_pop(pkt))
-            m_sock->send(pkt.Data());
+        Vector<Packet> sendList(m_sendQue.unsafe_begin(), m_sendQue.unsafe_end());
+        m_sendQue.clear();
 
-        m_sendCount.fetch_sub(1);
-        if (m_sendCount == 0)
+        const auto size = sendList.size();
+        for (int32 i = 0; i < size; ++i)
+            m_sock->send(sendList[i].Data());
+        if (m_sendCount.fetch_sub(size) == size)
             return;
     }
 }
@@ -48,7 +49,7 @@ Session::~Session() {
 }
 
 void Session::Disconnect() {
-    if (!m_isDisconnected)
+    if (!m_isDisconnected.exchange(true))
     {
         m_isDisconnected = true;
         onDisconnected();
