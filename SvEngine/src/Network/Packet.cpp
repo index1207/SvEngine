@@ -110,7 +110,7 @@ Packet& Packet::operator<<(double Data) {
     return *this;
 }
 
-Packet& Packet::operator<<(String Data) {
+Packet& Packet::operator<<(StringView Data) {
     *this << static_cast<unsigned short>(Data.length()+1)*2;
     m_buffer.insert(m_buffer.end(), Data.begin(), Data.end());
     return *this;

@@ -1,9 +1,7 @@
-import copy
 import itertools
 import os
 import json
 import argparse
-from re import I
 import stringcase
 from dataclasses import dataclass, field
 
@@ -63,9 +61,10 @@ using TFunction = std::function<T>;
 #define STATIC_POINTER_CAST(to, from) std::static_pointer_cast<to>(from)
 
 class Session;
+static std::mutex s_mtx;
 #endif
 
-#define BIND_HANDLER(pckname, buffer) std::bind(pckname##PacketHandler, std::placeholders::_1, STATIC_POINTER_CAST(pckname, Packet::parseFrom<pckname>(buffer)));
+#define BIND_HANDLER(pckname, buffer) std::bind(pckname##PacketHandler, std::placeholders::_1, STATIC_POINTER_CAST(pckname, Packet::ParseFrom<pckname>(buffer)));
 
 namespace {1}
 {{
@@ -112,13 +111,13 @@ cppFormat.classFormat = '''class {0}
     protected:
         virtual void Read() override
         {{
-            Packet::read();
+            Packet::Read();
             {2}
         }}
         virtual void Write() override
         {{
             {3}
-            finish();
+            Finish();
         }}
     public:
         {4}
@@ -209,7 +208,7 @@ def readCpp(readType):
 
     idname = stringcase.constcase(messageName)
     if readType == 'struct':
-        idname = 'None'
+        idname = 'NONE'
 
     return cppFormat.classFormat.format(
         (messageName),
@@ -260,7 +259,7 @@ def readCsharp(conditionList, handlerList):
 def getLangTypename(typename):
     if typename == 'string':
         if args.lang == 'cpp':
-            return 'std::string'
+            return 'String'
     if typename.find('list') != -1:
         val = typename.split('|')
         if args.lang == 'cpp':
@@ -338,16 +337,30 @@ for filename in defList:
                     classList.append(readCsharp(bindList, handlerList))
         # defined message list
         if len(messageList) > 0:
-            for message in messageList:
-                isServer = False
-                if 'client' in messageList[messageList.index(message)]:
-                    messageName = message['client']
-                    messageNameList[0].append((messageName))
-                elif 'server' in messageList[messageList.index(message)]:
-                   messageName = message['server']
-                   messageNameList[1].append((messageName))
-                   isServer = True
-            
+            for message in messageList['client']:
+                messageName = message['name']
+                messageNameList[0].append(messageName)
+                
+                data = message['data']
+                dataList = []
+
+                # message data
+                for element in data:
+                    elem = Element()
+                    elem.name = element['name']
+                    elem.type = getLangTypename(element['type'])
+
+                    dataList.append(elem)
+
+                # Add class list.
+                if args.lang == 'cpp':
+                    classList.append(readCpp('message'))
+                elif args.lang == 'csharp':
+                    classList.append(readCsharp(bindList, handlerList))
+            for message in messageList['server']:
+                messageName = message['name']
+                messageNameList[1].append(messageName)
+                
                 data = message['data']
                 dataList = []
 

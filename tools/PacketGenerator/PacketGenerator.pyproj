@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>1cbc2443-d0a8-4ed5-ac39-1782d2001b4e</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>execute.py</StartupFile>
+    <StartupFile>generate.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -12,8 +12,9 @@
     <Name>PacketGenerator</Name>
     <RootNamespace>PacketGenerator</RootNamespace>
     <LaunchProvider>Standard Python launcher</LaunchProvider>
-    <CommandLineArguments>-s ../../TestServer/ -c "D:/Project/Unreal Project/Multiplay/Source/Multiplay/"</CommandLineArguments>
+    <CommandLineArguments>-l cpp -p "D:/Project/Game Server/HazardServer/common/message/"</CommandLineArguments>
     <EnableNativeCodeDebugging>False</EnableNativeCodeDebugging>
+    <IsWindowsApplication>False</IsWindowsApplication>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>

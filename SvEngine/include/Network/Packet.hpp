@@ -26,7 +26,7 @@ public:
     Packet& operator<<(long long Data);
     Packet& operator<<(float Data);
     Packet& operator<<(double Data);
-    Packet& operator<<(String Data);
+    Packet& operator<<(StringView Data);
 
     template<class T>
     Packet& operator<<(std::vector<T> Data) {
