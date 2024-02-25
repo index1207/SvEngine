@@ -25,7 +25,7 @@ public:
 	void Launch(uint64 delay, CallbackType&& callback);
 	
 	template<uint64 _Dly = 0, class T, class _Ret, class ...Args>
-	inline void Launch(_Ret(T::* method)(Args...), Args&&... args)
+	inline void Launch(_Ret(T::* method)(Args...), Args... args)
 	{
 		auto owner = std::static_pointer_cast<T>(shared_from_this());
 		if constexpr (_Dly)

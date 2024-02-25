@@ -2,6 +2,7 @@
 // Created by han93 on 2023-12-16.
 //
 #include "pch.h"
+#include <codecvt>
 
 #include "Network/Packet.hpp"
 
@@ -111,8 +112,9 @@ Packet& Packet::operator<<(double Data) {
 }
 
 Packet& Packet::operator<<(StringView Data) {
-    *this << static_cast<unsigned short>(Data.length()+1)*2;
-    m_buffer.insert(m_buffer.end(), Data.begin(), Data.end());
+    auto str = action::ToAnsiString(Data);
+    *this << static_cast<int16>(str.length());
+    m_buffer.insert(m_buffer.end(), str.begin(), str.end());
     return *this;
 }
 
@@ -225,7 +227,7 @@ Packet& Packet::operator>>(String& Data)
 {
     unsigned short len;
     *this >> len;
-    std::copy(m_buffer.begin(), m_buffer.begin() + len, Data.begin());
+    Data.assign(m_buffer.begin(), m_buffer.begin() + len);
     m_buffer.erase(m_buffer.begin(), m_buffer.begin() + len);
     return *this;
 }

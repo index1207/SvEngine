@@ -11,6 +11,13 @@ namespace action
 		return ws;
 	}
 
+	inline std::string ToAnsiString(StringView str)
+	{
+		std::string s;
+		s.assign(str.begin(), str.end());
+		return s;
+	}
+
 	class Random
 	{
 	public:
