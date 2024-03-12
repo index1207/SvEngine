@@ -21,12 +21,12 @@
     <ClCompile Include="src\Thread\JobSerializer.cpp" />
     <ClCompile Include="src\Thread\ThreadManager.cpp" />
     <ClCompile Include="src\Thread\TLSStorage.cpp" />
-    <ClCompile Include="src\Database\DbConnection.cpp" />
-    <ClCompile Include="src\Database\DBConnectionPool.cpp" />
-    <ClCompile Include="src\Database\Statement.cpp" />
     <ClCompile Include="src\Util\File.cpp" />
     <ClCompile Include="src\Util\XmlParser.cpp" />
     <ClCompile Include="src\Thread\JobTimer.cpp" />
+    <ClCompile Include="src\Database\DbConnection.cpp" />
+    <ClCompile Include="src\Database\DBConnectionPool.cpp" />
+    <ClCompile Include="src\Database\Statement.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">
@@ -73,11 +73,11 @@
     <ClInclude Include="include\Thread\JobSerializer.hpp" />
     <ClInclude Include="include\Thread\ThreadManager.hpp" />
     <ClInclude Include="include\Thread\TLSStorage.hpp" />
-    <ClInclude Include="include\Database\DBConnection.hpp" />
-    <ClInclude Include="include\Database\DBConnectionPool.hpp" />
-    <ClInclude Include="include\Database\Statement.hpp" />
     <ClInclude Include="include\Util\File.hpp" />
     <ClInclude Include="include\Util\XmlParser.hpp" />
     <ClInclude Include="include\Thread\JobTimer.hpp" />
+    <ClInclude Include="include\Database\DbConnection.hpp" />
+    <ClInclude Include="include\Database\DBConnectionPool.hpp" />
+    <ClInclude Include="include\Database\Statement.hpp" />
   </ItemGroup>
 </Project>

@@ -2,6 +2,9 @@
 #include <sql.h>
 #include <sqlext.h>
 
+template<int32 Param, int32 Column>
+class Statement;
+
 enum
 {
 	WVARCHAR_MAX = 4000,
@@ -18,6 +21,12 @@ public:
 	bool Fetch();
 	int32 GetRowCount();
 	void Unbind();
+
+	template<int32 Param, int32 Column>
+	Statement<Param, Column> CreateStatement(String sql)
+	{
+		return Statement<Param, Column>(this, sql);
+	}
 public:
 	bool BindParam(int32 paramIdx, bool* value, SQLLEN* idx);
 	bool BindParam(int32 paramIdx, float* value, SQLLEN* idx);

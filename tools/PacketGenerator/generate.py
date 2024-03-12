@@ -32,9 +32,10 @@ cppFormat.file = '''#pragma once
 
 /* Additional headers. */
 {0}
-
+namespace gen {{
 namespace {1} {{
     {2}
+}}
 }}
 #pragma warning(pop)
 '''
@@ -64,7 +65,8 @@ class Session;
 #endif
 
 #define BIND_HANDLER(pckname, buffer) std::bind(pckname##PacketHandler, std::placeholders::_1, STATIC_POINTER_CAST(pckname, Packet::ParseFrom<pckname>(buffer)));
-
+namespace gen
+{{
 namespace {1}
 {{
     class PacketHandler
@@ -73,9 +75,9 @@ namespace {1}
 	public:
 		static Handler getHandler(std::span<char> buffer)
         {{
-            gen::PacketId id = gen::PacketId::NONE;
+            PacketId id = PacketId::NONE;
 			std::memcpy(&id, buffer.data(), sizeof(unsigned short));
-			id = (gen::PacketId)ntohs((u_short)id);
+			id = (PacketId)ntohs((u_short)id);
             
             switch (id)
             {{
@@ -96,6 +98,7 @@ namespace {1}
         }}
 {3}
 	}};
+}}
 }}
 '''
 
@@ -416,12 +419,13 @@ if args.lang == 'cpp':
     allMessageList = list(itertools.chain(*messageNameList))
     types.write('#pragma once\n\n\
 template<class T> inline T& unmove(T&& t) {{ return static_cast<T&>(t); }}\n\n\
+namespace gen {{\
 namespace {0} {{\n\
     enum PacketId : uint16 {{\n\
         NONE = 0,\n\
 {1}\
     \n\t}};\n\
-\n}}'.format(args.namespace, ',\n'.join(str(f'\t\t{stringcase.constcase(value)} = {allMessageList.index(value)+1}') for value in allMessageList)))
+\n}}\n}}'.format(args.namespace, ',\n'.join(str(f'\t\t{stringcase.constcase(value)} = {allMessageList.index(value)+1}') for value in allMessageList)))
 
 open(f'generated/ServerPacketHandler.gen.{ext}', 'w').write(outputHandler[0])
 open(f'generated/ClientPacketHandler.gen.{ext}', 'w').write(outputHandler[1])

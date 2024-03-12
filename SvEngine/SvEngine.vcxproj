@@ -195,10 +195,11 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="src\Thread\JobTimer.cpp" />
-    <ClCompile Include="src\Util\File.cpp" />
     <ClCompile Include="src\Database\DbConnection.cpp" />
     <ClCompile Include="src\Database\DBConnectionPool.cpp" />
+    <ClCompile Include="src\Database\Statement.cpp" />
+    <ClCompile Include="src\Thread\JobTimer.cpp" />
+    <ClCompile Include="src\Util\File.cpp" />
     <ClCompile Include="src\Thread\JobSerializer.cpp" />
     <ClCompile Include="PCH\pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -214,14 +215,14 @@
     <ClCompile Include="src\Network\Session.cpp" />
     <ClCompile Include="src\Util\Console.cpp" />
     <ClCompile Include="src\Thread\ThreadManager.cpp" />
-    <ClCompile Include="src\Database\Statement.cpp" />
     <ClCompile Include="src\Util\XmlParser.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\Util\File.hpp" />
-    <ClInclude Include="include\Database\DBConnection.hpp" />
-    <ClInclude Include="include\CoreHeader.hpp" />
+    <ClInclude Include="include\Database\DbConnection.hpp" />
     <ClInclude Include="include\Database\DBConnectionPool.hpp" />
+    <ClInclude Include="include\Database\Statement.hpp" />
+    <ClInclude Include="include\Util\File.hpp" />
+    <ClInclude Include="include\CoreHeader.hpp" />
     <ClInclude Include="include\Thread\TLSStorage.hpp" />
     <ClInclude Include="include\Util\Action.hpp" />
     <ClInclude Include="include\Subsystem\Engine.hpp" />
@@ -234,7 +235,6 @@
     <ClInclude Include="include\Thread\JobTimer.hpp" />
     <ClInclude Include="PCH\pch.h" />
     <ClInclude Include="include\Thread\ThreadManager.hpp" />
-    <ClInclude Include="include\Database\Statement.hpp" />
     <ClInclude Include="include\Util\XmlParser.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

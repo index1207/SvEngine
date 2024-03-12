@@ -18,16 +18,20 @@ public:
 		m_columnFlag = 0;
 		m_connection->Unbind();
 	}
+	Statement(DBConnection* connection, String sql) : Statement(connection)
+	{
+		m_query = sql;
+	}
 
 	bool Validate()
 	{
 		return m_paramFlag == FullBits<paramCount>::value && m_columnFlag == FullBits<columnCount>::value;
 	}
 
-	bool ExecuteQuery(String query)
+	bool ExecuteQuery()
 	{
 		ASSERT_CRASH(Validate());
-		return m_connection->Execute(query);
+		return m_connection->Execute(m_query);
 	}
 
 	bool Next()
@@ -82,6 +86,7 @@ public:
 		m_columnFlag |= 1LL << idx;
 	}
 private:
+	String m_query;
 	DBConnection* m_connection;
 	SQLLEN m_paramIdx[paramCount > 0 ? paramCount : 1];
 	SQLLEN m_columnIdx[columnCount > 0 ? columnCount : 1];
