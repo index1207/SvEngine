@@ -64,19 +64,19 @@ public:
 	}
 
 	template<class T>
-	T Bind(int32 idx, T& value) {
+	void Bind(int32 idx, T& value) {
 		m_connection->BindCol(idx+1, &value, &m_columnIdx[idx]);
 		m_columnFlag |= 1LL << idx;
 	}
 	template<int32 N>
 	void Bind(int32 idx, WCHAR(&value)[N])
 	{
-		m_connection->BindCol(idx+1, value, N-1, &m_columnIdx[idx]);
+		m_connection->BindCol(idx+1, value, N*2, &m_columnIdx[idx]);
 		m_columnFlag |= 1LL << idx;
 	}
 	void Bind(int32 idx, WCHAR* value, int32 size)
 	{
-		m_connection->BindCol(idx+1, value, size - 1, &m_columnIdx[idx]);
+		m_connection->BindCol(idx+1, value, size*2, &m_columnIdx[idx]);
 		m_columnFlag |= 1LL << idx;
 	}
 	template<class T, int32 N>

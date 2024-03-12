@@ -13,7 +13,6 @@ public:
 	DBConnection* Pop();
 	void Push(DBConnection* connection);
 private:
-	std::mutex m_mtx;
 	SQLHENV _environment = SQL_NULL_HANDLE;
 	Vector<DBConnection*> _connections;
 };

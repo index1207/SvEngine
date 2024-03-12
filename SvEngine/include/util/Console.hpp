@@ -7,9 +7,10 @@
 #include <iostream>
 #include <syncstream>
 
-MAKE_LOG_CATEGORY(Server);
 MAKE_LOG_CATEGORY(Netcpp);
 MAKE_LOG_CATEGORY(Database);
+MAKE_LOG_CATEGORY(Temp);
+MAKE_LOG_CATEGORY(IO);
 
 using HANDLE = void*;
 

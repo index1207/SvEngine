@@ -13,8 +13,6 @@ DBConnectionPool::~DBConnectionPool()
 
 bool DBConnectionPool::Connect(int32 connectionCount, String connectionString)
 {
-	std::lock_guard lock(m_mtx);
-
 	if (::SQLAllocHandle(SQL_HANDLE_ENV, SQL_NULL_HANDLE, &_environment) != SQL_SUCCESS)
 		return false;
 
@@ -35,8 +33,6 @@ bool DBConnectionPool::Connect(int32 connectionCount, String connectionString)
 
 void DBConnectionPool::Clear()
 {
-	std::lock_guard lock(m_mtx);
-
 	if (_environment != SQL_NULL_HANDLE)
 	{
 		::SQLFreeHandle(SQL_HANDLE_ENV, _environment);
@@ -51,8 +47,6 @@ void DBConnectionPool::Clear()
 
 DBConnection* DBConnectionPool::Pop()
 {
-	std::lock_guard lock(m_mtx);
-
 	if (_connections.empty())
 		return nullptr;
 
@@ -63,6 +57,5 @@ DBConnection* DBConnectionPool::Pop()
 
 void DBConnectionPool::Push(DBConnection* connection)
 {
-	std::lock_guard lock(m_mtx);
 	_connections.push_back(connection);
 }

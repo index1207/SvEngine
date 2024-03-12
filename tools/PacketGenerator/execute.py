@@ -13,8 +13,8 @@ subprocess.call(['python', 'generate.py', '-l', 'cpp', '-p', args.server_path+'m
 #subprocess.call(['python', 'generate.py', '-l', 'csharp'], shell=True)
 
 if args.server_path != '':
-    copy_tree('generated', args.server_path + 'generated')
-    os.remove(args.server_path + 'generated/ClientPacketHandler.gen.hpp')
+    copy_tree('generated', args.server_path + f'generated/{args.namespace}')
+    os.remove(args.server_path + f'generated/{args.namespace}/ClientPacketHandler.gen.hpp')
 if args.client_path != '':
-    copy_tree('generated', args.client_path + 'generated')
-    os.remove(args.client_path + 'generated/ServerPacketHandler.gen.hpp')
+    copy_tree('generated', args.client_path + f'generated/{args.namespace}')
+    os.remove(args.client_path + f'generated/{args.namespace}/ServerPacketHandler.gen.hpp')

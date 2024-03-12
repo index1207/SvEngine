@@ -407,7 +407,7 @@ if args.lang == 'cpp':
             handlerList[i].append(handlerName)
     for i in range(2):
         outputHandler[i] = cppFormat.handler.format(
-            '\n'.join(f'#include "generated/{(value.rstrip(".json"))}.gen.hpp"' for value in defList),
+            '\n'.join(f'#include "generated/{args.namespace}/{(value.rstrip(".json"))}.gen.hpp"' for value in defList),
             args.namespace,
             '\n'.join(f'\t\t\tcase {stringcase.constcase(value)}:\n\t\t\t\treturn BIND_HANDLER({value}, buffer);' for value in messageNameList[i]),
             '\n'.join(str('\t\tstatic bool '+value+f'(TSharedPtr<Session> session, TSharedPtr<{(messageNameList[i][handlerList[i].index(value)])}> packet);') for value in handlerList[i]) #handlers
