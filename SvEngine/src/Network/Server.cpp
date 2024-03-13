@@ -21,7 +21,9 @@ void Server::OnAcceptCompleted(net::Context* acceptContext, bool isSuccess) {
     if (isSuccess)
     {
         auto client = m_clientFactory();
-        client->Run(move(acceptContext->acceptSocket));
+        client->Run(std::move(acceptContext->acceptSocket));
+        acceptContext->acceptSocket = std::make_unique<Socket>(Protocol::Tcp);
+
         client->onConnected();
     }
     m_listenSock.accept(acceptContext);
@@ -35,6 +37,7 @@ void Server::Run(Endpoint endpoint, int count) {
 
     for(int i = 0; i < count; ++i) {
         auto acceptContext = new Context;
+        acceptContext->acceptSocket = std::make_unique<Socket>(Protocol::Tcp);
         acceptContext->completed = std::bind(&Server::OnAcceptCompleted, this, placeholders::_1, placeholders::_2);
 
         if (!m_listenSock.accept(acceptContext))

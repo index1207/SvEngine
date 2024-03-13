@@ -3,7 +3,6 @@
 #include <vector>
 #include <functional>
 
-#include "net/Socket.hpp"
 #include "net/Context.hpp"
 
 using namespace net;
@@ -44,7 +43,5 @@ namespace sv {
         std::vector<char> m_buffer;
         net::Context m_recvCtx;
         std::atomic<bool> m_isDisconnected;
-        std::mutex m_mtx;
     };
-
 }

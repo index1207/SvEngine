@@ -283,6 +283,10 @@ parser.add_argument('-p', '--path', default='./define', action='store', dest='pa
 parser.add_argument('-n', '--namespace', default='gen', action='store', dest='namespace', help='namespace name')
 args = parser.parse_args()
 
+if not os.path.isdir('generated'):
+    os.mkdir('generated')
+os.mkdir(f'generated/{args.namespace}')
+
 
 ext = ''
 outputHandler = ['', '']
@@ -397,7 +401,7 @@ for filename in defList:
             ext = 'cs'
 
         # write packet & handler file
-        genPacket = open(f'generated/{(filename.rstrip(".json"))}.gen.{ext}', 'w')
+        genPacket = open(f'generated/{args.namespace}/{(filename.rstrip(".json"))}.gen.{ext}', 'w')
         genPacket.write(outputFile)
 
 if args.lang == 'cpp':
@@ -414,12 +418,12 @@ if args.lang == 'cpp':
         )
     
 
-types = open(f'generated/Packet.gen.{ext}', 'w')
+types = open(f'generated/{args.namespace}/Packet.gen.{ext}', 'w')
 if args.lang == 'cpp':
     allMessageList = list(itertools.chain(*messageNameList))
     types.write('#pragma once\n\n\
 template<class T> inline T& unmove(T&& t) {{ return static_cast<T&>(t); }}\n\n\
-namespace gen {{\
+namespace gen {{\n\
 namespace {0} {{\n\
     enum PacketId : uint16 {{\n\
         NONE = 0,\n\
@@ -427,5 +431,5 @@ namespace {0} {{\n\
     \n\t}};\n\
 \n}}\n}}'.format(args.namespace, ',\n'.join(str(f'\t\t{stringcase.constcase(value)} = {allMessageList.index(value)+1}') for value in allMessageList)))
 
-open(f'generated/ServerPacketHandler.gen.{ext}', 'w').write(outputHandler[0])
-open(f'generated/ClientPacketHandler.gen.{ext}', 'w').write(outputHandler[1])
+open(f'generated/{args.namespace}/ServerPacketHandler.gen.{ext}', 'w').write(outputHandler[0])
+open(f'generated/{args.namespace}/ClientPacketHandler.gen.{ext}', 'w').write(outputHandler[1])

@@ -198,6 +198,7 @@
     <ClCompile Include="src\Database\DbConnection.cpp" />
     <ClCompile Include="src\Database\DBConnectionPool.cpp" />
     <ClCompile Include="src\Database\Statement.cpp" />
+    <ClCompile Include="src\Network\Client.cpp" />
     <ClCompile Include="src\Thread\JobTimer.cpp" />
     <ClCompile Include="src\Util\File.cpp" />
     <ClCompile Include="src\Thread\JobSerializer.cpp" />
@@ -221,6 +222,7 @@
     <ClInclude Include="include\Database\DbConnection.hpp" />
     <ClInclude Include="include\Database\DBConnectionPool.hpp" />
     <ClInclude Include="include\Database\Statement.hpp" />
+    <ClInclude Include="include\Network\Client.hpp" />
     <ClInclude Include="include\Util\File.hpp" />
     <ClInclude Include="include\CoreHeader.hpp" />
     <ClInclude Include="include\Thread\TLSStorage.hpp" />
