@@ -30,7 +30,9 @@ void Server::OnAcceptCompleted(net::Context* acceptContext, bool isSuccess) {
         {
             const auto err = WSAGetLastError();
         }
-        client->OnConnected(net::Endpoint::parse(addr));
+        const auto endpoint = net::Endpoint::parse(addr);
+        client->m_sock->setRemoteEndpoint(endpoint);
+        client->OnConnected(endpoint);
     }
     m_listenSock.accept(acceptContext);
 }
