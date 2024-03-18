@@ -2,6 +2,7 @@
 #include "Network/Client.hpp"
 #include "net/Exception.hpp"
 
+#include <net/Socket.hpp>
 #include <net/Context.hpp>
 
 Client::Client() {
@@ -24,8 +25,15 @@ void Client::onConnectCompleted(Context* context, bool isSuccess) {
     auto client = m_serverFactory();
     if (isSuccess) {
         client->Run(std::make_unique<Socket>(m_sock));
-        client->onConnected();
+
+        SOCKADDR_IN addr;
+        int len = sizeof(addr);
+        if (SOCKET_ERROR == getpeername(client->m_sock->getHandle(), reinterpret_cast<SOCKADDR*>(&addr), &len))
+        {
+            const auto err = WSAGetLastError();
+        }
+        client->OnConnected(net::Endpoint::parse(addr));
     }
     else
-        client->onFail(Failure::Connect);
+        client->OnFail(Failure::Connect);
 }

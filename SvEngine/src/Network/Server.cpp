@@ -24,7 +24,13 @@ void Server::OnAcceptCompleted(net::Context* acceptContext, bool isSuccess) {
         client->Run(std::move(acceptContext->acceptSocket));
         acceptContext->acceptSocket = std::make_unique<Socket>(Protocol::Tcp);
 
-        client->onConnected();
+        SOCKADDR_IN addr;
+        int len = sizeof(addr);
+        if (SOCKET_ERROR == getpeername(client->m_sock->getHandle(), reinterpret_cast<SOCKADDR*>(&addr), &len))
+        {
+            const auto err = WSAGetLastError();
+        }
+        client->OnConnected(net::Endpoint::parse(addr));
     }
     m_listenSock.accept(acceptContext);
 }

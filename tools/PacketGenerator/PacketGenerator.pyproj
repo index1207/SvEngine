@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>1cbc2443-d0a8-4ed5-ac39-1782d2001b4e</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>generate.py</StartupFile>
+    <StartupFile>execute.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -12,7 +12,7 @@
     <Name>PacketGenerator</Name>
     <RootNamespace>PacketGenerator</RootNamespace>
     <LaunchProvider>Standard Python launcher</LaunchProvider>
-    <CommandLineArguments>-l cpp -p "D:/Project/Game Server/HazardServer/common/message/"</CommandLineArguments>
+    <CommandLineArguments>-s ../../AccountServer/common/ -c=['D:/Project/Unreal Project/MoralHazard/Source/MoralHazard/Network/'] -n account</CommandLineArguments>
     <EnableNativeCodeDebugging>False</EnableNativeCodeDebugging>
     <IsWindowsApplication>False</IsWindowsApplication>
   </PropertyGroup>

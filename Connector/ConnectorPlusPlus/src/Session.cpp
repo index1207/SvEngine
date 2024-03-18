@@ -23,7 +23,7 @@ void Session::OnRecvCompleted(Context *context, bool isSuccess) {
         Disconnect();
         return;
     }
-    onReceive(context->buffer.subspan(0, context->length), context->length);
+    OnReceive(context->buffer.subspan(0, context->length), context->length);
     m_sock->receive(context);
 }
 
@@ -34,7 +34,7 @@ void Session::Disconnect() {
     if (!m_isDisconnected)
     {
         m_isDisconnected = true;
-        onDisconnected();
+        OnDisconnected();
         m_ref = nullptr;
     }
 }

@@ -5,7 +5,7 @@
 #include "Session.hpp"
 
 class Client {
-    using serverFactory = std::function<std::shared_ptr<Session>()>;
+    using ServerFactory = std::function<std::shared_ptr<Session>()>;
 
     Client();
 public:
@@ -26,5 +26,5 @@ private:
     void onConnectCompleted(Context* context, bool isSuccess);
 private:
     Socket m_sock;
-    serverFactory m_serverFactory;
+    ServerFactory m_serverFactory;
 };

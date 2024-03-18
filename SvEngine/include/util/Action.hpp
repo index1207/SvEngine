@@ -10,46 +10,13 @@ namespace action
 	static std::uniform_int_distribution<> dis(0, 15);
 	static std::uniform_int_distribution<> dis2(8, 11);
 
-	inline String ToUnicodeString(std::string_view str)
-	{
-		String ws;
-		ws.assign(str.begin(), str.end());
-		return ws;
-	}
+	String ToUnicodeString(std::string_view str);
 
-	inline std::string ToAnsiString(StringView str)
-	{
-		std::string s;
-		s.assign(str.begin(), str.end());
-		return s;
-	}
+	std::string ToAnsiString(StringView str);
 
-	inline String generate_uuid_v4() {
-		std::wstringstream ss;
-		int i;
-		ss << std::hex;
-		for (i = 0; i < 8; i++) {
-			ss << dis(gen);
-		}
-		ss << "-";
-		for (i = 0; i < 4; i++) {
-			ss << dis(gen);
-		}
-		ss << "-4";
-		for (i = 0; i < 3; i++) {
-			ss << dis(gen);
-		}
-		ss << "-";
-		ss << dis2(gen);
-		for (i = 0; i < 3; i++) {
-			ss << dis(gen);
-		}
-		ss << "-";
-		for (i = 0; i < 12; i++) {
-			ss << dis(gen);
-		};
-		return ss.str();
-	}
+	String UUIDv4() noexcept;
+
+	String Timestamp();
 
 	class Random
 	{

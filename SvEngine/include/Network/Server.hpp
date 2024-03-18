@@ -8,7 +8,7 @@
 
 class Server {
     friend class Session;
-    using clientFactory = std::function<std::shared_ptr<Session>()>;
+    using ClientFactory = std::function<std::shared_ptr<Session>()>;
     Server();
 public:
     ~Server();
@@ -30,5 +30,5 @@ private:
 private:
     net::Socket m_listenSock;
     std::vector<net::Context*> m_acceptContexts;
-    clientFactory m_clientFactory;
+    ClientFactory m_clientFactory;
 };

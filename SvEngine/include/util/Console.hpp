@@ -28,15 +28,19 @@ enum EncodingType {
 
 class Console {
     friend class Engine;
+
+    using ColorOperation = std::ostream&(std::ostream&);
+
     static void Initialize();
 public:
     static void SetOutputEncoding();
     static void Log(String category, LogType type, String message);
 private:
-    static void LogDisplay(String message);
-    static void LogWarning(String message);
-    static void LogDebug(String message);
-    static void LogError(String message);
+    static void Print(ColorOperation color, String message, bool ln = true);
+    static void LogDisplay(String category, String message);
+    static void LogWarning(String category, String message);
+    static void LogDebug(String category, String message);
+    static void LogError(String category, String message);
 private:
     static HANDLE s_handle;
 };

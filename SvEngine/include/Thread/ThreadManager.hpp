@@ -15,6 +15,7 @@ public:
 	static void Initialize();
 	static void Finalize();
 private:
-	ConcurrencyVector<std::thread> m_threads;
+	std::mutex m_lock;
+	Vector<std::thread> m_threads;
 };
 

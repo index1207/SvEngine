@@ -19,7 +19,8 @@ enum class Failure
 class Session : public std::enable_shared_from_this<Session>
 {
     friend class Server;
-    using serverFactory = std::function<std::shared_ptr<Session>()>;
+    friend class Client;
+    using ServerFactory = std::function<std::shared_ptr<Session>()>;
 public:
     Session();
     virtual ~Session();
@@ -30,10 +31,10 @@ public:
     void Disconnect();
     void Send(Packet* packet);
 public:
-    virtual void onConnected() {};
-    virtual void onDisconnected() {};
-    virtual void onReceive(std::span<char>, int) {};
-    virtual void onFail(Failure) {};
+    virtual void OnConnected(net::Endpoint) {};
+    virtual void OnDisconnected(net::Endpoint) {};
+    virtual void OnReceive(std::span<char>, int) {};
+    virtual void OnFail(Failure) {};
 protected:
     std::unique_ptr<Socket> m_sock;
 private:

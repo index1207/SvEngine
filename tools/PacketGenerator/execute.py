@@ -1,7 +1,14 @@
+import ast
 import subprocess
 import os
 import argparse
 from distutils.dir_util import copy_tree
+
+def arg_as_list(s):
+    v = ast.literal_eval(s)
+    if type(v) is not list:
+        raise argparse.ArgumentTypeError("Argument \"%s\" is not a list" % (s))
+    return v
 
 parser = argparse.ArgumentParser()
 parser.add_argument('-s', '--server_path', default='', action='store', dest='server_path', help='server project directory path')
@@ -10,11 +17,11 @@ parser.add_argument('-n', '--namespace', default='gen', action='store', dest='na
 args = parser.parse_args()
 
 subprocess.call(['python', 'generate.py', '-l', 'cpp', '-p', args.server_path+'message/', '-n', args.namespace], shell=True)
-#subprocess.call(['python', 'generate.py', '-l', 'csharp'], shell=True)
+# # subprocess.call(['python', 'generate.py', '-l', 'csharp'], shell=True)
 
 if args.server_path != '':
     copy_tree(f'generated/{args.namespace}', args.server_path + f'generated/{args.namespace}')
     os.remove(args.server_path + f'generated/{args.namespace}/ClientPacketHandler.gen.hpp')
-if args.client_path != '':
-    copy_tree(f'generated/{args.namespace}', args.client_path + f'generated/{args.namespace}')
-    os.remove(args.client_path + f'generated/{args.namespace}/ServerPacketHandler.gen.hpp')
+for clientPath in arg_as_list(args.client_path):
+    copy_tree(f'generated/{args.namespace}', clientPath + f'generated/{args.namespace}')
+    os.remove(clientPath + f'generated/{args.namespace}/ServerPacketHandler.gen.hpp')

@@ -14,12 +14,13 @@ ThreadManager::~ThreadManager()
 
 void ThreadManager::Launch(CallbackType callback)
 {
-	m_threads.push_back(std::thread([=]()
-	{
+	std::lock_guard lock(m_lock);
+
+	m_threads.emplace_back([=] {
 		Initialize();
 		callback();
 		Finalize();
-	}));
+	});
 }
 
 void ThreadManager::Join()

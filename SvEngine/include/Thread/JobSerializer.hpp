@@ -37,7 +37,7 @@ public:
 		else Push(std::make_shared<Job>(owner, method, std::forward<Args>(args)...));
 	}
 	template<class T, class _Ret, class ...Args>
-	inline void Launch(int64 delay, _Ret(T::* method)(Args...), Args&&... args)
+	inline void Launch(int64 delay, _Ret(T::* method)(Args...), Args... args)
 	{
 		auto owner = std::static_pointer_cast<T>(shared_from_this());
 		auto job = std::make_shared<Job>(owner, method, std::forward<Args>(args)...);

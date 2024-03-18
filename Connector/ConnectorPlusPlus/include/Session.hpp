@@ -19,7 +19,7 @@ namespace sv {
     class Session : public std::enable_shared_from_this<Session>
     {
         friend class Server;
-        using serverFactory = std::function<std::shared_ptr<Session>()>;
+        using ServerFactory = std::function<std::shared_ptr<Session>()>;
     public:
         Session();
         virtual ~Session();
@@ -30,10 +30,10 @@ namespace sv {
         void Disconnect();
         void Send(std::span<char> buffer);
     public:
-        virtual void onConnected() {};
-        virtual void onDisconnected() {};
-        virtual void onReceive(std::span<char> buffer, int length) {};
-        virtual void onFail(Failure cause) {};
+        virtual void OnConnected() {};
+        virtual void OnDisconnected() {};
+        virtual void OnReceive(std::span<char> buffer, int length) {};
+        virtual void OnFail(Failure cause) {};
     protected:
         std::unique_ptr<Socket> m_sock;
     private:

@@ -2,6 +2,7 @@ import itertools
 import os
 import json
 import argparse
+import shutil
 import stringcase
 from dataclasses import dataclass, field
 
@@ -274,7 +275,13 @@ def getLangTypename(typename):
 
     return typename
 
-
+def DeleteAllFiles(filePath):
+    if os.path.exists(filePath):
+        for file in os.scandir(filePath):
+            os.remove(file.path)
+        return 'Remove All File'
+    else:
+        return 'Directory Not Found'
 
 
 parser = argparse.ArgumentParser()
@@ -283,10 +290,8 @@ parser.add_argument('-p', '--path', default='./define', action='store', dest='pa
 parser.add_argument('-n', '--namespace', default='gen', action='store', dest='namespace', help='namespace name')
 args = parser.parse_args()
 
-if not os.path.isdir('generated'):
-    os.mkdir('generated')
-os.mkdir(f'generated/{args.namespace}')
-
+if os.path.exists(f'generated/{args.namespace}') != True:
+    os.mkdir(f'generated/{args.namespace}')
 
 ext = ''
 outputHandler = ['', '']

@@ -5,7 +5,6 @@
 
 #include "util/Console.hpp"
 #include "Windows.h"
-
 #include "color.hpp"
 
 HANDLE Console::s_handle;
@@ -14,56 +13,56 @@ void Console::SetOutputEncoding()
 {
 }
 
-void Console::Log(String category, LogType type, String message) {
-    message = L"[" + category + L"] " + message;
+void Console::Log(String category, LogType type, String message)
+{
     switch (type)
     {
     case LogType::Log:
-        LogDisplay(message);
+        LogDisplay(category, message);
         break;
     case LogType::Warning:
-        LogWarning(message);
+        LogWarning(category, message);
         break;
     case LogType::Debug:
-        LogDebug(message);
+        LogDebug(category, message);
         break;
     case LogType::Error:
-        LogError(message);
+        LogError(category, message);
         break;
     default:
         break;
     }
 }
 
-void Console::LogDisplay(String message)
+void Console::Print(ColorOperation color, String message, bool ln)
 {
-    std::osyncstream(std::cout) << hue::bright_white;
-    std::wosyncstream(std::wcout) << "[Log]" << message << std::endl;
+    if (ln) message += L'\n';
+    std::cout << color << action::ToAnsiString(message);
 }
 
-void Console::LogWarning(String message)
+void Console::LogDisplay(String category, String message)
 {
-    std::osyncstream(std::cout) << hue::yellow;
-    std::wosyncstream(std::wcout) << "[Warning]" << message << std::endl;
+    Print(hue::bright_white, std::format(TEXT("[{}][Log] {}"), category, message));
 }
 
-void Console::LogDebug(String message)
+void Console::LogWarning(String category, String message)
 {
-    std::osyncstream(std::cout) << hue::light_green;
-    std::wosyncstream(std::wcout) << "[Debug]" << message << std::endl;
+    Print(hue::yellow, std::format(TEXT("[{}][Warning] {}"), category, message));
 }
 
-void Console::LogError(String message)
+void Console::LogDebug(String category, String message)
 {
-    std::osyncstream(std::cout) << hue::light_red;
-    std::wosyncstream(std::wcout) << "[Error]" << message << std::endl;
+    Print(hue::light_green, std::format(TEXT("[{}][Debug] {}"), category, message));
+}
+
+void Console::LogError(String category, String message)
+{
+    Print(hue::light_red, std::format(TEXT("[{}][Error] {}"), category, message));
 }
 
 void Console::Initialize() {
-    #ifdef WIN32
     s_handle = GetStdHandle(STD_OUTPUT_HANDLE);
     SetConsoleOutputCP(CP_UTF8);
-    #endif
 
     setlocale(LC_ALL, "");
 }
