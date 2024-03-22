@@ -12,7 +12,7 @@
     <Name>PacketGenerator</Name>
     <RootNamespace>PacketGenerator</RootNamespace>
     <LaunchProvider>Standard Python launcher</LaunchProvider>
-    <CommandLineArguments>-s ../../AccountServer/common/ -c=['D:/Project/Unreal Project/MoralHazard/Source/MoralHazard/Network/'] -n account</CommandLineArguments>
+    <CommandLineArguments>-s ../../MMOServer/common/ -c "['../../../MoralHazard/Source/MoralHazard/Network/']" -n mmo</CommandLineArguments>
     <EnableNativeCodeDebugging>False</EnableNativeCodeDebugging>
     <IsWindowsApplication>False</IsWindowsApplication>
   </PropertyGroup>

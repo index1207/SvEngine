@@ -427,9 +427,9 @@ types = open(f'generated/{args.namespace}/Packet.gen.{ext}', 'w')
 if args.lang == 'cpp':
     allMessageList = list(itertools.chain(*messageNameList))
     types.write('#pragma once\n\n\
-template<class T> inline T& unmove(T&& t) {{ return static_cast<T&>(t); }}\n\n\
 namespace gen {{\n\
 namespace {0} {{\n\
+    template<class T> inline T& unmove(T&& t) {{ return static_cast<T&>(t); }}\n\n\
     enum PacketId : uint16 {{\n\
         NONE = 0,\n\
 {1}\

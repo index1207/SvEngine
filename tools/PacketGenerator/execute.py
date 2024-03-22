@@ -2,7 +2,7 @@ import ast
 import subprocess
 import os
 import argparse
-from distutils.dir_util import copy_tree
+import shutil
 
 def arg_as_list(s):
     v = ast.literal_eval(s)
@@ -20,8 +20,16 @@ subprocess.call(['python', 'generate.py', '-l', 'cpp', '-p', args.server_path+'m
 # # subprocess.call(['python', 'generate.py', '-l', 'csharp'], shell=True)
 
 if args.server_path != '':
-    copy_tree(f'generated/{args.namespace}', args.server_path + f'generated/{args.namespace}')
+    dest = args.server_path + f'generated/{args.namespace}'
+    if os.path.exists(dest):
+        shutil.rmtree(dest)
+        
+    shutil.copytree(f'generated/{args.namespace}', dest)
     os.remove(args.server_path + f'generated/{args.namespace}/ClientPacketHandler.gen.hpp')
 for clientPath in arg_as_list(args.client_path):
-    copy_tree(f'generated/{args.namespace}', clientPath + f'generated/{args.namespace}')
+    dest = clientPath + f'generated/{args.namespace}'
+    if os.path.exists(dest):
+        shutil.rmtree(dest)
+        
+    shutil.copytree(f'generated/{args.namespace}', dest)
     os.remove(clientPath + f'generated/{args.namespace}/ServerPacketHandler.gen.hpp')
