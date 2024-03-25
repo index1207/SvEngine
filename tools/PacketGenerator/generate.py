@@ -31,6 +31,8 @@ cppFormat.file = '''#pragma once
 
 #include <vector>
 
+#undef ERROR
+
 /* Additional headers. */
 {0}
 namespace gen {{
