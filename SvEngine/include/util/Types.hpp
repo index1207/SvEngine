@@ -62,4 +62,4 @@ using String = std::wstring;
 using StringView = std::wstring_view;
 
 #define ASSERT_CRASH(exp) if(!(exp)) { int* ptr = nullptr; *ptr = 1234; }
-#define MAKE_LOG_CATEGORY(name) static String Log##name(L#name)
+#define MAKE_LOG_CATEGORY(name) namespace Category { static String name(L#name); }

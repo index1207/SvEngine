@@ -15,7 +15,6 @@ ThreadManager::~ThreadManager()
 void ThreadManager::Launch(CallbackType callback)
 {
 	std::lock_guard lock(m_lock);
-
 	m_threads.emplace_back([=] {
 		Initialize();
 		callback();
@@ -29,6 +28,10 @@ void ThreadManager::Join()
 		if (t.joinable()) t.join();
 
 	m_threads.clear();
+}
+
+void ThreadManager::Terminate()
+{
 }
 
 void ThreadManager::Initialize()

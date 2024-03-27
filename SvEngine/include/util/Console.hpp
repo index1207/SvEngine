@@ -15,7 +15,7 @@ MAKE_LOG_CATEGORY(IO);
 using HANDLE = void*;
 
 enum LogType {
-    Log, // white
+    Info, // white
     Warning,
     Debug,   // green
     Error    // red

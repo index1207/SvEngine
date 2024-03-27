@@ -71,7 +71,7 @@ public:
 	template<int32 N>
 	void Bind(int32 idx, WCHAR(&value)[N])
 	{
-		m_connection->BindCol(idx+1, value, N*2, &m_columnIdx[idx]);
+		m_connection->BindCol(idx+1, value, N*2, & m_columnIdx[idx]);
 		m_columnFlag |= 1LL << idx;
 	}
 	void Bind(int32 idx, WCHAR* value, int32 size)

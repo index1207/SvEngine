@@ -11,6 +11,7 @@ public:
 public:
 	void Launch(CallbackType callback);
 	void Join();
+	void Terminate();
 public:
 	static void Initialize();
 	static void Finalize();

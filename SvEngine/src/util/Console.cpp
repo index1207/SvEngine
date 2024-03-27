@@ -17,7 +17,7 @@ void Console::Log(String category, LogType type, String message)
 {
     switch (type)
     {
-    case LogType::Log:
+    case LogType::Info:
         LogDisplay(category, message);
         break;
     case LogType::Warning:
@@ -42,17 +42,17 @@ void Console::Print(ColorOperation color, String message, bool ln)
 
 void Console::LogDisplay(String category, String message)
 {
-    Print(hue::bright_white, std::format(TEXT("[{}][Log] {}"), category, message));
+    Print(hue::bright_white, std::format(TEXT("[{}][INFO] {}"), category, message));
 }
 
 void Console::LogWarning(String category, String message)
 {
-    Print(hue::yellow, std::format(TEXT("[{}][Warning] {}"), category, message));
+    Print(hue::yellow, std::format(TEXT("[{}][WARNING] {}"), category, message));
 }
 
 void Console::LogDebug(String category, String message)
 {
-    Print(hue::light_green, std::format(TEXT("[{}][Debug] {}"), category, message));
+    Print(hue::light_green, std::format(TEXT("[{}][DEBUG] {}"), category, message));
 }
 
 void Console::LogError(String category, String message)
