@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "Util/Action.hpp"
 #include <iomanip>
+#include <sstream>
 
 String action::ToUnicodeString(std::string_view str)
 {
@@ -53,4 +54,17 @@ String action::Timestamp()
 	std::wstringstream wss;
 	wss << std::format(TEXT("{}/{:02}/{:02} ({:02}:{:02}:{:02})"), time.tm_year + 1900, time.tm_mon, time.tm_mday, time.tm_hour, time.tm_min, time.tm_sec);
 	return wss.str();
+}
+
+Vector<String> action::Split(StringView str, WCHAR del)
+{
+	Vector<String> res;
+	std::wstringstream wss(str.data());
+
+	String t = L"";
+	while (std::getline(wss, t, del))
+	{
+		res.push_back(t);
+	}
+	return res;
 }

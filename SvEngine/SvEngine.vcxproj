@@ -195,6 +195,7 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Point.cpp" />
     <ClCompile Include="src\Util\Parser\Ini.cpp" />
     <ClCompile Include="src\Database\DbConnection.cpp" />
     <ClCompile Include="src\Database\DBConnectionPool.cpp" />
@@ -217,6 +218,7 @@
     <ClCompile Include="src\Network\Session.cpp" />
     <ClCompile Include="src\Util\Console.cpp" />
     <ClCompile Include="src\Thread\ThreadManager.cpp" />
+    <ClCompile Include="src\Vector.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Database\DbConnection.hpp" />
@@ -238,6 +240,8 @@
     <ClInclude Include="include\Thread\JobTimer.hpp" />
     <ClInclude Include="PCH\pch.h" />
     <ClInclude Include="include\Thread\ThreadManager.hpp" />
+    <ClInclude Include="include\Point.hpp" />
+    <ClInclude Include="include\Vector.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

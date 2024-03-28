@@ -18,6 +18,8 @@ namespace action
 
 	String Timestamp();
 
+	Vector<String> Split(StringView str, WCHAR del);
+
 	class Random
 	{
 	public:

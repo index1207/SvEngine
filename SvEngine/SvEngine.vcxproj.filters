@@ -28,6 +28,8 @@
     <ClCompile Include="src\Database\Statement.cpp" />
     <ClCompile Include="src\Network\Client.cpp" />
     <ClCompile Include="src\Util\Parser\Ini.cpp" />
+    <ClCompile Include="src\Point.cpp" />
+    <ClCompile Include="src\Vector.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">
@@ -81,5 +83,7 @@
     <ClInclude Include="include\Database\Statement.hpp" />
     <ClInclude Include="include\Network\Client.hpp" />
     <ClInclude Include="include\Util\Parser\Ini.hpp" />
+    <ClInclude Include="include\Point.hpp" />
+    <ClInclude Include="include\Vector.hpp" />
   </ItemGroup>
 </Project>

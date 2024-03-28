@@ -23,6 +23,9 @@
 #include <sql.h>
 #include <sqlext.h>
 
+#include "Point.hpp"
+#include "Vector.hpp"
+
 #include "Util/Types.hpp"
 #include "Util/Action.hpp"
 #include "Util/Console.hpp"
