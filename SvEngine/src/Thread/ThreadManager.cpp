@@ -14,24 +14,24 @@ ThreadManager::~ThreadManager()
 
 void ThreadManager::Launch(CallbackType callback)
 {
-	std::lock_guard lock(m_lock);
-	m_threads.emplace_back([=] {
+	m_threads.push_back(new std::thread([=] {
 		Initialize();
 		callback();
 		Finalize();
-	});
+	}));
 }
 
 void ThreadManager::Join()
 {
 	for (auto& t : m_threads)
-		if (t.joinable()) t.join();
-
-	m_threads.clear();
+		if (t->joinable()) t->join();
 }
 
 void ThreadManager::Terminate()
 {
+	for (auto& t : m_threads)
+		delete t;
+	m_threads.clear();
 }
 
 void ThreadManager::Initialize()
