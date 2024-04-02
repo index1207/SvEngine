@@ -205,5 +205,8 @@ private:
 	T m_z;
 };
 
+using Vector2DI = Vector2D<int>;
+using Vector2DF = Vector2D<float>;
+
 using Vector3DI = Vector3D<int>;
 using Vector3DF = Vector3D<float>;
