@@ -4,6 +4,7 @@ template<class T>
 class Vector2D
 {
 public:
+	Vector2D() = default;
 	explicit Vector2D(T x, T y) noexcept
 		: m_x(x), m_y(y)
 	{
@@ -99,6 +100,7 @@ template<class T>
 class Vector3D
 {
 public:
+	Vector3D() = default;
 	explicit Vector3D(T x, T y, T z) noexcept
 		: m_x(x), m_y(y), m_z(z)
 	{
