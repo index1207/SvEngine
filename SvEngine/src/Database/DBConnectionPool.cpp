@@ -25,7 +25,7 @@ bool DBConnectionPool::Connect(int32 connectionCount, String connectionString)
 		if (connection->Connect(_environment, connectionString) == false)
 			return false;
 
-		_connections.push_back(connection);
+		_connections.push(connection);
 	}
 
 	return true;
@@ -39,8 +39,12 @@ void DBConnectionPool::Clear()
 		_environment = SQL_NULL_HANDLE;
 	}
 
-	for (DBConnection* connection : _connections)
-		delete connection;
+	while (_connections.empty())
+	{
+		DBConnection* connection = nullptr;
+		if (_connections.try_pop(connection))
+			delete connection;
+	}
 
 	_connections.clear();
 }
@@ -50,12 +54,12 @@ DBConnection* DBConnectionPool::Pop()
 	if (_connections.empty())
 		return nullptr;
 
-	DBConnection* connection = _connections.back();
-	_connections.pop_back();
+	DBConnection* connection = nullptr;
+	_connections.try_pop(connection);
 	return connection;
 }
 
 void DBConnectionPool::Push(DBConnection* connection)
 {
-	_connections.push_back(connection);
+	_connections.push(connection);
 }

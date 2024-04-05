@@ -14,6 +14,6 @@ public:
 	void Push(DBConnection* connection);
 private:
 	SQLHENV _environment = SQL_NULL_HANDLE;
-	Vector<DBConnection*> _connections;
+	ConcurrencyQueue<DBConnection*> _connections;
 };
 

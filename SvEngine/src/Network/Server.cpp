@@ -27,9 +27,8 @@ void Server::OnAcceptCompleted(net::Context* acceptContext, bool isSuccess) {
         SOCKADDR_IN addr;
         int len = sizeof(addr);
         if (SOCKET_ERROR == getpeername(client->m_sock->getHandle(), reinterpret_cast<SOCKADDR*>(&addr), &len))
-        {
-            const auto err = WSAGetLastError();
-        }
+            throw net::network_error("getpeername()");
+
         const auto endpoint = net::Endpoint::parse(addr);
         client->m_sock->setRemoteEndpoint(endpoint);
         client->OnConnected(endpoint);

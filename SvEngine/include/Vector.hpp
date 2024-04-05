@@ -6,81 +6,76 @@ class Vector2D
 public:
 	Vector2D() = default;
 	explicit Vector2D(T x, T y) noexcept
-		: m_x(x), m_y(y)
+		: x(x), y(y)
 	{
 	}
 	~Vector2D() = default;
 public:
-	void SetX(T x) noexcept { m_x = x; }
-	void SetY(T y) noexcept { m_y = y; }
-	T GetX() const noexcept { return m_x; }
-	T GetY() const noexcept { return m_y; }
-public:
 #pragma region Linear Algebra
-	double Length() const { return std::sqrt(m_x * m_x + m_y * m_y); }
+	double Length() const { return std::sqrt(x * x + y * y); }
 	void Normalize()
 	{
 		const auto len = Length();
-		return Vector2D<T>(m_x / len, m_y / len);
+		return Vector2D<T>(x / len, y / len);
 	}
 	void operator+=(Vector2D<T>&& v) noexcept
 	{
-		m_x += v.m_x;
-		m_y += v.m_y;
+		x += v.x;
+		y += v.y;
 	}
 	void operator-=(Vector2D<T>&& v) noexcept
 	{
-		m_x -= v.m_x;
-		m_y -= v.m_y;
+		x -= v.x;
+		y -= v.y;
 	}
 	void operator+=(const Vector2D<T>& v) noexcept
 	{
-		m_x += v.m_x;
-		m_y += v.m_y;
+		x += v.x;
+		y += v.y;
 	}
 	void operator-=(const Vector2D<T>& v) noexcept
 	{
-		m_x -= v.m_x;
-		m_y -= v.m_y;
+		x -= v.x;
+		y -= v.y;
 	}
 	void operator*=(double scala) noexcept
 	{
-		m_x *= scala;
-		m_y *= scala;
+		x *= scala;
+		y *= scala;
 	}
 	Vector2D<T> operator+(Vector2D<T>&& v) noexcept
 	{
 		return Vector2D<T>(
-			m_x + v.m_x,
-			m_y + v.m_y
+			x + v.x,
+			y + v.y
 		);
 	}
 	Vector2D<T> operator+(const Vector2D<T>& v) noexcept
 	{
 		return Vector2D<T>(
-			m_x + v.m_x,
-			m_y + v.m_y
+			x + v.x,
+			y + v.y
 		);
 	}
 	Vector2D<T> operator-(Vector2D<T>&& v) noexcept
 	{
 		return Vector2D<T>(
-			m_x - v.m_x,
-			m_y - v.m_y
+			x - v.x,
+			y - v.y
 		);
 	}
 	Vector2D<T> operator-(const Vector2D<T>& v) noexcept
 	{
 		return Vector2D<T>(
-			m_x - v.m_x,
-			m_y - v.m_y
+			x - v.x,
+			y - v.y
 		);
 	}
 	Vector2D<T> operator*(double scala) noexcept
 	{
 		return VectorD<T>(
-			m_x * scala,
-			m_y * scala
+			x * scala,
+			y * scala
 		);
 	}
 #pragma endregion
@@ -91,9 +86,20 @@ public:
 	static Vector2D<T> Down() noexcept { return Vector2D<T>(0, -1); }
 	static Vector2D<T> Left() noexcept { return Vector2D<T>(-1, 0); }
 	static Vector2D<T> Right() noexcept { return Vector2D<T>(1, 0); }
-private:
-	T m_x;
-	T m_y;
+public:
+	bool operator==(Vector2D<T> v)
+	{
+		return this->x == v.x &&
+			   this->y == v.y;
+	}
+	bool operator==(Point2D<T> p)
+	{
+		return this->x == p.x &&
+			   this->y == p.y;
+	}
+public:
+	T x;
+	T y;
 };
 
 template<class T>
@@ -102,93 +108,93 @@ class Vector3D
 public:
 	Vector3D() = default;
 	explicit Vector3D(T x, T y, T z) noexcept
-		: m_x(x), m_y(y), m_z(z)
+		: x(x), y(y), z(z)
 	{
 	}
 	~Vector3D() = default;
 public:
-	void SetX(T x) noexcept { m_x = x; }
-	void SetY(T y) noexcept { m_y = y; }
-	void SetZ(T z) noexcept { m_y = z; }
-	T GetX() noexcept { return m_x; }
-	T GetY() noexcept { return m_y; }
-	T GetZ() noexcept { return m_z; }
+	void SetX(T x) noexcept { x = x; }
+	void SetY(T y) noexcept { y = y; }
+	void SetZ(T z) noexcept { y = z; }
+	T GetX() noexcept { return x; }
+	T GetY() noexcept { return y; }
+	T GetZ() noexcept { return z; }
 public:
 #pragma region Linear Algebra
-	double Length() const { return std::sqrt(m_x * m_x + m_y * m_y + m_z * m_z); }
+	double Length() const { return std::sqrt(x * x + y * y + z * z); }
 	void Normalize()
 	{
 		const auto len = Length();
-		return Vector3D<T>(m_x / len, m_y / len, m_z / len);
+		return Vector3D<T>(x / len, y / len, z / len);
 	}
 	void operator+=(Vector3D<T>&& v) noexcept
 	{
-		m_x += v.m_x;
-		m_y += v.m_y;
-		m_z += v.m_z;
+		x += v.x;
+		y += v.y;
+		z += v.z;
 	}
 	void operator-=(Vector3D<T>&& v) noexcept
 	{
-		m_x -= v.m_x;
-		m_y -= v.m_y;
-		m_z -= v.m_z;
+		x -= v.x;
+		y -= v.y;
+		z -= v.z;
 	}
 	void operator+=(const Vector3D<T>& v) noexcept
 	{
-		m_x += v.m_x;
-		m_y += v.m_y;
-		m_z += v.m_z;
+		x += v.x;
+		y += v.y;
+		z += v.z;
 	}
 	void operator-=(const Vector3D<T>& v) noexcept
 	{
-		m_x -= v.m_x;
-		m_y -= v.m_y;
-		m_z -= v.m_z;
+		x -= v.x;
+		y -= v.y;
+		z -= v.z;
 	}
 	void operator*=(double scala) noexcept
 	{
-		m_x *= scala;
-		m_y *= scala;
-		m_z *= scala;
+		x *= scala;
+		y *= scala;
+		z *= scala;
 	}
 	Vector3D<T> operator+(Vector3D<T>&& v) noexcept
 	{
 		return Vector3D<T>(
-			m_x + v.m_x,
-			m_y + v.m_y,
-			m_z + v.m_z
+			x + v.x,
+			y + v.y,
+			z + v.z
 		);
 	}
 	Vector3D<T> operator+(const Vector3D<T>& v) noexcept
 	{
 		return Vector3D<T>(
-			m_x + v.m_x,
-			m_y + v.m_y,
-			m_z + v.m_z
+			x + v.x,
+			y + v.y,
+			z + v.z
 		);
 	}
 	Vector3D<T> operator-(Vector3D<T>&& v) noexcept
 	{
 		return Vector3D<T>(
-			m_x - v.m_x,
-			m_y - v.m_y,
-			m_z - v.m_z
+			x - v.x,
+			y - v.y,
+			z - v.z
 		);
 	}
 	Vector3D<T> operator-(const Vector3D<T>& v) noexcept
 	{
 		return Vector3D<T>(
-			m_x - v.m_x,
-			m_y - v.m_y,
-			m_z - v.m_z
+			x - v.x,
+			y - v.y,
+			z - v.z
 		);
 	}
 	Vector3D<T> operator*(double scala) noexcept
 	{
 		return Vector3D<T>(
-			m_x * scala,
-			m_y * scala,
-			m_z * scala
+			x * scala,
+			y * scala,
+			z * scala
 		);
 	}
 #pragma endregion
@@ -201,10 +207,23 @@ public:
 	static Vector3D<T> Right() noexcept { return Vector3D<T>(0, 1, 0); }
 	static Vector3D<T> Foward() noexcept { return Vector3D<T>(1, 0, 0); }
 	static Vector3D<T> Back() noexcept { return Vector3D<T>(-1, 0, 0); }
-private:
-	T m_x;
-	T m_y;
-	T m_z;
+public:
+	bool operator==(Vector3D<T> v)
+	{
+		return this->x == v.x &&
+			   this->y == v.y &&
+			   this->z == v.z;
+	}
+	bool operator==(Point3D<T> p)
+	{
+		return this->x == p.x &&
+			   this->y == p.y &&
+			   this->z == p.z;
+	}
+public:
+	T x;
+	T y;
+	T z;
 };
 
 using Vector2DI = Vector2D<int>;

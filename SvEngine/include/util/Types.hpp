@@ -61,8 +61,18 @@ using ConcurrencyHashSet = concurrency::concurrent_unordered_set<Value>;
 using String = std::wstring;
 using StringView = std::wstring_view;
 
-#pragma warning(push)
-#pragma warning(disable: 6011)
-#define ASSERT_CRASH(exp) if(!(exp)) { int* ptr = nullptr; *ptr = 1234; }
-#pragma warning(pop)
+#define CRASH() \
+{ \
+	int* crash = nullptr; \
+	__analysis_assume(crash != nullptr); \
+	*crash = 0xDEAD; \
+}
+#define ASSERT_CRASH(expr) \
+{ \
+	if(!(expr)) \
+	{ \
+		CRASH(); \
+		__analysis_assume(expr); \
+	} \
+}
 #define MAKE_LOG_CATEGORY(name) namespace Category { static String name(L#name); }
