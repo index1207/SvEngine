@@ -134,5 +134,5 @@ void className::operator delete[](void* ptr, size_t size)\
 		IMPLE_ARENA_ALLOC(className)
 
 #define CREATE_DYNAMIC_ARENA(className, reserveSize)\
-		static DynamicArena className##Arena(reserveSize);\
+		static DynamicArena className##Arena(sizeof(className)*reserveSize);\
 		IMPLE_ARENA_ALLOC(className)
