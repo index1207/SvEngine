@@ -41,4 +41,9 @@ namespace action
 			}
 		}
 	};
+
+	template<class T>
+	struct PeelArrayType { using type = T; };
+	template<class T>
+	struct PeelArrayType<T[]> { using type = T; };
 }

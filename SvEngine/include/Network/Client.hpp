@@ -18,8 +18,8 @@ public:
     {
         auto client = std::shared_ptr<Client>(new Client);
         client->m_serverFactory = [] {
-            return std::make_shared<T>();
-            };
+            return Arena::MakeShared<T>();
+        };
         return client;
     }
 private:

@@ -23,12 +23,15 @@
 #include <sql.h>
 #include <sqlext.h>
 
-#include "Point.hpp"
-#include "Vector.hpp"
+#include "GameFramework/Point.hpp"
+#include "GameFramework/Vector.hpp"
 
 #include "Util/Types.hpp"
 #include "Util/Action.hpp"
 #include "Util/Console.hpp"
+
+#include "Memory/Arena.hpp"
+
 #include "Thread/TLSStorage.hpp"
 #include "Network/Packet.hpp"
 #include "Subsystem/Engine.hpp"

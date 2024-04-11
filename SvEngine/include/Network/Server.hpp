@@ -21,8 +21,8 @@ public:
     {
         auto server = std::shared_ptr<Server>(new Server);
         server->m_clientFactory = [] {
-            return std::make_shared<T>();
-            };
+            return Arena::MakeShared<T>();
+        };
         return server;
     }
 private:

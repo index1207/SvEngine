@@ -21,6 +21,8 @@ class Session : public std::enable_shared_from_this<Session>
     friend class Server;
     friend class Client;
     using ServerFactory = std::function<std::shared_ptr<Session>()>;
+
+    USE_ARENA()
 public:
     Session();
     virtual ~Session();

@@ -8,6 +8,8 @@
 #include "net/Context.hpp"
 #include "net/Exception.hpp"
 
+CREATE_STATIC_ARENA(Session, 1024)
+
 Session::Session() : m_buffer(1024, '\0'), m_isDisconnected(false) {
 }
 
@@ -37,7 +39,7 @@ void Session::FlushQueue()
         Vector<Packet> sendList(m_sendQue.unsafe_begin(), m_sendQue.unsafe_end());
         m_sendQue.clear();
 
-        const auto size = sendList.size();
+        const int32 size = static_cast<int32>(sendList.size());
         for (int32 i = 0; i < size; ++i)
             m_sock->send(sendList[i].Data());
         if (m_sendCount.fetch_sub(size) == size)
