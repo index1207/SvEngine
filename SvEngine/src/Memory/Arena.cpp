@@ -14,8 +14,7 @@ DynamicArena::~DynamicArena()
 
 void DynamicArena::Reset() noexcept
 {
-	if (m_buffer)
-		free(m_buffer);
+	if (m_buffer) free(m_buffer);
 }
 
 size_t DynamicArena::Used() noexcept
@@ -25,17 +24,15 @@ size_t DynamicArena::Used() noexcept
 
 void DynamicArena::Reserve()
 {
-	auto newBuffer = static_cast<byte*>(malloc(m_size));
-	auto offset = Used();
-
-	__analysis_assume(newBuffer != nullptr);
-
 	if (m_buffer != nullptr)
 	{
-		memcpy(newBuffer, m_buffer, m_size);
+		realloc(m_buffer, m_size);
 	}
-	m_buffer = newBuffer;
-	m_ptr = m_buffer + offset;
+	else
+	{
+		m_buffer = static_cast<byte*>(malloc(m_size));
+		m_ptr = m_buffer;
+	}
 }
 
 byte* DynamicArena::Allocate(size_t size)

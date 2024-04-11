@@ -22,7 +22,7 @@ public:
 	virtual void Reset() = 0;
 	virtual size_t Used() = 0;
 	virtual byte* Allocate(size_t size) = 0;
-	virtual void Deallocate(byte* ptr, size_t size) =	0;
+	virtual void Deallocate(byte* ptr, size_t size) = 0;
 protected:
 	size_t AlignUp(size_t n) noexcept
 	{
@@ -129,7 +129,7 @@ void className::operator delete[](void* ptr, size_t size)\
 }\
 
 
-#define CREATE_STATIC_ARENA(className, arenaSize)\
+#define CREATE_FIXED_ARENA(className, arenaSize)\
 		static FixedArena<sizeof(className)*arenaSize> className##Arena;\
 		IMPLE_ARENA_ALLOC(className)
 
