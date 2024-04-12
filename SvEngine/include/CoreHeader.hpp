@@ -29,11 +29,10 @@
 #include "Util/Types.hpp"
 #include "Util/Action.hpp"
 #include "Util/Console.hpp"
-
-#include "Memory/Arena.hpp"
-
 #include "Thread/TLSStorage.hpp"
 #include "Network/Packet.hpp"
 #include "Subsystem/Engine.hpp"
+
+#include "Memory/Arena.hpp"
 
 using namespace net;

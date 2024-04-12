@@ -8,7 +8,7 @@
 #include "net/Context.hpp"
 #include "net/Exception.hpp"
 
-CREATE_STATIC_ARENA(Session, 1024)
+CREATE_FIXED_ARENA(Session, 1024)
 
 Session::Session() : m_buffer(1024, '\0'), m_isDisconnected(false) {
 }
