@@ -6,28 +6,34 @@ class DBConnectionPool;
 class JobTimer;
 
 class Engine {
-    enum Define
+    enum EngineOption
     {
-        WORK_TICK = 64
+        GQCSTimeout = 10,
+        FlushTick = 32
     };
 public:
     Engine();
     ~Engine();
 public:
-    void ExecuteIocpLogic(int32 threadCount, bool useMainThrd);
+    void Initialize();
+
+    void ExecuteThread(int32 io, int32 logic, bool mainAsLogic);
+    void AddJobQueue(class JobQueue* jobQue);
+
+    /// <summary> (unsafe) PushJob </summary>
+    void PushJob(std::shared_ptr<class Job> job);
 public:
     __forceinline ThreadManager* GetThreadManager() { return m_threadManager; }
-    __forceinline JobQueue* GetJobQueue() { return m_jobQue; }
     __forceinline DBConnectionPool* GetDBConnectionPool() { return m_dbConnectionPool; }
     __forceinline JobTimer* GetJobTimer() { return m_jobTimer; }
 private:
-    void ExecuteWorker();
-    void DistributeDeferredJob();
+    void ExecuteLogic(int32 threadCount, bool useMainThrd);
+    void ExecuteIo(int32 threadCount);
 private:
-    ThreadManager* m_threadManager;
-    JobQueue* m_jobQue;
-    DBConnectionPool* m_dbConnectionPool;
-    JobTimer* m_jobTimer;
+    ThreadManager* m_threadManager = nullptr;
+    DBConnectionPool* m_dbConnectionPool = nullptr;
+    JobTimer* m_jobTimer = nullptr;
+    ConcurrencyVector<class JobQueue*> m_jobQues;
 };
 
 extern Engine* GEngine;

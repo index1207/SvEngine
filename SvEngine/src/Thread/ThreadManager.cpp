@@ -38,8 +38,12 @@ void ThreadManager::Initialize()
 {
 	static std::atomic<uint16> s_threadId = 1;
 	LThreadId = s_threadId.fetch_add(1);
+
+	LJobQueue = new JobQueue;
+	GEngine->AddJobQueue(LJobQueue);
 }
 
 void ThreadManager::Finalize()
 {
+	delete LJobQueue;
 }

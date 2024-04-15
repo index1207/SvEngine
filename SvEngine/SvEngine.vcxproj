@@ -202,7 +202,6 @@
     <ClCompile Include="src\Database\DBConnectionPool.cpp" />
     <ClCompile Include="src\Database\Statement.cpp" />
     <ClCompile Include="src\Network\Client.cpp" />
-    <ClCompile Include="src\Thread\JobTimer.cpp" />
     <ClCompile Include="src\Util\File.cpp" />
     <ClCompile Include="src\Thread\JobSerializer.cpp" />
     <ClCompile Include="PCH\pch.cpp">
@@ -239,7 +238,6 @@
     <ClInclude Include="include\Util\Parser\Ini.hpp" />
     <ClInclude Include="include\Util\Types.hpp" />
     <ClInclude Include="include\Thread\JobSerializer.hpp" />
-    <ClInclude Include="include\Thread\JobTimer.hpp" />
     <ClInclude Include="PCH\pch.h" />
     <ClInclude Include="include\Thread\ThreadManager.hpp" />
     <ClInclude Include="include\GameFramework\Point.hpp" />

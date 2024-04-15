@@ -3,8 +3,6 @@
 class Arena
 {
 public:
-	static constexpr size_t alignment = alignof(std::max_align_t);
-public:
 	template<class T, class... Args>
 	requires std::is_class_v<T>
 	static inline std::shared_ptr<T> MakeShared(Args&&... args)
@@ -18,20 +16,22 @@ public:
 		using Ty = action::PeelArrayType<T>::type;
 		return std::shared_ptr<T>(new Ty[size]);
 	}
-public:
+protected:
+	static constexpr size_t alignment = alignof(std::max_align_t);
+protected:
 	virtual void Reset() = 0;
 	virtual size_t Used() = 0;
 	virtual byte* Allocate(size_t size) = 0;
 	virtual void Deallocate(byte* ptr, size_t size) = 0;
 protected:
-	size_t AlignUp(size_t n) noexcept
+	inline size_t AlignUp(size_t n) noexcept
 	{
 		return (n + alignment - 1) & ~(alignment - 1);
 	}
 };
 
 template<size_t N>
-class FixedArena : public Arena
+class FixedArena : protected Arena
 {
 public:
 	FixedArena() : m_ptr(m_buffer) { }
@@ -82,7 +82,7 @@ private:
 	byte* m_ptr;
 };
 
-class DynamicArena : public Arena
+class DynamicArena : protected Arena
 {
 public:
 	DynamicArena(size_t reserve = 0);

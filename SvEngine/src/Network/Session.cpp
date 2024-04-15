@@ -53,7 +53,6 @@ Session::~Session() {
 void Session::Disconnect() {
     if (!m_isDisconnected.exchange(true))
     {
-        m_isDisconnected = true;
         OnDisconnected(m_sock->getRemoteEndpoint().value());
         m_ref = nullptr;
     }
