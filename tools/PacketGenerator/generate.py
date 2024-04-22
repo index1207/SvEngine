@@ -53,8 +53,6 @@ cppFormat.handler = '''#pragma once
 
 using Session = class FSession;
 
-#define STATIC_POINTER_CAST(to, from) StaticCastSharedPtr<to>(from)
-
 #else
 
 template<typename T>
@@ -62,12 +60,10 @@ using TSharedPtr = std::shared_ptr<T>;
 template<typename T>
 using TFunction = std::function<T>;
 
-#define STATIC_POINTER_CAST(to, from) std::static_pointer_cast<to>(from)
-
 class Session;
 #endif
 
-#define BIND_HANDLER(pckname, buffer) std::bind(pckname##PacketHandler, std::placeholders::_1, STATIC_POINTER_CAST(pckname, Packet::ParseFrom<pckname>(buffer)));
+#define BIND_HANDLER(pckname, buffer) std::bind(pckname##PacketHandler, std::placeholders::_1, Packet::ParseFrom<pckname>(buffer));
 namespace gen
 {{
 namespace {1}
