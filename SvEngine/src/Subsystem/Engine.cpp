@@ -23,34 +23,21 @@ Engine::~Engine()
 	delete m_jobTimer;
 }
 
-void Engine::ExecuteThread(int32 io, int32 logic, bool mainAsLogic)
+void Engine::ExecuteThread(int32 io, int32 logic)
 {
 	ExecuteIo(io);
-	ExecuteLogic(logic, mainAsLogic);
+	ExecuteLogic(logic);
 	m_threadManager->Join();
 }
 
 void Engine::AddJobQueue(JobQueue* jobQue)
 {
 	m_jobQues.push_back(jobQue);
-}
+}  
 
-void Engine::PushJob(std::shared_ptr<class Job> job)
+void Engine::PushJob(std::shared_ptr<Job> job)
 {
-	uint32 minSize = UINT_MAX;
-	JobQueue* jobQue = nullptr;
-	for (const auto& que : m_jobQues)
-	{
-		if (minSize > que->GetSize())
-		{
-			minSize = que->GetSize();
-			jobQue = que;
-		}
-	}
-	if (jobQue)
-	{
-		jobQue->Push(job);
-	}
+	m_jobQues[GetTickCount64() % m_jobQues.size()]->Push(job);
 }
 
 void Engine::Initialize()
@@ -60,12 +47,14 @@ void Engine::Initialize()
 	m_jobTimer = new JobTimer;
 }
 
-void Engine::ExecuteLogic(int32 threadCount, bool useMainThrd)
+void Engine::ExecuteLogic(int32 threadCount)
 {
-	if (!useMainThrd)
-		--threadCount;
-
-	auto f = [this] {
+	auto init = []()
+	{
+		LJobQueue = new JobQueue;
+		GEngine->AddJobQueue(LJobQueue);
+	};
+	auto worker = [this] {
 		while (true)
 		{
 			m_jobTimer->Distribute(GetTickCount64());
@@ -77,11 +66,9 @@ void Engine::ExecuteLogic(int32 threadCount, bool useMainThrd)
 	{
 		m_threadManager->Launch([=]()
 		{
-			f();
-		});
+			worker();
+		}, init);
 	}
-
-	if (useMainThrd) f();
 }
 
 void Engine::ExecuteIo(int32 threadCount)
@@ -94,6 +81,6 @@ void Engine::ExecuteIo(int32 threadCount)
 			{
 				IoSystem::instance().worker(); // IOCP I/O Worker
 			};
-		});
+		}, []{});
 	}
 }

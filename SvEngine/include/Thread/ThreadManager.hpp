@@ -9,7 +9,7 @@ public:
 	ThreadManager();
 	~ThreadManager();
 public:
-	void Launch(CallbackType callback);
+	void Launch(CallbackType callback, CallbackType tlsInit);
 	void Join();
 	void Terminate();
 public:

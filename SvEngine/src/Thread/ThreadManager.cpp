@@ -12,10 +12,11 @@ ThreadManager::~ThreadManager()
 	Join();
 }
 
-void ThreadManager::Launch(CallbackType callback)
+void ThreadManager::Launch(CallbackType callback, CallbackType tlsInit)
 {
 	m_threads.push_back(new std::thread([=] {
 		Initialize();
+		tlsInit();
 		callback();
 		Finalize();
 	}));
@@ -38,9 +39,6 @@ void ThreadManager::Initialize()
 {
 	static std::atomic<uint16> s_threadId = 1;
 	LThreadId = s_threadId.fetch_add(1);
-
-	LJobQueue = new JobQueue;
-	GEngine->AddJobQueue(LJobQueue);
 }
 
 void ThreadManager::Finalize()

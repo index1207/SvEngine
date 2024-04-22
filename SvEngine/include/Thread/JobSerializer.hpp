@@ -8,7 +8,7 @@ public:
 	Job(CallbackType&& callback);
 	
 	template<class T, class _Ret, class ...Args>
-	inline Job(std::shared_ptr<T> owner, _Ret(T::*method)(Args...), Args&&... args)
+	inline Job(std::shared_ptr<T> owner, _Ret(T::*method)(Args...), Args... args)
 	{
 		this->m_callback = [owner, method, args...]() { (owner.get()->*method)(args...); };
 	}
@@ -22,8 +22,8 @@ class JobTimer
 	struct JobReserve
 	{
 		JobReserve() = default;
-		JobReserve(uint64 tick, std::shared_ptr<class JobSerializer> jobSerializer, std::shared_ptr<Job> job)
-			: reserveTick(tick), jobSerializer(jobSerializer), job(job) {}
+		JobReserve(uint64 tick, std::shared_ptr<Job> job)
+			: reserveTick(tick), job(job) {}
 
 		inline bool operator<(const JobReserve& other) const
 		{
@@ -31,11 +31,10 @@ class JobTimer
 		}
 
 		uint64 reserveTick;
-		std::weak_ptr<class JobSerializer> jobSerializer;
 		std::shared_ptr<Job> job;
 	};
 public:
-	void Reserve(uint64 tick, std::shared_ptr<JobSerializer> jobSerializer, std::shared_ptr<Job> job);
+	void Reserve(uint64 tick, std::shared_ptr<Job> job);
 	void Distribute(uint64 now);
 private:
 	ConcurrencyPriorityQueue<JobReserve> m_jobs;
@@ -59,7 +58,7 @@ public:
 	void Launch(CallbackType&& callback);
 	void Launch(uint64 delay, CallbackType&& callback);
 	
-	template<uint64 _Dly = 0, class T, class _Ret, class ...Args>
+	template<uint64 _Dly = 0, class T, class _Ret, class... Args>
 	inline void Launch(_Ret(T::*method)(Args...), Args... args)
 	{
 		auto owner = std::static_pointer_cast<T>(shared_from_this());
@@ -69,9 +68,9 @@ public:
 			if (auto* jobTimer = GEngine->GetJobTimer())
 				jobTimer->Reserve(_Dly, shared_from_this(), job);
 		}
-		else Push(std::make_shared<Job>(owner, method, std::forward<Args>(args)...));
+		else GEngine->PushJob(Arena::MakeShared<Job>(owner, method, std::forward<Args>(args)...));
 	}
-	template<class T, class _Ret, class ...Args>
+	template<class T, class _Ret, class... Args>
 	inline void Launch(int64 delay, _Ret(T::*method)(Args...), Args... args)
 	{
 		auto owner = std::static_pointer_cast<T>(shared_from_this());
@@ -79,7 +78,6 @@ public:
 		if (auto* jobTimer = GEngine->GetJobTimer())
 			jobTimer->Reserve(delay, shared_from_this(), job);
 	}
-	inline void Push(std::shared_ptr<Job> job);
 private:
 	std::atomic<bool> m_isPushed;
 };

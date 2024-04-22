@@ -17,7 +17,7 @@ public:
 public:
     void Initialize();
 
-    void ExecuteThread(int32 io, int32 logic, bool mainAsLogic);
+    void ExecuteThread(int32 io, int32 logic);
     void AddJobQueue(class JobQueue* jobQue);
 
     /// <summary> (unsafe) PushJob </summary>
@@ -27,7 +27,7 @@ public:
     __forceinline DBConnectionPool* GetDBConnectionPool() { return m_dbConnectionPool; }
     __forceinline JobTimer* GetJobTimer() { return m_jobTimer; }
 private:
-    void ExecuteLogic(int32 threadCount, bool useMainThrd);
+    void ExecuteLogic(int32 threadCount);
     void ExecuteIo(int32 threadCount);
 private:
     ThreadManager* m_threadManager = nullptr;
