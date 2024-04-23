@@ -68,7 +68,7 @@ uint32 JobQueue::GetSize()
 }
 
 
-CREATE_DYNAMIC_ARENA(Job, 1024)
+CREATE_FIXED_ARENA(Job, 1024)
 Job::Job(CallbackType&& callback) : m_callback(std::move(callback))
 {
 }

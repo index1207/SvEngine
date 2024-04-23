@@ -8,7 +8,7 @@ public:
 	Job(CallbackType&& callback);
 	
 	template<class T, class _Ret, class ...Args>
-	inline Job(std::shared_ptr<T> owner, _Ret(T::*method)(Args...), Args... args)
+	inline Job(std::shared_ptr<T> owner, _Ret(T::*method)(Args...), Args&&... args)
 	{
 		this->m_callback = [owner, method, args...]() { (owner.get()->*method)(args...); };
 	}
