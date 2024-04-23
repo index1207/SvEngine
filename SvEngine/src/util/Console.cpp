@@ -5,7 +5,6 @@
 
 #include "util/Console.hpp"
 #include "Windows.h"
-#include "color.hpp"
 
 HANDLE Console::s_handle;
 
@@ -34,30 +33,32 @@ void Console::Log(String category, LogType type, String message)
     }
 }
 
-void Console::Print(ColorOperation color, String message, bool ln)
+void Console::Print(Color color, String message, bool ln)
 {
-    if (ln) message += L'\n';
-    std::cout << color << action::ToAnsiString(message);
+    message += L'\n';
+
+    SetConsoleTextAttribute(s_handle, color);
+    WriteConsole(s_handle, message.c_str(), message.length(), nullptr, nullptr);
 }
 
 void Console::LogDisplay(String category, String message)
 {
-    Print(hue::bright_white, std::format(TEXT("[{}][INFO] {}"), category, message));
+    Print(Color::White, std::format(TEXT("[{}][INFO] {}"), category, message));
 }
 
 void Console::LogWarning(String category, String message)
 {
-    Print(hue::yellow, std::format(TEXT("[{}][WARNING] {}"), category, message));
+    Print(Color::Yellow, std::format(TEXT("[{}][WARNING] {}"), category, message));
 }
 
 void Console::LogDebug(String category, String message)
 {
-    Print(hue::light_green, std::format(TEXT("[{}][DEBUG] {}"), category, message));
+    Print(Color::Green, std::format(TEXT("[{}][DEBUG] {}"), category, message));
 }
 
 void Console::LogError(String category, String message)
 {
-    Print(hue::light_red, std::format(TEXT("[{}][Error] {}"), category, message));
+    Print(Color::Red, std::format(TEXT("[{}][Error] {}"), category, message));
 }
 
 void Console::Initialize() {
@@ -66,4 +67,3 @@ void Console::Initialize() {
 
     setlocale(LC_ALL, "");
 }
-    

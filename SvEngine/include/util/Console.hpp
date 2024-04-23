@@ -21,6 +21,26 @@ enum LogType {
     Error    // red
 };
 
+enum Color
+{
+    Black,    
+    DarkBlue, 
+    DarkGreen,
+    LightBlue,
+    DarkRed,
+    Magenta,
+    Orange,
+    LightGray,
+    Gray,
+    Blue,
+    Green,
+    Cyan,
+    Red,
+    Pink,
+    Yellow,
+    White
+};
+
 enum EncodingType {
     ANSI,
     UTF8,
@@ -29,14 +49,12 @@ enum EncodingType {
 class Console {
     friend class Engine;
 
-    using ColorOperation = std::ostream&(std::ostream&);
-
     static void Initialize();
 public:
     static void SetOutputEncoding();
     static void Log(String category, LogType type, String message);
 private:
-    static void Print(ColorOperation color, String message, bool ln = true);
+    static void Print(Color color, String message, bool ln = true);
     static void LogDisplay(String category, String message);
     static void LogWarning(String category, String message);
     static void LogDebug(String category, String message);
