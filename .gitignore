@@ -18,4 +18,6 @@ bin/
 tools/PacketGenerator/generated
 
 *Server
+*Client
+*.sln
 *.sln
