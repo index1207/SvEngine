@@ -9,7 +9,6 @@ ThreadManager::ThreadManager()
 
 ThreadManager::~ThreadManager()
 {
-	Join();
 }
 
 void ThreadManager::Launch(CallbackType callback, CallbackType tlsInit)

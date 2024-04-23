@@ -25,8 +25,8 @@ Engine::~Engine()
 
 void Engine::ExecuteThread(int32 io, int32 logic)
 {
-	ExecuteIo(io);
 	ExecuteLogic(logic);
+	ExecuteIo(io);
 	m_threadManager->Join();
 }
 
