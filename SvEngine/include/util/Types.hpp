@@ -19,6 +19,9 @@ using uint64 = unsigned long long;
 template<class T>
 using Vector = std::vector<T>;
 
+template<class T, size_t N>
+using Array = std::array<T, N>;
+
 template<class T>
 using List = std::list<T>;
 

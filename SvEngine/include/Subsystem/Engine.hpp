@@ -9,7 +9,7 @@ class Engine {
     enum EngineOption
     {
         GQCSTimeout = 10,
-        FlushTick = 32
+        FlushTick = 1
     };
 public:
     Engine();
@@ -27,7 +27,7 @@ public:
     __forceinline DBConnectionPool* GetDBConnectionPool() { return m_dbConnectionPool; }
     __forceinline JobTimer* GetJobTimer() { return m_jobTimer; }
 private:
-    void ExecuteLogic(int32 threadCount);
+    void ExecuteLogic(int32 threadCount, std::function<void()> tlsInit = [] {});
     void ExecuteIo(int32 threadCount);
 private:
     ThreadManager* m_threadManager = nullptr;

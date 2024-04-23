@@ -47,18 +47,19 @@ void Engine::Initialize()
 	m_jobTimer = new JobTimer;
 }
 
-void Engine::ExecuteLogic(int32 threadCount)
+void Engine::ExecuteLogic(int32 threadCount, std::function<void()> tlsInit)
 {
-	auto init = []()
+	auto init = [=, this]()
 	{
 		LJobQueue = new JobQueue;
 		GEngine->AddJobQueue(LJobQueue);
+		tlsInit();
 	};
 	auto worker = [this] {
 		while (true)
 		{
-			m_jobTimer->Distribute(GetTickCount64());
 			std::this_thread::sleep_for(std::chrono::milliseconds(EngineOption::FlushTick));
+			m_jobTimer->Distribute(GetTickCount64());
 			LJobQueue->Flush();
 		}
 	};
@@ -81,6 +82,6 @@ void Engine::ExecuteIo(int32 threadCount)
 			{
 				IoSystem::instance().worker(); // IOCP I/O Worker
 			};
-		}, []{});
+		});
 	}
 }

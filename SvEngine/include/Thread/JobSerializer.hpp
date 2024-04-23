@@ -66,7 +66,7 @@ public:
 		{
 			auto job = Arena::MakeShared<Job>(owner, method, std::forward<Args>(args)...);
 			if (auto* jobTimer = GEngine->GetJobTimer())
-				jobTimer->Reserve(_Dly, shared_from_this(), job);
+				jobTimer->Reserve(_Dly, job);
 		}
 		else GEngine->PushJob(Arena::MakeShared<Job>(owner, method, std::forward<Args>(args)...));
 	}
@@ -76,7 +76,7 @@ public:
 		auto owner = std::static_pointer_cast<T>(shared_from_this());
 		auto job = Arena::MakeShared<Job>(owner, method, std::forward<Args>(args)...);
 		if (auto* jobTimer = GEngine->GetJobTimer())
-			jobTimer->Reserve(delay, shared_from_this(), job);
+			jobTimer->Reserve(delay, job);
 	}
 private:
 	std::atomic<bool> m_isPushed;

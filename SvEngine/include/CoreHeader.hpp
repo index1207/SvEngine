@@ -7,6 +7,7 @@
 #include <string>
 #include <format>
 #include <vector>
+#include <array>
 #include <list>
 #include <stack>
 #include <queue>
