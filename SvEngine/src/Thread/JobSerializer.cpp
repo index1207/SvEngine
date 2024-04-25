@@ -1,21 +1,30 @@
 #include "pch.h"
 #include "Thread/JobSerializer.hpp"
 
-void JobSerializer::Launch(CallbackType&& callback)
+void JobSerializer::Launch(JobCallback&& callback)
 {
-	GEngine->PushJob(Arena::MakeShared<Job>(std::move(callback)));
+	m_jobs.push(MakeShared<Job>(std::move(callback)));
 }
 
-void JobSerializer::Launch(uint64 delay, CallbackType&& callback)
+void JobSerializer::Launch(uint64 delay, JobCallback&& callback)
 {
-	auto job = Arena::MakeShared<Job>(std::move(callback));
+	auto job = MakeShared<Job>(std::move(callback));
 	if (auto* jobTimer = GEngine->GetJobTimer())
-		jobTimer->Reserve(delay, job);
+		jobTimer->Reserve(delay, shared_from_this(), job);
 }
 
-void JobTimer::Reserve(uint64 tick, std::shared_ptr<Job> job)
+void JobSerializer::Push(std::shared_ptr<Job> job)
 {
-	m_jobs.push({ GetTickCount64() + tick, job });
+	m_jobs.push(job);
+}
+
+void JobSerializer::Flush()
+{
+}
+
+void JobTimer::Reserve(uint64 tick, std::shared_ptr<class JobSerializer> serializer, std::shared_ptr<Job> job)
+{
+	m_jobs.push({ GetTickCount64() + tick, serializer, job });
 }
 
 void JobTimer::Distribute(uint64 now)
@@ -39,36 +48,14 @@ void JobTimer::Distribute(uint64 now)
 	}
 	for (const auto& job : executeJobs)
 	{
-		GEngine->PushJob(job.job);
+		if (auto serializer = job.serializer.lock())
+			serializer->Push(job.job);
 	}
 
 	m_isDistributed.store(false);
 }
 
-void JobQueue::Push(std::shared_ptr<Job> job)
-{
-	m_jobQue.push(job);
-}
-
-void JobQueue::Flush()
-{
-	while (!m_jobQue.empty())
-	{
-		std::shared_ptr<Job> job;
-		if (m_jobQue.try_pop(job))
-		{
-			(*job)();
-		}
-	}
-}
-
-uint32 JobQueue::GetSize()
-{
-	return m_jobQue.unsafe_size();
-}
-
-
-CREATE_FIXED_ARENA(Job, 1024)
-Job::Job(CallbackType&& callback) : m_callback(std::move(callback))
+CREATE_ARENA(Job, 1024)
+Job::Job(JobCallback&& callback) : m_callback(std::forward<JobCallback>(callback))
 {
 }

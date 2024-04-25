@@ -1,7 +1,7 @@
 #pragma once
 
 class ThreadManager;
-class JobQueue;
+class JobSerializer;
 class DBConnectionPool;
 class JobTimer;
 
@@ -17,11 +17,8 @@ public:
 public:
     void Initialize();
 
+    void AddSerializer(JobSerializer* serializer);
     void ExecuteThread(int32 io, int32 logic);
-    void AddJobQueue(class JobQueue* jobQue);
-
-    /// <summary> (unsafe) PushJob </summary>
-    void PushJob(std::shared_ptr<class Job> job);
 public:
     __forceinline ThreadManager* GetThreadManager() { return m_threadManager; }
     __forceinline DBConnectionPool* GetDBConnectionPool() { return m_dbConnectionPool; }
@@ -33,7 +30,7 @@ private:
     ThreadManager* m_threadManager = nullptr;
     DBConnectionPool* m_dbConnectionPool = nullptr;
     JobTimer* m_jobTimer = nullptr;
-    ConcurrencyVector<class JobQueue*> m_jobQues;
+    ConcurrencyQueue<JobSerializer*> m_jobSerializer;
 };
 
 extern Engine* GEngine;

@@ -13,7 +13,7 @@ ThreadManager::~ThreadManager()
 
 void ThreadManager::Launch(CallbackType callback, CallbackType tlsInit)
 {
-	m_threads.push_back(new std::thread([=] {
+	m_threads.push_back(new std::thread([=, this] {
 		Initialize();
 		tlsInit();
 		callback();
@@ -42,5 +42,4 @@ void ThreadManager::Initialize()
 
 void ThreadManager::Finalize()
 {
-	delete LJobQueue;
 }

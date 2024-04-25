@@ -30,6 +30,7 @@
     <ClCompile Include="src\GameFramework\Point.cpp" />
     <ClCompile Include="src\GameFramework\Vector.cpp" />
     <ClCompile Include="src\Memory\Arena.cpp" />
+    <ClCompile Include="src\Memory\ObjectPool.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">
@@ -85,5 +86,6 @@
     <ClInclude Include="include\GameFramework\Point.hpp" />
     <ClInclude Include="include\GameFramework\Vector.hpp" />
     <ClInclude Include="include\Memory\Arena.hpp" />
+    <ClInclude Include="include\Memory\ObjectPool.hpp" />
   </ItemGroup>
 </Project>

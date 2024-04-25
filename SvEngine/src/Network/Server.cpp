@@ -20,18 +20,19 @@ Server::Server() {
 void Server::OnAcceptCompleted(net::Context* acceptContext, bool isSuccess) {
     if (isSuccess)
     {
+        SOCKADDR_IN addr;
+        int namelen = sizeof(addr);
+        ASSERT_CRASH(SOCKET_ERROR != getpeername(acceptContext->acceptSocket->getHandle(), reinterpret_cast<SOCKADDR*>(&addr), &namelen));
+
+        auto remoteEndpoint = Endpoint::parse(addr);
+        
         auto client = m_clientFactory();
         client->Run(std::move(acceptContext->acceptSocket));
+        client->m_sock->setRemoteEndpoint(remoteEndpoint);
+
         acceptContext->acceptSocket = std::make_unique<Socket>(Protocol::Tcp);
 
-        SOCKADDR_IN addr;
-        int len = sizeof(addr);
-        if (SOCKET_ERROR == getpeername(client->m_sock->getHandle(), reinterpret_cast<SOCKADDR*>(&addr), &len))
-            throw net::network_error("getpeername()");
-
-        const auto endpoint = net::Endpoint::parse(addr);
-        client->m_sock->setRemoteEndpoint(endpoint);
-        client->OnConnected(endpoint);
+        client->OnConnected(remoteEndpoint);
     }
     m_listenSock.accept(acceptContext);
 }

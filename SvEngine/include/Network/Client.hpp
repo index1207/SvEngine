@@ -18,12 +18,12 @@ public:
     {
         auto client = std::shared_ptr<Client>(new Client);
         client->m_serverFactory = [] {
-            return Arena::MakeShared<T>();
+            return MakeShared<T>();
         };
         return client;
     }
 private:
-    void onConnectCompleted(Context* context, bool isSuccess);
+    void OnConnectCompleted(Context* context, bool isSuccess);
 private:
     Socket m_sock;
     ServerFactory m_serverFactory;

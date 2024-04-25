@@ -1,11 +1,12 @@
 #pragma once
 
+using JobCallback = std::function<void()>;
+
 class Job
 {
 	USE_ARENA()
-	using CallbackType = std::function<void()>;
 public:
-	Job(CallbackType&& callback);
+	Job(JobCallback&& callback);
 	
 	template<class T, class _Ret, class ...Args>
 	inline Job(std::shared_ptr<T> owner, _Ret(T::*method)(Args...), Args&&... args)
@@ -14,7 +15,7 @@ public:
 	}
 	__forceinline void operator()() { this->m_callback(); }
 private:
-	CallbackType m_callback;
+	JobCallback m_callback;
 };
 
 class JobTimer
@@ -22,8 +23,8 @@ class JobTimer
 	struct JobReserve
 	{
 		JobReserve() = default;
-		JobReserve(uint64 tick, std::shared_ptr<Job> job)
-			: reserveTick(tick), job(job) {}
+		JobReserve(uint64 tick, std::shared_ptr<class JobSerializer> serializer, std::shared_ptr<Job> job)
+			: reserveTick(tick), serializer(serializer), job(job) {}
 
 		inline bool operator<(const JobReserve& other) const
 		{
@@ -31,53 +32,47 @@ class JobTimer
 		}
 
 		uint64 reserveTick;
+		std::weak_ptr<class JobSerializer> serializer;
 		std::shared_ptr<Job> job;
 	};
 public:
-	void Reserve(uint64 tick, std::shared_ptr<Job> job);
+	void Reserve(uint64 tick, std::shared_ptr<class JobSerializer> serializer, std::shared_ptr<Job> job);
 	void Distribute(uint64 now);
 private:
 	ConcurrencyPriorityQueue<JobReserve> m_jobs;
 	std::atomic<bool> m_isDistributed = false;
 };
 
-class JobQueue
-{
-public:
-	void Push(std::shared_ptr<Job> job);
-	void Flush();
-	uint32 GetSize();
-private:
-	ConcurrencyQueue<std::shared_ptr<Job>> m_jobQue;
-};
-
 class JobSerializer : public std::enable_shared_from_this<JobSerializer>
 {
-	using CallbackType = std::function<void()>;
 public:
-	void Launch(CallbackType&& callback);
-	void Launch(uint64 delay, CallbackType&& callback);
+	void Launch(JobCallback&& callback);
+	void Launch(uint64 delay, JobCallback&& callback);
 	
 	template<uint64 _Dly = 0, class T, class _Ret, class... Args>
 	inline void Launch(_Ret(T::*method)(Args...), Args... args)
 	{
 		auto owner = std::static_pointer_cast<T>(shared_from_this());
+		auto job = MakeShared<Job>(owner, method, std::forward<Args>(args)...);
 		if constexpr (_Dly)
 		{
-			auto job = Arena::MakeShared<Job>(owner, method, std::forward<Args>(args)...);
 			if (auto* jobTimer = GEngine->GetJobTimer())
-				jobTimer->Reserve(_Dly, job);
+				jobTimer->Reserve(_Dly, shared_from_this(), job);
 		}
-		else GEngine->PushJob(Arena::MakeShared<Job>(owner, method, std::forward<Args>(args)...));
+		else m_jobs.push(job);
 	}
 	template<class T, class _Ret, class... Args>
 	inline void Launch(int64 delay, _Ret(T::*method)(Args...), Args... args)
 	{
 		auto owner = std::static_pointer_cast<T>(shared_from_this());
-		auto job = Arena::MakeShared<Job>(owner, method, std::forward<Args>(args)...);
+		auto job = MakeShared<Job>(owner, method, std::forward<Args>(args)...);
 		if (auto* jobTimer = GEngine->GetJobTimer())
-			jobTimer->Reserve(delay, job);
+			jobTimer->Reserve(delay, owner, job);
 	}
+
+	inline void Push(std::shared_ptr<Job> job);
+	void Flush();
 private:
-	std::atomic<bool> m_isPushed;
+	std::atomic<uint32> m_jobCount;
+	ConcurrencyQueue<std::shared_ptr<Job>> m_jobs;
 };

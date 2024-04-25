@@ -1,55 +1,40 @@
 #pragma once
 
+template<class T, class... Args>
+	requires std::is_class_v<T>
+static inline std::shared_ptr<T> MakeShared(Args&&... args)
+{
+	return std::shared_ptr<T>(new T(std::forward<Args>(args)...));
+}
+template<class T>
+	requires std::is_unbounded_array_v<T>
+static inline std::shared_ptr<T> MakeShared(const size_t size)
+{
+	using Ty = action::PeelArrayType<T>::type;
+	return std::shared_ptr<T>(new Ty[size]);
+}
+
+template<class T, size_t N>
 class Arena
 {
-public:
-	template<class T, class... Args>
-	requires std::is_class_v<T>
-	static inline std::shared_ptr<T> MakeShared(Args&&... args)
-	{
-		return std::shared_ptr<T>(new T(std::forward<Args>(args)...));
-	}
-	template<class T>
-	requires std::is_unbounded_array_v<T>
-	static inline std::shared_ptr<T> MakeShared(const size_t size)
-	{
-		using Ty = action::PeelArrayType<T>::type;
-		return std::shared_ptr<T>(new Ty[size]);
-	}
-protected:
 	static constexpr size_t alignment = alignof(std::max_align_t);
-protected:
-	virtual void Reset() = 0;
-	virtual size_t Used() = 0;
-	virtual byte* Allocate(size_t size) = 0;
-	virtual void Deallocate(byte* ptr, size_t size) = 0;
-protected:
-	inline size_t AlignUp(size_t n) noexcept
-	{
-		return (n + alignment - 1) & ~(alignment - 1);
-	}
-};
-
-template<size_t N>
-class FixedArena : protected Arena
-{
 public:
-	FixedArena() : m_ptr(m_buffer) { }
-	FixedArena(const FixedArena&) = delete;
-	FixedArena& operator=(const FixedArena&) = delete;
+	Arena() : m_ptr(m_buffer) { }
+	Arena(const Arena&) = delete;
+	Arena& operator=(const Arena&) = delete;
 public:
 	static constexpr size_t Size() noexcept { return N; }
 public:
-	virtual void Reset() noexcept override
+	virtual void Reset() noexcept
 	{
 		m_ptr = m_buffer;
 	}
-	virtual size_t Used() noexcept override
+	virtual size_t Used() noexcept
 	{
 		return static_cast<size_t>(m_ptr - m_buffer);
 	}
 public:
-	virtual byte* Allocate(size_t size) override
+	virtual byte* Allocate(size_t size)
 	{
 		const auto alignNum = AlignUp(size);
 		const auto availableBytes = static_cast<decltype(alignNum)>(m_buffer + N - m_ptr);
@@ -61,7 +46,7 @@ public:
 		}
 		return static_cast<byte*>(::operator new(size));
 	}
-	virtual void Deallocate(byte* ptr, size_t size) noexcept override
+	virtual void Deallocate(byte* ptr, size_t size) noexcept
 	{
 		if (IsArenaMemory(ptr))
 		{
@@ -77,29 +62,12 @@ private:
 	{
 		return ptr >= m_buffer && ptr <= m_buffer + N;
 	}
+	inline size_t AlignUp(size_t n) noexcept
+	{
+		return (n + alignment - 1) & ~(alignment - 1);
+	}
 private:
-	alignas(alignment) byte m_buffer[N] = { 0, };
-	byte* m_ptr;
-};
-
-class DynamicArena : protected Arena
-{
-public:
-	DynamicArena(size_t reserve = 0);
-	DynamicArena(const DynamicArena&) = delete;
-	~DynamicArena();
-	DynamicArena& operator=(const DynamicArena&) = delete;
-public:
-	virtual void Reset() noexcept override;
-	virtual size_t Used() noexcept override;
-public:
-	void Reserve();
-
-	byte* Allocate(size_t size);
-	void Deallocate(byte* ptr, size_t size) noexcept;
-private:
-	alignas(alignment) byte* m_buffer;
-	size_t m_size;
+	alignas(alignment) byte m_buffer[sizeof(T) * N] = { 0, };
 	byte* m_ptr;
 };
 
@@ -129,10 +97,6 @@ void className::operator delete[](void* ptr, size_t size)\
 }\
 
 
-#define CREATE_FIXED_ARENA(className, arenaSize)\
-		static FixedArena<sizeof(className)*arenaSize> className##Arena;\
-		IMPLE_ARENA_ALLOC(className)
-
-#define CREATE_DYNAMIC_ARENA(className, reserveSize)\
-		static DynamicArena className##Arena(sizeof(className)*reserveSize);\
+#define CREATE_ARENA(className, arenaSize)\
+		static Arena<className, arenaSize> className##Arena;\
 		IMPLE_ARENA_ALLOC(className)

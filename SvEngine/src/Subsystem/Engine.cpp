@@ -23,21 +23,16 @@ Engine::~Engine()
 	delete m_jobTimer;
 }
 
+void Engine::AddSerializer(JobSerializer* serializer)
+{
+	m_jobSerializer.push(serializer);
+}
+
 void Engine::ExecuteThread(int32 io, int32 logic)
 {
 	ExecuteLogic(logic);
 	ExecuteIo(io);
 	m_threadManager->Join();
-}
-
-void Engine::AddJobQueue(JobQueue* jobQue)
-{
-	m_jobQues.push_back(jobQue);
-}  
-
-void Engine::PushJob(std::shared_ptr<Job> job)
-{
-	m_jobQues[GetTickCount64() % m_jobQues.size()]->Push(job);
 }
 
 void Engine::Initialize()
@@ -49,18 +44,11 @@ void Engine::Initialize()
 
 void Engine::ExecuteLogic(int32 threadCount, std::function<void()> tlsInit)
 {
-	auto init = [=, this]()
-	{
-		LJobQueue = new JobQueue;
-		GEngine->AddJobQueue(LJobQueue);
-		tlsInit();
-	};
-	auto worker = [this] {
+	auto worker = [=] {
 		while (true)
 		{
 			std::this_thread::sleep_for(std::chrono::milliseconds(EngineOption::FlushTick));
 			m_jobTimer->Distribute(GetTickCount64());
-			LJobQueue->Flush();
 		}
 	};
 	for (int i = 0; i < threadCount; ++i)
@@ -68,7 +56,7 @@ void Engine::ExecuteLogic(int32 threadCount, std::function<void()> tlsInit)
 		m_threadManager->Launch([=]()
 		{
 			worker();
-		}, init);
+		}, tlsInit);
 	}
 }
 
@@ -77,7 +65,7 @@ void Engine::ExecuteIo(int32 threadCount)
 	for (int i = 0; i < threadCount; ++i)
 	{
 		m_threadManager->Launch([=]()
-		{
+		{	
 			while (true)
 			{
 				IoSystem::instance().worker(); // IOCP I/O Worker
