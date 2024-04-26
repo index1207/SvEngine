@@ -41,11 +41,8 @@ protected:
     std::unique_ptr<Socket> m_sock;
 private:
     void OnRecvCompleted(Context* context, bool isSuccess);
-    void FlushQueue();
+    void OnSendCompleted(Context* context, bool isSuccess);
 private:
-    ConcurrencyQueue<Packet> m_sendQue;
-    std::atomic<int> m_sendCount;
-
     std::shared_ptr<Session> m_ref; // TEMP
 
     std::vector<char> m_buffer;

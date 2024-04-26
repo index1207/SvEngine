@@ -13,7 +13,7 @@ Engine::Engine()
 	Console::Initialize();
 
 	net::Option::Autorun = false;
-	net::Option::Timeout = EngineOption::GQCSTimeout;
+	net::Option::Timeout = WorkTick;
 }
 
 Engine::~Engine()
@@ -32,7 +32,6 @@ void Engine::ExecuteThread(int32 io, int32 logic)
 {
 	ExecuteLogic(logic);
 	ExecuteIo(io);
-	m_threadManager->Join();
 }
 
 void Engine::Initialize()
@@ -47,8 +46,20 @@ void Engine::ExecuteLogic(int32 threadCount, std::function<void()> tlsInit)
 	auto worker = [=] {
 		while (true)
 		{
-			std::this_thread::sleep_for(std::chrono::milliseconds(EngineOption::FlushTick));
 			m_jobTimer->Distribute(GetTickCount64());
+
+			if (!m_jobSerializer.empty())
+			{
+				JobSerializer* jobSerializer;
+				if (m_jobSerializer.try_pop(jobSerializer))
+				{
+					jobSerializer->Flush();
+				}
+			}
+			else
+			{
+			}
+			std::this_thread::sleep_for(std::chrono::milliseconds(WorkTick));
 		}
 	};
 	for (int i = 0; i < threadCount; ++i)

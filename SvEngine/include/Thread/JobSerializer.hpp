@@ -46,6 +46,8 @@ private:
 class JobSerializer : public std::enable_shared_from_this<JobSerializer>
 {
 public:
+	JobSerializer();
+public:
 	void Launch(JobCallback&& callback);
 	void Launch(uint64 delay, JobCallback&& callback);
 	

@@ -1,6 +1,11 @@
 #include "pch.h"
 #include "Thread/JobSerializer.hpp"
 
+JobSerializer::JobSerializer()
+{
+	GEngine->AddSerializer(this);
+}
+
 void JobSerializer::Launch(JobCallback&& callback)
 {
 	m_jobs.push(MakeShared<Job>(std::move(callback)));
@@ -20,6 +25,13 @@ void JobSerializer::Push(std::shared_ptr<Job> job)
 
 void JobSerializer::Flush()
 {
+	while (!m_jobs.empty())
+	{
+		std::shared_ptr<Job> job;
+		if (m_jobs.try_pop(job))
+			(*job)();
+	}
+	GEngine->AddSerializer(this);
 }
 
 void JobTimer::Reserve(uint64 tick, std::shared_ptr<class JobSerializer> serializer, std::shared_ptr<Job> job)

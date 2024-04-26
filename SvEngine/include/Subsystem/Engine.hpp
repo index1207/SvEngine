@@ -8,8 +8,7 @@ class JobTimer;
 class Engine {
     enum EngineOption
     {
-        GQCSTimeout = 10,
-        FlushTick = 1
+        WorkTick = 1
     };
 public:
     Engine();
@@ -30,6 +29,7 @@ private:
     ThreadManager* m_threadManager = nullptr;
     DBConnectionPool* m_dbConnectionPool = nullptr;
     JobTimer* m_jobTimer = nullptr;
+
     ConcurrencyQueue<JobSerializer*> m_jobSerializer;
 };
 

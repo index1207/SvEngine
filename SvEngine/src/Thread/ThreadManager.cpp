@@ -9,11 +9,12 @@ ThreadManager::ThreadManager()
 
 ThreadManager::~ThreadManager()
 {
+	Join();
 }
 
 void ThreadManager::Launch(CallbackType callback, CallbackType tlsInit)
 {
-	m_threads.push_back(new std::thread([=, this] {
+	m_threads.push_back(new std::thread([=] {
 		Initialize();
 		tlsInit();
 		callback();
@@ -23,8 +24,10 @@ void ThreadManager::Launch(CallbackType callback, CallbackType tlsInit)
 
 void ThreadManager::Join()
 {
-	for (auto& t : m_threads)
-		if (t->joinable()) t->join();
+	for (auto t : m_threads)
+	{
+		t->join();
+	}
 }
 
 void ThreadManager::Terminate()

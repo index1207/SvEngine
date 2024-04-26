@@ -32,19 +32,9 @@ void Session::OnRecvCompleted(Context *context, bool isSuccess) {
     m_sock->receive(context);
 }
 
-void Session::FlushQueue()
+void Session::OnSendCompleted(Context* context, bool isSuccess)
 {
-    while (true)
-    {
-        Vector<Packet> sendList(m_sendQue.unsafe_begin(), m_sendQue.unsafe_end());
-        m_sendQue.clear();
-
-        const int32 size = static_cast<int32>(sendList.size());
-        for (int32 i = 0; i < size; ++i)
-            m_sock->send(sendList[i].Data());
-        if (m_sendCount.fetch_sub(size) == size)
-            return;
-    }
+    if(context) delete context;
 }
 
 Session::~Session() {
@@ -63,12 +53,9 @@ Socket Session::GetSocket() {
 }
 
 void Session::Send(Packet* packet) {
-    auto prevCount = m_sendCount.fetch_add(1);
     packet->Write();
-    m_sendQue.push(*packet);
-
-    if (prevCount == 0)
-    {
-        FlushQueue();
-    }
+    auto ctx = new Context;
+    ctx->completed = std::bind(&Session::OnSendCompleted, this, std::placeholders::_1, std::placeholders::_2);
+    ctx->buffer = packet->Data();
+    m_sock->send(ctx);
 }
