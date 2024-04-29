@@ -8,9 +8,9 @@
 #include "net/Context.hpp"
 #include "net/Exception.hpp"
 
-CREATE_ARENA(Session, 1024)
+CREATE_ARENA(Session, 0x1000)
 
-Session::Session() : m_buffer(1024, '\0'), m_isDisconnected(false), m_flushSend(false) {
+Session::Session() : m_buffer(0x10000, '\0'), m_isDisconnected(false), m_flushSend(false) {
 }
 
 void Session::Run(std::shared_ptr<Socket> sock) {
