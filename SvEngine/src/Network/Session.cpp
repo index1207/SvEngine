@@ -10,14 +10,15 @@
 
 CREATE_ARENA(Session, 1024)
 
-Session::Session() : m_buffer(1024, '\0'), m_isDisconnected(false) {
+Session::Session() : m_buffer(1024, '\0'), m_isDisconnected(false), m_flushSend(false) {
 }
 
-void Session::Run(std::unique_ptr<Socket> sock) {
-    m_sock = std::move(sock);
+void Session::Run(std::shared_ptr<Socket> sock) {
+    m_sock = sock;
 
     m_recvCtx.completed = bind(&Session::OnRecvCompleted, this, std::placeholders::_1, std::placeholders::_2);
     m_recvCtx.buffer = m_buffer;
+    m_sendCtx.completed = bind(&Session::OnSendCompleted, this, std::placeholders::_1, std::placeholders::_2);
 
     m_sock->receive(&m_recvCtx);
     m_ref = shared_from_this();
@@ -34,7 +35,8 @@ void Session::OnRecvCompleted(Context *context, bool isSuccess) {
 
 void Session::OnSendCompleted(Context* context, bool isSuccess)
 {
-    if(context) delete context;
+    m_sendCtx.sendBuffer.clear();
+    m_flushSend.store(false);
 }
 
 Session::~Session() {
@@ -54,8 +56,10 @@ Socket Session::GetSocket() {
 
 void Session::Send(Packet* packet) {
     packet->Write();
-    auto ctx = new Context;
-    ctx->completed = std::bind(&Session::OnSendCompleted, this, std::placeholders::_1, std::placeholders::_2);
-    ctx->buffer = packet->Data();
-    m_sock->send(ctx);
+    m_sendCtx.sendBuffer.push_back(packet->Data());
+
+    if (!m_flushSend.exchange(true))
+    {
+        m_sock->send(&m_sendCtx);
+    }
 }

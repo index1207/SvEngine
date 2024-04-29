@@ -3,7 +3,7 @@ template<class T>
 class ObjectPool
 {
 public:
-	T* Pop()
+	static T* Pop()
 	{
 		if (!m_pool.empty())
 		{
@@ -13,12 +13,18 @@ public:
 		}
 		return new T();
 	}
-	void Push(T* ptr)
+	static void Push(T* ptr)
 	{
-		ptr->~T();
-		m_pool.push(ptr);
+		if (ptr)
+		{
+			ptr->~T();
+			m_pool.push(ptr);
+		}
 	}
 private:
-	ConcurrencyQueue<T*> m_pool;
+	static ConcurrencyQueue<T*> m_pool;
 };
+
+template<class T>
+ConcurrencyQueue<T*> ObjectPool<T>::m_pool;
 

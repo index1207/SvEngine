@@ -20,5 +20,6 @@
 #include "Subsystem/Engine.hpp"
 
 #include "Memory/Arena.hpp"
+#include "Memory/ObjectPool.hpp"
 
 using namespace net;

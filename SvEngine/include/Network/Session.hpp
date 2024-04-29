@@ -27,7 +27,7 @@ public:
     Session();
     virtual ~Session();
 public:
-    void Run(std::unique_ptr<Socket> sock);
+    void Run(std::shared_ptr<Socket> sock);
     Socket GetSocket();
 public:
     void Disconnect();
@@ -38,7 +38,7 @@ public:
     virtual void OnReceive(std::span<char>, int) {};
     virtual void OnFail(Failure) {};
 protected:
-    std::unique_ptr<Socket> m_sock;
+    std::shared_ptr<Socket> m_sock;
 private:
     void OnRecvCompleted(Context* context, bool isSuccess);
     void OnSendCompleted(Context* context, bool isSuccess);
@@ -47,6 +47,8 @@ private:
 
     std::vector<char> m_buffer;
     net::Context m_recvCtx;
+    net::Context m_sendCtx;
+    std::atomic<bool> m_flushSend;
 
     std::atomic<bool> m_isDisconnected;
 };

@@ -1,5 +1,5 @@
 #pragma once
-
+	
 template<class T, class... Args>
 	requires std::is_class_v<T>
 static inline std::shared_ptr<T> MakeShared(Args&&... args)
