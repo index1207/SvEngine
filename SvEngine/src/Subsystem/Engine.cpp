@@ -25,7 +25,7 @@ Engine::~Engine()
 
 void Engine::AddSerializer(JobSerializer* serializer)
 {
-	m_jobSerializer.push(serializer);
+	m_serializerQue.push(serializer);
 }
 
 void Engine::ExecuteThread(int32 io, int32 logic)
@@ -48,16 +48,13 @@ void Engine::ExecuteLogic(int32 threadCount, std::function<void()> tlsInit)
 		{
 			m_jobTimer->Distribute(GetTickCount64());
 
-			if (!m_jobSerializer.empty())
+			if (!m_serializerQue.empty())
 			{
 				JobSerializer* jobSerializer;
-				if (m_jobSerializer.try_pop(jobSerializer))
+				if (m_serializerQue.try_pop(jobSerializer))
 				{
 					jobSerializer->Flush();
 				}
-			}
-			else
-			{
 			}
 			std::this_thread::sleep_for(std::chrono::milliseconds(WorkTick));
 		}

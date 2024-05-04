@@ -11,13 +11,12 @@ public:
 			while (!m_pool.try_pop(ptr));
 			return ptr;
 		}
-		return new T();
+		return reinterpret_cast<T*>(malloc(sizeof(T)));
 	}
 	static void Push(T* ptr)
 	{
 		if (ptr)
 		{
-			ptr->~T();
 			m_pool.push(ptr);
 		}
 	}
@@ -28,3 +27,12 @@ private:
 template<class T>
 ConcurrencyQueue<T*> ObjectPool<T>::m_pool;
 
+#define USE_POOL(className)\
+void* operator new(size_t size)\
+{\
+	return reinterpret_cast<void*>(ObjectPool<className>::Pop());\
+}\
+void operator delete(void* ptr)\
+{\
+	ObjectPool<className>::Push(reinterpret_cast<className*>(ptr));\
+}\

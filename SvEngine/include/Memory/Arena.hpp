@@ -1,13 +1,11 @@
 #pragma once
 	
-template<class T, class... Args>
-	requires std::is_class_v<T>
+template<class T, class... Args> requires std::is_class_v<T>
 static inline std::shared_ptr<T> MakeShared(Args&&... args)
 {
 	return std::shared_ptr<T>(new T(std::forward<Args>(args)...));
 }
-template<class T>
-	requires std::is_unbounded_array_v<T>
+template<class T> requires std::is_unbounded_array_v<T>
 static inline std::shared_ptr<T> MakeShared(const size_t size)
 {
 	using Ty = action::PeelArrayType<T>::type;
@@ -100,3 +98,4 @@ void className::operator delete[](void* ptr, size_t size)\
 #define CREATE_ARENA(className, arenaSize)\
 		static Arena<className, arenaSize> className##Arena;\
 		IMPLE_ARENA_ALLOC(className)
+

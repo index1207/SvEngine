@@ -46,4 +46,9 @@ namespace action
 	struct PeelArrayType { using type = T; };
 	template<class T>
 	struct PeelArrayType<T[]> { using type = T; };
+
+	template<class T>
+	struct PeelPointerType { using type = T; };
+	template<class T>
+	struct PeelPointerType<T*> { using type = T; };
 }

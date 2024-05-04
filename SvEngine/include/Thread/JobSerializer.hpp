@@ -75,6 +75,5 @@ public:
 	inline void Push(std::shared_ptr<Job> job);
 	void Flush();
 private:
-	std::atomic<uint32> m_jobCount;
 	ConcurrencyQueue<std::shared_ptr<Job>> m_jobs;
 };

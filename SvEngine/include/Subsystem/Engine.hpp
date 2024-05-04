@@ -30,7 +30,7 @@ private:
     DBConnectionPool* m_dbConnectionPool = nullptr;
     JobTimer* m_jobTimer = nullptr;
 
-    ConcurrencyQueue<JobSerializer*> m_jobSerializer;
+    ConcurrencyQueue<JobSerializer*> m_serializerQue;
 };
 
 extern Engine* GEngine;
