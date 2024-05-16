@@ -5,12 +5,19 @@
 #pragma once
 
 class Session;
+
+enum PacketType : uint8
+{
+    Generated,
+    RPC
+};
+
 class Packet {
     friend Session;
     using HandlerFunc = std::function<void(std::shared_ptr<Session>)>;
 public:
     Packet() = default;
-    Packet(unsigned short id, int reserve = 1024);
+    Packet(uint16 id, PacketType type = Generated, int reserve = 1024);
     virtual ~Packet() {};
 public:
     Packet& operator<<(unsigned char Data);
@@ -30,7 +37,7 @@ public:
 
     template<class T>
     Packet& operator<<(std::vector<T> Data) {
-        *this << static_cast<unsigned short>(Data.size());
+        *this << static_cast<uint16>(Data.size());
         for(const T& elem : Data)
             *this << elem;
         return *this;
@@ -65,10 +72,9 @@ public:
 protected:
     void virtual Write() {};
     void virtual Read();
-    void Finish();
 public:
-    unsigned short GetId() const { return m_id; }
-    unsigned short GetSize() const { return m_size; }
+    void SetId(uint16 id) { m_id = id; }
+    uint16 GetId() const { return m_id; }
 public:
     void Parse(std::span<char> buffer);
 
@@ -83,5 +89,4 @@ public:
 private:
     std::vector<char> m_buffer;
     unsigned short m_id;
-    unsigned short m_size;
 };

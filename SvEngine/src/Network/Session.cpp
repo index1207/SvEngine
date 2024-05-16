@@ -54,12 +54,16 @@ Socket Session::GetSocket() {
     return *m_sock;
 }
 
-void Session::Send(Packet* packet) {
-    packet->Write();
-    m_sendCtx.sendBuffer.push_back(packet->Data());
-
+void Session::Send(std::span<char> buffer)
+{
+    m_sendCtx.sendBuffer.push_back(buffer);
     if (!m_flushSend.exchange(true))
     {
         m_sock->send(&m_sendCtx);
     }
+}
+
+void Session::Send(Packet* packet) {
+    packet->Write();
+    Send(packet->Data());
 }

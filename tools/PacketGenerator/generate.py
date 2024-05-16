@@ -72,12 +72,8 @@ namespace {1}
 	{{
     	using Handler = TFunction<bool(TSharedPtr<Session>)>;
 	public:
-		static Handler getHandler(std::span<char> buffer)
+		static Handler getHandler(uint16 id, std::span<char> buffer)
         {{
-            PacketId id = PacketId::NONE;
-			std::memcpy(&id, buffer.data(), sizeof(unsigned short));
-			id = (PacketId)ntohs((u_short)id);
-            
             switch (id)
             {{
             case PacketId::NONE:
@@ -88,9 +84,9 @@ namespace {1}
             }}
             return nullptr;
         }}
-        static bool handlePacket(TSharedPtr<Session> session, std::span<char> buffer)
+        static bool handlePacket(TSharedPtr<Session> session, uint16 id, std::span<char> buffer)
         {{
-            auto handler = getHandler(buffer);
+            auto handler = getHandler(id, buffer);
             if (!handler || !session)
                 return false;
             return handler(session);
@@ -118,7 +114,6 @@ cppFormat.classFormat = '''class {0}
         virtual void Write() override
         {{
             {3}
-            Finish();
         }}
     public:
         {4}

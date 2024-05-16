@@ -28,7 +28,7 @@ template<class T>
 ConcurrencyQueue<T*> ObjectPool<T>::m_pool;
 
 #define USE_POOL(className)\
-void* operator new(size_t size)\
+void* operator new(size_t)\
 {\
 	return reinterpret_cast<void*>(ObjectPool<className>::Pop());\
 }\

@@ -5,11 +5,6 @@
 
 namespace action
 {
-	static std::random_device              rd;
-	static std::mt19937                    gen(rd());
-	static std::uniform_int_distribution<> dis(0, 15);
-	static std::uniform_int_distribution<> dis2(8, 11);
-
 	String ToUnicodeString(std::string_view str);
 
 	std::string ToAnsiString(StringView str);
