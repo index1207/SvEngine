@@ -63,7 +63,7 @@ using TFunction = std::function<T>;
 class Session;
 #endif
 
-#define BIND_HANDLER(pckname, buffer) std::bind(pckname##PacketHandler, std::placeholders::_1, Packet::ParseFrom<pckname>(buffer));
+#define BIND_HANDLER(pckname, buffer, id) std::bind(pckname##PacketHandler, std::placeholders::_1, Packet::ParseFrom<pckname>(buffer, id));
 namespace gen
 {{
 namespace {1}
@@ -72,7 +72,7 @@ namespace {1}
 	{{
     	using Handler = TFunction<bool(TSharedPtr<Session>)>;
 	public:
-		static Handler getHandler(uint16 id, std::span<char> buffer)
+		static Handler GetHandler(uint16 id, std::span<char> buffer)
         {{
             switch (id)
             {{
@@ -84,9 +84,9 @@ namespace {1}
             }}
             return nullptr;
         }}
-        static bool handlePacket(TSharedPtr<Session> session, uint16 id, std::span<char> buffer)
+        static bool HandlePacket(TSharedPtr<Session> session, uint16 id, std::span<char> buffer)
         {{
-            auto handler = getHandler(id, buffer);
+            auto handler = GetHandler(id, buffer);
             if (!handler || !session)
                 return false;
             return handler(session);
@@ -411,7 +411,7 @@ if args.lang == 'cpp':
         outputHandler[i] = cppFormat.handler.format(
             '\n'.join(f'#include "generated/{args.namespace}/{(value.rstrip(".json"))}.gen.hpp"' for value in defList),
             args.namespace,
-            '\n'.join(f'\t\t\tcase {stringcase.constcase(value)}:\n\t\t\t\treturn BIND_HANDLER({value}, buffer);' for value in messageNameList[i]),
+            '\n'.join(f'\t\t\tcase {stringcase.constcase(value)}:\n\t\t\t\treturn BIND_HANDLER({value}, buffer, id);' for value in messageNameList[i]),
             '\n'.join(str('\t\tstatic bool '+value+f'(TSharedPtr<Session> session, TSharedPtr<{(messageNameList[i][handlerList[i].index(value)])}> packet);') for value in handlerList[i]) #handlers
         )
     

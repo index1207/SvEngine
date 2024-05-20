@@ -79,13 +79,16 @@ public:
     void Parse(std::span<char> buffer);
 
     template<class T>
-    static std::shared_ptr<T> ParseFrom(std::span<char> buffer)
+    static std::shared_ptr<T> ParseFrom(std::span<char> buffer, uint16 id)
     {
         auto pk = std::make_unique<T>();
         pk->Parse(buffer);
+        pk->SetId(id);
         return pk;
     }
     std::vector<char>& Data();
+    
+    static bool IsRpcId(uint16 id);
 private:
     std::vector<char> m_buffer;
     unsigned short m_id;

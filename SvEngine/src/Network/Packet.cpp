@@ -6,14 +6,19 @@
 #include "Network/Packet.hpp"
 
 Packet::Packet(uint16 id, PacketType type, int reserve) : m_buffer(2, 0), m_id(0) {
+    if (type == RPC)
+        id |= 0x8000;
     m_buffer.reserve(reserve);
     memcpy(m_buffer.data(), &id, sizeof(uint16));
-
-    if (type == RPC) m_buffer[0] |= 0x80;
 }
 
 std::vector<char>& Packet::Data() {
     return m_buffer;
+}
+
+bool Packet::IsRpcId(uint16 id)
+{
+    return (0x8000 & id) != 0;
 }
 
 void Packet::Parse(std::span<char> buffer) {
