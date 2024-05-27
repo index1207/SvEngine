@@ -33,10 +33,19 @@ void Session::OnRecvCompleted(Context *context, bool isSuccess) {
     m_sock->receive(context);
 }
 
-void Session::OnSendCompleted(Context* context, bool isSuccess)
+void Session::OnSendCompleted(Context*, bool isSuccess)
 {
-    m_sendCtx.sendBuffer.clear();
-    m_flushSend.store(false);
+    if (isSuccess)
+    {
+        m_sendCtx.sendBuffer.clear();
+        m_flushSend.store(false);
+    }
+    else
+    {
+        auto endpoint = m_sock->getRemoteEndpoint();
+        if (endpoint.has_value())
+            OnDisconnected(endpoint.value());
+    }
 }
 
 Session::~Session() {
@@ -54,7 +63,12 @@ Socket Session::GetSocket() {
     return *m_sock;
 }
 
-void Session::Send(std::span<char> buffer)
+void Session::SendUnsafe(std::span<char> buffer)
+{
+    m_sock->send(buffer);
+}
+
+void Session::SendBuffered(std::span<char> buffer)
 {
     m_sendCtx.sendBuffer.push_back(buffer);
     if (!m_flushSend.exchange(true))
@@ -63,7 +77,10 @@ void Session::Send(std::span<char> buffer)
     }
 }
 
-void Session::Send(Packet* packet) {
+void Session::Send(Packet* packet, bool unsafe) {
     packet->Write();
-    Send(packet->Data());
+    if (unsafe)
+        SendUnsafe(packet->Data());
+    else
+        SendBuffered(packet->Data());
 }

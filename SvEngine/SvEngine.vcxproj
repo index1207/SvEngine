@@ -224,6 +224,7 @@
     <ClCompile Include="src\Util\Console.cpp" />
     <ClCompile Include="src\Thread\ThreadManager.cpp" />
     <ClCompile Include="src\GameFramework\Vector.cpp" />
+    <ClCompile Include="src\Memory\STLAllocator.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Memory\Arena.hpp" />
@@ -248,6 +249,7 @@
     <ClInclude Include="include\Thread\ThreadManager.hpp" />
     <ClInclude Include="include\GameFramework\Point.hpp" />
     <ClInclude Include="include\GameFramework\Vector.hpp" />
+    <ClInclude Include="include\Memory\STLAllocator.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

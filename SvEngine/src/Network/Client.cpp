@@ -21,14 +21,14 @@ void Client::Run(Endpoint endpoint) {
     m_sock.connect(connectContext);
 }
 
-void Client::OnConnectCompleted(Context* context, bool isSuccess) {
+void Client::OnConnectCompleted(Context*, bool isSuccess) {
     auto client = m_serverFactory();
     if (isSuccess) {
         client->Run(std::make_unique<Socket>(m_sock));
 
     //    SOCKADDR_IN addr;
     //    int len = sizeof(addr);
-    //    if (SOCKET_ERROR == getpeername(client->m_sock->getHandle(), reinterpret_cast<SOCKADDR*>(&addr), &len))
+    //    if (SOCKET_ERROR == getpeername(client->m_sosck->getHandle(), reinterpret_cast<SOCKADDR*>(&addr), &len))
     //        throw net::network_error("getpeername()");
         client->OnConnected(Endpoint());
     }

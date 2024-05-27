@@ -31,8 +31,9 @@ public:
     Socket GetSocket();
 public:
     void Disconnect();
-    void Send(std::span<char> buffer);
-    void Send(Packet* packet);
+    void SendUnsafe(std::span<char> buffer);
+    void SendBuffered(std::span<char> buffer);
+    void Send(Packet* packet, bool unsafe = false);
 public:
     virtual void OnConnected(net::Endpoint) {};
     virtual void OnDisconnected(net::Endpoint) {};

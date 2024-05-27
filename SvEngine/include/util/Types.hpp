@@ -87,10 +87,3 @@ using StringView = std::wstring_view;
 	} \
 }
 #define MAKE_LOG_CATEGORY(name) namespace Category { static String name(L#name); }
-
-//template<class T, class... Args>
-//std::shared_ptr<T> MakeShared(Args&&... args)
-//{
-//	auto object = std::make_shared<T>(std::forward<Args>(args)...);
-//	new(object) T(std::forward<Args>(args)...);
-//}

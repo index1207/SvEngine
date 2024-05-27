@@ -97,14 +97,14 @@ namespace {1}
 }}
 '''
 
-cppFormat.classFormat = '''class {0}
-            : public Packet {{
+cppFormat.classFormat = '''class {0} : public Packet
+    {{
+        USE_POOL({0})
     public:
-        {0}() : Packet(static_cast<unsigned short>(PacketId::{1})) {{
-        }}
-        ~{0}() {{
-    
-        }}
+        {0}() : Packet(static_cast<uint16>({1}))
+        {{ }}
+        ~{0}()
+        {{ }}
     protected:
         virtual void Read() override
         {{

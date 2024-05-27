@@ -12,7 +12,7 @@ Packet::Packet(uint16 id, PacketType type, int reserve) : m_buffer(2, 0), m_id(0
     memcpy(m_buffer.data(), &id, sizeof(uint16));
 }
 
-std::vector<char>& Packet::Data() {
+Vector<char>& Packet::Data() {
     return m_buffer;
 }
 
@@ -22,7 +22,7 @@ bool Packet::IsRpcId(uint16 id)
 }
 
 void Packet::Parse(std::span<char> buffer) {
-    m_buffer = std::vector(buffer.begin(), buffer.end());
+    m_buffer = Vector<char>(buffer.begin(), buffer.end());
     Read();
 }
 

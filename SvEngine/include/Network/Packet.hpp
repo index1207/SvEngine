@@ -4,6 +4,8 @@
 
 #pragma once
 
+#include "Memory/ObjectPool.hpp"
+
 class Session;
 
 enum PacketType : uint8
@@ -81,15 +83,15 @@ public:
     template<class T>
     static std::shared_ptr<T> ParseFrom(std::span<char> buffer, uint16 id)
     {
-        auto pk = std::make_unique<T>();
+        auto pk = MakeShared<T>();
         pk->Parse(buffer);
         pk->SetId(id);
         return pk;
     }
-    std::vector<char>& Data();
+    Vector<char>& Data();
     
     static bool IsRpcId(uint16 id);
 private:
-    std::vector<char> m_buffer;
+    Vector<char> m_buffer;
     unsigned short m_id;
 };
