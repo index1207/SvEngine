@@ -67,7 +67,6 @@ void JobTimer::Distribute(uint64 now)
 	m_isDistributed.store(false);
 }
 
-CREATE_ARENA(Job, 1024)
 Job::Job(JobCallback&& callback) : m_callback(std::forward<JobCallback>(callback))
 {
 }

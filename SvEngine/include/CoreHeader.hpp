@@ -10,7 +10,6 @@
 #include <sql.h>
 #include <sqlext.h>
 
-#include "GameFramework/Point.hpp"
 #include "GameFramework/Vector.hpp"
 
 #include "Util/Action.hpp"

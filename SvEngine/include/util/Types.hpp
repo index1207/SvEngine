@@ -24,8 +24,8 @@ using uint16 = unsigned short;
 using uint32 = unsigned int;
 using uint64 = unsigned long long;
 
-template<class T>
-using Vector = std::vector<T>;
+template<class T, class Allocator = std::allocator<T>>
+using Vector = std::vector<T, Allocator>;
 
 template<class T, size_t N>
 using Array = std::array<T, N>;

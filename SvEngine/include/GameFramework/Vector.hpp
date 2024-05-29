@@ -87,17 +87,6 @@ public:
 	static Vector2D<T> Left() noexcept { return Vector2D<T>(-1, 0); }
 	static Vector2D<T> Right() noexcept { return Vector2D<T>(1, 0); }
 public:
-	bool operator==(Vector2D<T> v)
-	{
-		return this->x == v.x &&
-			   this->y == v.y;
-	}
-	bool operator==(Point2D<T> p)
-	{
-		return this->x == p.x &&
-			   this->y == p.y;
-	}
-public:
 	T x;
 	T y;
 };
@@ -112,13 +101,6 @@ public:
 	{
 	}
 	~Vector3D() = default;
-public:
-	void SetX(T x) noexcept { x = x; }
-	void SetY(T y) noexcept { y = y; }
-	void SetZ(T z) noexcept { y = z; }
-	T GetX() noexcept { return x; }
-	T GetY() noexcept { return y; }
-	T GetZ() noexcept { return z; }
 public:
 #pragma region Linear Algebra
 	double Length() const { return std::sqrt(x * x + y * y + z * z); }
@@ -207,19 +189,6 @@ public:
 	static Vector3D<T> Right() noexcept { return Vector3D<T>(0, 1, 0); }
 	static Vector3D<T> Foward() noexcept { return Vector3D<T>(1, 0, 0); }
 	static Vector3D<T> Back() noexcept { return Vector3D<T>(-1, 0, 0); }
-public:
-	bool operator==(Vector3D<T> v)
-	{
-		return this->x == v.x &&
-			   this->y == v.y &&
-			   this->z == v.z;
-	}
-	bool operator==(Point3D<T> p)
-	{
-		return this->x == p.x &&
-			   this->y == p.y &&
-			   this->z == p.z;
-	}
 public:
 	T x;
 	T y;

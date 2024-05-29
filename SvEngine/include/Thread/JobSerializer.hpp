@@ -4,7 +4,7 @@ using JobCallback = std::function<void()>;
 
 class Job
 {
-	USE_ARENA()
+	USE_POOL(Job)
 public:
 	Job(JobCallback&& callback);
 	
