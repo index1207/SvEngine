@@ -10,7 +10,7 @@
 
 CREATE_ARENA(Session, 0x1000)
 
-Session::Session() : m_buffer(0x10000, '\0'), m_isDisconnected(false), m_flushSend(false) {
+Session::Session() : m_buffer(0x10000, '\0'), m_isDisconnected(false), m_isSending(false) {
 }
 
 void Session::Run(std::shared_ptr<Socket> sock) {
@@ -35,12 +35,7 @@ void Session::OnRecvCompleted(Context *context, bool isSuccess) {
 
 void Session::OnSendCompleted(Context*, bool isSuccess)
 {
-    if (isSuccess)
-    {
-        m_sendCtx.sendBuffer.clear();
-        m_flushSend.store(false);
-    }
-    else
+    if (!isSuccess)
     {
         auto endpoint = m_sock->getRemoteEndpoint();
         if (endpoint.has_value())
@@ -68,13 +63,17 @@ void Session::SendUnsafe(std::span<char> buffer)
     m_sock->send(buffer);
 }
 
-void Session::SendBuffered(std::span<char> buffer)
+void Session::SendAtomic(std::span<char> buffer)
 {
-    m_sendCtx.sendBuffer.push_back(buffer);
-    if (!m_flushSend.exchange(true))
-    {
-        m_sock->send(&m_sendCtx);
+    bool expected = false;
+    while (m_isSending.compare_exchange_strong(expected, true)) {
+        expected = false;
+        std::this_thread::yield();
     }
+    
+    m_sendCtx.buffer = buffer;
+    m_sock->send(&m_sendCtx);
+    m_isSending.store(false, std::memory_order_release);
 }
 
 void Session::Send(Packet* packet, bool unsafe) {
@@ -82,5 +81,5 @@ void Session::Send(Packet* packet, bool unsafe) {
     if (unsafe)
         SendUnsafe(packet->Data());
     else
-        SendBuffered(packet->Data());
+        SendAtomic(packet->Data());
 }

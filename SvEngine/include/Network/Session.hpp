@@ -32,7 +32,7 @@ public:
 public:
     void Disconnect();
     void SendUnsafe(std::span<char> buffer);
-    void SendBuffered(std::span<char> buffer);
+    void SendAtomic(std::span<char> buffer);
     void Send(Packet* packet, bool unsafe = false);
 public:
     virtual void OnConnected(net::Endpoint) {};
@@ -50,7 +50,6 @@ private:
     std::vector<char> m_buffer;
     net::Context m_recvCtx;
     net::Context m_sendCtx;
-    std::atomic<bool> m_flushSend;
-
+    std::atomic<bool> m_isSending;
     std::atomic<bool> m_isDisconnected;
 };
