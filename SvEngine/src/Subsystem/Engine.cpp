@@ -43,7 +43,7 @@ void Engine::Initialize()
 
 void Engine::ExecuteLogic(int32 threadCount, std::function<void()> tlsInit)
 {
-	auto worker = [=] {
+	auto worker = [this] {
 		while (true)
 		{
 			m_jobTimer->Distribute(GetTickCount64());
