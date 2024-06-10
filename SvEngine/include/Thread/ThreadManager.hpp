@@ -14,7 +14,6 @@ public:
 	void Terminate();
 public:
 	static void Initialize();
-	static void Finalize();
 private:
 	ConcurrencyVector<std::thread*> m_threads;
 };

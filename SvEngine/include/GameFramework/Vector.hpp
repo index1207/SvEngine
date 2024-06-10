@@ -79,6 +79,10 @@ public:
 		);
 	}
 #pragma endregion
+	bool operator==(Vector2D<T> v)
+	{
+		return x == v.x && y == v.y;
+	}
 public:
 	static Vector2D<T> Zero() noexcept { return Vector2D<T>(0, 0); }
 	static Vector2D<T> One() noexcept { return Vector2D<T>(1, 1); }
@@ -180,6 +184,10 @@ public:
 		);
 	}
 #pragma endregion
+	bool operator==(Vector3D<T> v)
+	{
+		return x == v.x && y == v.y && z == v.z;
+	}
 public:
 	static Vector3D<T> Zero() noexcept { return Vector3D<T>(0, 0, 0); }
 	static Vector3D<T> One() noexcept { return Vector3D<T>(1, 1, 1); }

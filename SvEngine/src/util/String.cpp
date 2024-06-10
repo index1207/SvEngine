@@ -1,23 +1,25 @@
 #include "pch.h"
-#include "Util/Action.hpp"
+#include "Util/String.hpp"
+
+#include <random>
 #include <iomanip>
 #include <sstream>
 
-String action::ToUnicodeString(std::string_view str)
+String ToUnicodeString(std::string_view str)
 {
 	String ws;
 	ws.assign(str.begin(), str.end());
 	return ws;
 }
 
-std::string action::ToAnsiString(StringView str)
+std::string ToAnsiString(StringView str)
 {
 	std::string s;
 	s.assign(str.begin(), str.end());
 	return s;
 }
 
-String action::UUIDv4() noexcept
+String UUIDv4() noexcept
 {
 	static std::random_device              rd;
 	static std::mt19937                    gen(rd());
@@ -50,7 +52,7 @@ String action::UUIDv4() noexcept
 	return ss.str();
 }
 
-String action::Timestamp()
+String Timestamp()
 {
 	auto now = std::time(nullptr);
 	tm time = {};
@@ -61,7 +63,7 @@ String action::Timestamp()
 	return wss.str();
 }
 
-Vector<String> action::Split(StringView str, WCHAR del)
+Vector<String> Split(StringView str, WCHAR del)
 {
 	Vector<String> res;
 	std::wstringstream wss(str.data());

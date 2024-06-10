@@ -18,7 +18,6 @@ void ThreadManager::Launch(CallbackType callback, CallbackType tlsInit)
 		Initialize();
 		tlsInit();
 		callback();
-		Finalize();
 	}));
 }
 
@@ -41,8 +40,4 @@ void ThreadManager::Initialize()
 {
 	static std::atomic<uint16> s_threadId = 1;
 	LThreadId = s_threadId.fetch_add(1);
-}
-
-void ThreadManager::Finalize()
-{
 }

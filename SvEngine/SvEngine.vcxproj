@@ -215,7 +215,6 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="src\Thread\TLSStorage.cpp" />
-    <ClCompile Include="src\Util\Action.cpp" />
     <ClCompile Include="src\Subsystem\Engine.cpp" />
     <ClCompile Include="src\Network\Packet.cpp" />
     <ClCompile Include="src\Network\Server.cpp" />
@@ -223,6 +222,7 @@
     <ClCompile Include="src\Util\Console.cpp" />
     <ClCompile Include="src\Thread\ThreadManager.cpp" />
     <ClCompile Include="src\GameFramework\Vector.cpp" />
+    <ClCompile Include="src\Util\String.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Memory\Arena.hpp" />
@@ -233,19 +233,21 @@
     <ClInclude Include="include\Util\File.hpp" />
     <ClInclude Include="include\CoreHeader.hpp" />
     <ClInclude Include="include\Thread\TLSStorage.hpp" />
-    <ClInclude Include="include\Util\Action.hpp" />
     <ClInclude Include="include\Subsystem\Engine.hpp" />
     <ClInclude Include="include\Network\Packet.hpp" />
     <ClInclude Include="include\Network\Server.hpp" />
     <ClInclude Include="include\Network\Session.hpp" />
     <ClInclude Include="include\Util\Console.hpp" />
     <ClInclude Include="include\Util\Parser\Ini.hpp" />
+    <ClInclude Include="include\Util\Random.hpp" />
+    <ClInclude Include="include\Util\Template.hpp" />
     <ClInclude Include="include\Util\Types.hpp" />
     <ClInclude Include="include\Thread\JobSerializer.hpp" />
     <ClInclude Include="include\Memory\ObjectPool.hpp" />
     <ClInclude Include="PCH\pch.h" />
     <ClInclude Include="include\Thread\ThreadManager.hpp" />
     <ClInclude Include="include\GameFramework\Vector.hpp" />
+    <ClInclude Include="include\Util\String.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
