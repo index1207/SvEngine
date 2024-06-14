@@ -115,10 +115,9 @@ Packet& Packet::operator<<(double Data) {
 }
 
 Packet& Packet::operator<<(StringView Data) {
-    std::string str;
-    str.assign(Data.begin(), Data.end());
-    *this << static_cast<int16>(str.length());
-    m_buffer.insert(m_buffer.end(), str.begin(), str.end());
+    const auto str = reinterpret_cast<const char*>(Data.data());
+    *this << static_cast<int16>(Data.size());
+    m_buffer.insert(m_buffer.end(), str, str+Data.size()*2);
     return *this;
 }
 
@@ -225,7 +224,7 @@ Packet& Packet::operator>>(String& Data)
 {
     unsigned short len;
     *this >> len;
-    Data.assign(m_buffer.begin(), m_buffer.begin() + len);
-    m_buffer.erase(m_buffer.begin(), m_buffer.begin() + len);
+    Data.assign(reinterpret_cast<const wchar_t*>(m_buffer.data()), len);
+    m_buffer.erase(m_buffer.begin(), m_buffer.begin() + len*2);
     return *this;
 }
