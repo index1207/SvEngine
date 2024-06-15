@@ -40,7 +40,6 @@ public:
 	void Distribute(uint64 now);
 private:
 	ConcurrencyPriorityQueue<JobReserve> m_jobs;
-	std::atomic<bool> m_isDistributed = false;
 };
 
 class JobSerializer : public std::enable_shared_from_this<JobSerializer>
@@ -72,7 +71,7 @@ public:
 			jobTimer->Reserve(delay, owner, job);
 	}
 
-	inline void Push(std::shared_ptr<Job> job);
+	void Push(std::shared_ptr<Job> job);
 	void Flush();
 private:
 	ConcurrencyQueue<std::shared_ptr<Job>> m_jobs;
