@@ -48,8 +48,8 @@ using ConcurrencyVector = tbb::concurrent_vector<T>;
 template<class T>
 using ConcurrencyQueue = tbb::concurrent_queue<T>;
 
-template<class T>
-using ConcurrencyPriorityQueue = tbb::concurrent_priority_queue<T>;
+template<class T, class Compare = std::less<T>>
+using ConcurrencyPriorityQueue = tbb::concurrent_priority_queue<T, Compare>;
 
 template<class Key, class Value>
 using Map = std::map<Key, Value>;
