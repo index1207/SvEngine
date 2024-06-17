@@ -12,21 +12,21 @@ void Console::SetOutputEncoding()
 {
 }
 
-void Console::Log(String category, LogType type, String message)
+void Console::Print(String category, LogType type, String message)
 {
     switch (type)
     {
     case LogType::Info:
-        LogDisplay(category, message);
+        Log(category, message);
         break;
     case LogType::Warning:
-        LogWarning(category, message);
+        Warning(category, message);
         break;
     case LogType::Debug:
-        LogDebug(category, message);
+        Debug(category, message);
         break;
     case LogType::Error:
-        LogError(category, message);
+        Error(category, message);
         break;
     default:
         break;
@@ -41,22 +41,22 @@ void Console::Print(Color color, String message, bool ln)
     WriteConsole(s_handle, message.c_str(), message.length(), nullptr, nullptr);
 }
 
-void Console::LogDisplay(String category, String message)
+void Console::Log(String category, String message)
 {
     Print(Color::White, std::format(TEXT("[{}][INFO] {}"), category, message));
 }
 
-void Console::LogWarning(String category, String message)
+void Console::Warning(String category, String message)
 {
     Print(Color::Yellow, std::format(TEXT("[{}][WARNING] {}"), category, message));
 }
 
-void Console::LogDebug(String category, String message)
+void Console::Debug(String category, String message)
 {
     Print(Color::Green, std::format(TEXT("[{}][DEBUG] {}"), category, message));
 }
 
-void Console::LogError(String category, String message)
+void Console::Error(String category, String message)
 {
     Print(Color::Red, std::format(TEXT("[{}][Error] {}"), category, message));
 }

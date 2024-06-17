@@ -52,13 +52,13 @@ class Console {
     static void Initialize();
 public:
     static void SetOutputEncoding();
-    static void Log(String category, LogType type, String message);
-private:
+public:
+    static void Print(String category, LogType type, String message);
     static void Print(Color color, String message, bool ln = true);
-    static void LogDisplay(String category, String message);
-    static void LogWarning(String category, String message);
-    static void LogDebug(String category, String message);
-    static void LogError(String category, String message);
+    static void Log(String category, String message);
+    static void Warning(String category, String message);
+    static void Debug(String category, String message);
+    static void Error(String category, String message);
 private:
     static HANDLE s_handle;
 };

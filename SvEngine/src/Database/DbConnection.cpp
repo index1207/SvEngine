@@ -261,7 +261,7 @@ void DBConnection::HandleError(SQLRETURN ret)
 		if (errorRet != SQL_SUCCESS && errorRet != SQL_SUCCESS_WITH_INFO)
 			break;
 
-		Console::Log(Category::Database, Error, errMsg);
+		Console::Error(Category::Database, errMsg);
 
 		index++;
 	}
