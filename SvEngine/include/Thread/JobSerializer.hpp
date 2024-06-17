@@ -28,11 +28,7 @@ class JobTimer
 
 		inline bool operator<(const JobReserve& other) const
 		{
-			return this->reserveTick < other.reserveTick;
-		}
-		inline bool operator>(const JobReserve& other) const
-		{
-			return this->reserveTick > other.reserveTick;
+			return reserveTick > other.reserveTick;
 		}
 
 		uint64 reserveTick;
@@ -43,7 +39,7 @@ public:
 	void Reserve(uint64 tick, std::shared_ptr<class JobSerializer> serializer, std::shared_ptr<Job> job);
 	void Distribute(uint64 now);
 private:
-	ConcurrencyPriorityQueue<JobReserve, std::greater<JobReserve>> m_jobs;
+	ConcurrencyPriorityQueue<JobReserve> m_jobs;
 };
 
 class JobSerializer : public std::enable_shared_from_this<JobSerializer>
