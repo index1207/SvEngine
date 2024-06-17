@@ -30,6 +30,10 @@ class JobTimer
 		{
 			return this->reserveTick < other.reserveTick;
 		}
+		inline bool operator>(const JobReserve& other) const
+		{
+			return this->reserveTick > other.reserveTick;
+		}
 
 		uint64 reserveTick;
 		std::weak_ptr<class JobSerializer> serializer;
@@ -39,8 +43,7 @@ public:
 	void Reserve(uint64 tick, std::shared_ptr<class JobSerializer> serializer, std::shared_ptr<Job> job);
 	void Distribute(uint64 now);
 private:
-	ConcurrencyPriorityQueue<JobReserve> m_jobs;
-	std::atomic<bool> m_isDistributed = false;
+	ConcurrencyPriorityQueue<JobReserve, std::greater<JobReserve>> m_jobs;
 };
 
 class JobSerializer : public std::enable_shared_from_this<JobSerializer>
@@ -69,10 +72,10 @@ public:
 		auto owner = std::static_pointer_cast<T>(shared_from_this());
 		auto job = MakeShared<Job>(owner, method, std::forward<Args>(args)...);
 		if (auto* jobTimer = GEngine->GetJobTimer())
-			jobTimer->Reserve(delay, owner, job);
+			jobTimer->Reserve(delay, shared_from_this(), job);
 	}
 
-	inline void Push(std::shared_ptr<Job> job);
+	void Push(std::shared_ptr<Job> job);
 	void Flush();
 private:
 	ConcurrencyQueue<std::shared_ptr<Job>> m_jobs;

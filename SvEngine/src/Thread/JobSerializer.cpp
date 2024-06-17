@@ -41,10 +41,6 @@ void JobTimer::Reserve(uint64 tick, std::shared_ptr<class JobSerializer> seriali
 
 void JobTimer::Distribute(uint64 now)
 {
-	if (m_isDistributed.exchange(true) == true) // 만약 Job을 빼고 있다면
-		return;
-
-	Vector<JobReserve> executeJobs;
 	while (!m_jobs.empty())
 	{
 		JobReserve jobReserve;
@@ -55,16 +51,10 @@ void JobTimer::Distribute(uint64 now)
 				m_jobs.push(jobReserve);
 				break;
 			}
-			executeJobs.push_back(jobReserve);
+			else if (auto serializer = jobReserve.serializer.lock())
+				serializer->Push(jobReserve.job);
 		}
 	}
-	for (const auto& job : executeJobs)
-	{
-		if (auto serializer = job.serializer.lock())
-			serializer->Push(job.job);
-	}
-
-	m_isDistributed.store(false);
 }
 
 Job::Job(JobCallback&& callback) : m_callback(std::forward<JobCallback>(callback))
