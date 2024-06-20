@@ -1,4 +1,6 @@
 ﻿# SV Engine
+![Build](https://github.com/index1207/SvEngine/actions/workflows/build.yml/badge.svg)
+![Lang](https://img.shields.io/badge/language-C++20-blue) <br>
 SV Engine is simple server engine. It helps develop multi-play game on Unity or Unreal engine and other projects.
 
 ## Features
@@ -28,12 +30,9 @@ your project can develop through session interaction events being called.
 
 
 ## Setup
-To use this server engine, firstly clone third-party libraries and build binary at `lib/bin` directory. <br>
-Secondly, install python and install other modules.
-### 1. Build netcpp
-1. `cd lib && mkdir bin`
-2. `cmake -S netcpp -B bin`
-3. Open `.sln` project and build by `Debug` & `Release` mods.
+To build this project, clone this repository recursive(`git clone --recursive https://github.com/index1207/SvEngine`) and install python and install other modules.
+
+### 1. Execute `Setup.bat`
 
 ### 2. Install python & modules
 1. `pip install stringcase`
