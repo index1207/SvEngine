@@ -1,9 +1,9 @@
-[submodule "lib/color-console"]
-	path = lib/color-console
-	url = https://github.com/aafulei/color-console
-[submodule "lib/rapidxml"]
-	path = lib/rapidxml
-	url = https://github.com/dwd/rapidxml
 [submodule "lib/netcpp"]
 	path = lib/netcpp
 	url = https://github.com/index1207/netcpp
+[submodule "lib/oneTBB"]
+	path = lib/oneTBB
+	url = https://github.com/oneapi-src/oneTBB
+[submodule "lib/magic_enum"]
+	path = lib/magic_enum
+	url = https://github.com/Neargye/magic_enum
