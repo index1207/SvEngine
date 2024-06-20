@@ -21,7 +21,7 @@ enum LogType {
     Error    // red
 };
 
-enum Color
+enum Color : WORD
 {
     Black,    
     DarkBlue, 
@@ -54,7 +54,7 @@ public:
     static void SetOutputEncoding();
 public:
     static void Print(String category, LogType type, String message);
-    static void Print(Color color, String message, bool ln = true);
+    static void Print(Color color, String message);
     static void Log(String category, String message);
     static void Warning(String category, String message);
     static void Debug(String category, String message);

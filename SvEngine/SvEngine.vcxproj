@@ -199,6 +199,7 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Util\Math.cpp" />
     <ClCompile Include="src\Memory\ObjectPool.cpp" />
     <ClCompile Include="src\Memory\Arena.cpp" />
     <ClCompile Include="src\Util\Parser\Ini.cpp" />
@@ -244,6 +245,7 @@
     <ClInclude Include="include\Util\Types.hpp" />
     <ClInclude Include="include\Thread\JobSerializer.hpp" />
     <ClInclude Include="include\Memory\ObjectPool.hpp" />
+    <ClInclude Include="include\Util\Math.hpp" />
     <ClInclude Include="PCH\pch.h" />
     <ClInclude Include="include\Thread\ThreadManager.hpp" />
     <ClInclude Include="include\GameFramework\Vector.hpp" />

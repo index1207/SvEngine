@@ -33,12 +33,11 @@ void Console::Print(String category, LogType type, String message)
     }
 }
 
-void Console::Print(Color color, String message, bool ln)
+void Console::Print(Color color, String message)
 {
     message += L'\n';
-
     SetConsoleTextAttribute(s_handle, color);
-    WriteConsole(s_handle, message.c_str(), message.length(), nullptr, nullptr);
+    WriteConsole(s_handle, message.c_str(), static_cast<DWORD>(message.length()), nullptr, nullptr);
 }
 
 void Console::Log(String category, String message)

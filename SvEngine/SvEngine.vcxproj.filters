@@ -30,6 +30,7 @@
     <ClCompile Include="src\Memory\Arena.cpp" />
     <ClCompile Include="src\Memory\ObjectPool.cpp" />
     <ClCompile Include="src\Util\String.cpp" />
+    <ClCompile Include="src\Util\Math.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">
@@ -87,5 +88,6 @@
     <ClInclude Include="include\Util\Random.hpp" />
     <ClInclude Include="include\Util\String.hpp" />
     <ClInclude Include="include\Util\Template.hpp" />
+    <ClInclude Include="include\Util\Math.hpp" />
   </ItemGroup>
 </Project>

@@ -27,6 +27,9 @@ using uint64 = unsigned long long;
 template<class T, class Allocator = std::allocator<T>>
 using Vector = std::vector<T, Allocator>;
 
+template<class T>
+using Deque = std::deque<T>;
+
 template<class T, size_t N>
 using Array = std::array<T, N>;
 
