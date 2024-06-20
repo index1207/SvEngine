@@ -1,10 +1,10 @@
 rem build library
-mkdir lib/bin
-cd lib/netcpp
+mkdir .\lib\bin
+cd lib\netcpp
 cmake . && cmake --build . --target netcpp --config Release
-cd ../oneTBB
+cd ..\oneTBB
 cmake . && cmake --build . --target tbb --config Release
-cd ../../
+cd ..\..\
 
 rem copy library files
 for /r .\lib\oneTBB\ %%i in (*.lib, *.dll) do (
