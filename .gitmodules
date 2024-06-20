@@ -4,6 +4,3 @@
 [submodule "lib/oneTBB"]
 	path = lib/oneTBB
 	url = https://github.com/oneapi-src/oneTBB
-[submodule "lib/magic_enum"]
-	path = lib/magic_enum
-	url = https://github.com/Neargye/magic_enum
