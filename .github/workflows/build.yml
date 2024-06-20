@@ -38,7 +38,8 @@ jobs:
         cmake --build . --target netcpp --config Release
 
     - name: Copy `.lib` & `.dll` to bin directory
-      run: setup.bat
+      run: ./setup.bat
+      shell: cmd
 
     - name: Build .sln project
       run: msbuild Engine.sln /p:Configuration=Release
