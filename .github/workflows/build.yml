@@ -27,13 +27,15 @@ jobs:
     
     - name: Build submodule `oneTBB`
       run: |
-        cmake lib/oneTBB
-        cmake --build lib/oneTBB --target tbb --config Release
+        cd lib/oneTBB
+        cmake .
+        cmake --build . --target tbb --config Release
     
     - name: Build submodule `netcpp`
       run: |
-        cmake lib/netcpp
-        cmake --build lib/netcpp --target netcpp --config Release
+        cd lib/netcpp
+        cmake .
+        cmake --build . --target netcpp --config Release
 
     - name: Copy `.lib` & `.dll` to bin directory
       run: setup.bat
