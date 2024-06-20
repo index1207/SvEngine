@@ -21,10 +21,23 @@ jobs:
     - name: Setup MSBuild
       uses: microsoft/setup-msbuild@v1.0.2
 
+    # Build submodule
     - name: Setup build submodule
       run: mkdir lib/bin
     
-    - name: Build & setup library
+    - name: Build submodule `oneTBB`
+      run: |
+        cd lib/oneTBB
+        cmake .
+        cmake --build . --target tbb --config Release
+    
+    - name: Build submodule `netcpp`
+      run: |
+        cd lib/netcpp
+        cmake .
+        cmake --build . --target netcpp --config Release
+
+    - name: Copy `.lib` & `.dll` to bin directory
       run: ./setup.bat
       shell: cmd
 
