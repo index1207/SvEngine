@@ -16,6 +16,7 @@
 #include "Util/Template.hpp"
 #include "Util/String.hpp"
 #include "Util/Random.hpp"
+#include "util/Math.hpp"
 #include "Thread/TLSStorage.hpp"
 #include "Network/Packet.hpp"
 #include "Subsystem/Engine.hpp"
