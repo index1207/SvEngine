@@ -1,6 +1,5 @@
-﻿# SV Engine
-![Build](https://github.com/index1207/SvEngine/actions/workflows/build.yml/badge.svg)
-![Lang](https://img.shields.io/badge/language-C++20-blue) <br>
+# SV Engine ![Build](https://github.com/index1207/SvEngine/actions/workflows/build.yml/badge.svg) ![Lang](https://img.shields.io/badge/language-C++20-blue) <br>
+
 SV Engine is simple server engine. It helps develop multi-play game on Unity or Unreal engine and other projects.
 
 ## Features
