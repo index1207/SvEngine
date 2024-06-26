@@ -13,7 +13,7 @@ public:
 public:
 #pragma region Linear Algebra
 	double Length() const { return std::sqrt(x * x + y * y); }
-	void Normalize()
+	Vector2D<T> Normalize()
 	{
 		const auto len = Length();
 		return Vector2D<T>(x / len, y / len);
@@ -73,7 +73,7 @@ public:
 	}
 	Vector2D<T> operator*(double scala) noexcept
 	{
-		return VectorD<T>(
+		return Vector2D<T>(
 			x * scala,
 			y * scala
 		);
