@@ -28,10 +28,12 @@ void Engine::AddSerializer(JobSerializer* serializer)
 	m_serializerQue.push(serializer);
 }
 
-void Engine::ExecuteThread(int32 io, int32 logic)
+void Engine::ExecuteThread(int32 io, int32 logic, bool enableMainThrd)
 {
 	ExecuteLogic(logic);
 	ExecuteIo(io);
+	if (enableMainThrd)
+		Polling();
 }
 
 void Engine::Initialize()
@@ -43,27 +45,11 @@ void Engine::Initialize()
 
 void Engine::ExecuteLogic(int32 threadCount, std::function<void()> tlsInit)
 {
-	auto worker = [this] {
-		while (true)
-		{
-			m_jobTimer->Distribute(GetTickCount64());
-
-			if (!m_serializerQue.empty())
-			{
-				JobSerializer* jobSerializer;
-				if (m_serializerQue.try_pop(jobSerializer))
-				{
-					jobSerializer->Flush();
-				}
-			}
-			std::this_thread::sleep_for(std::chrono::milliseconds(WorkTick));
-		}
-	};
 	for (int i = 0; i < threadCount; ++i)
 	{
 		m_threadManager->Launch([=]()
 		{
-			worker();
+			Polling();
 		}, tlsInit);
 	}
 }
@@ -79,5 +65,23 @@ void Engine::ExecuteIo(int32 threadCount)
 				IoSystem::instance().worker(); // IOCP I/O Worker
 			};
 		});
+	}
+}
+
+void Engine::Polling()
+{
+	while (true)
+	{
+		m_jobTimer->Distribute(GetTickCount64());
+
+		if (!m_serializerQue.empty())
+		{
+			JobSerializer* jobSerializer;
+			if (m_serializerQue.try_pop(jobSerializer))
+			{
+				jobSerializer->Flush();
+			}
+		}
+		std::this_thread::sleep_for(std::chrono::milliseconds(WorkTick));
 	}
 }

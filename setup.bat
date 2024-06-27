@@ -1,5 +1,9 @@
 @echo off
 
+@rem install python module
+pip install stringcase
+
+@rem build libraries
 mkdir .\lib\bin\Debug
 mkdir .\lib\bin\Release
 
