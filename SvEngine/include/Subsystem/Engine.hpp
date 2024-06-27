@@ -15,9 +15,10 @@ public:
     ~Engine();
 public:
     void Initialize();
+    void Polling();
 
     void AddSerializer(JobSerializer* serializer);
-    void ExecuteThread(int32 io, int32 logic);
+    void ExecuteThread(int32 io, int32 logic, bool enableMainThrd = true);
 public:
     __forceinline ThreadManager* GetThreadManager() { return m_threadManager; }
     __forceinline DBConnectionPool* GetDBConnectionPool() { return m_dbConnectionPool; }
