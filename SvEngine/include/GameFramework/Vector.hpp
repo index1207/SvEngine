@@ -16,7 +16,7 @@ public:
 	Vector2D<T> Normalize()
 	{
 		const auto len = Length();
-		return Vector2D<T>(x / len, y / len);
+		return Vector2D<T>(static_cast<T>(x / len), static_cast<T>(y / len));
 	}
 	void operator+=(Vector2D<T>&& v) noexcept
 	{
