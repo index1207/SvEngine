@@ -91,8 +91,8 @@ public:
 	static Vector2D<T> Left() noexcept { return Vector2D<T>(-1, 0); }
 	static Vector2D<T> Right() noexcept { return Vector2D<T>(1, 0); }
 public:
-	T x;
-	T y;
+	mutable T x;
+	mutable T y;
 };
 
 template<class T>
