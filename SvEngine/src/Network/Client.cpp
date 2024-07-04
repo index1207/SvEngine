@@ -26,11 +26,11 @@ void Client::OnConnectCompleted(Context*, bool isSuccess) {
     if (isSuccess) {
         client->Run(std::make_unique<Socket>(m_sock));
 
-    //    SOCKADDR_IN addr;
-    //    int len = sizeof(addr);
-    //    if (SOCKET_ERROR == getpeername(client->m_sosck->getHandle(), reinterpret_cast<SOCKADDR*>(&addr), &len))
-    //        throw net::network_error("getpeername()");
-        client->OnConnected(Endpoint());
+        SOCKADDR_IN addr;
+        int len = sizeof(addr);
+        if (SOCKET_ERROR == getpeername(client->m_sock->getHandle(), reinterpret_cast<SOCKADDR*>(&addr), &len))
+            throw net::network_error("getpeername()");
+        client->OnConnected(Endpoint::parse(addr));
     }
     else
         client->OnFail(Failure::Connect);

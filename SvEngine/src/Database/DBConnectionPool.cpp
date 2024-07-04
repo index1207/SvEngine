@@ -55,7 +55,7 @@ DBConnection* DBConnectionPool::Pop()
 		return nullptr;
 
 	DBConnection* connection = nullptr;
-	_connections.try_pop(connection);
+	while (!_connections.try_pop(connection)) {};
 	return connection;
 }
 

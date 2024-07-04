@@ -15,7 +15,7 @@ public:
     ~Engine();
 public:
     void Initialize();
-    void Polling();
+    void Fetch();
 
     void AddSerializer(JobSerializer* serializer);
     void ExecuteThread(int32 io, int32 logic, bool enableMainThrd = true);

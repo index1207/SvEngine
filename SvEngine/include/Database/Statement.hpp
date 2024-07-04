@@ -1,6 +1,6 @@
 #pragma once
 
-#include "DBConnection.hpp"
+#include "DBConnectionPool.hpp"
 
 template<int32 C> struct FullBits { enum { value = (1 << (C - 1)) | FullBits<C - 1>::value }; };
 template<> struct FullBits<1> { enum { value = 1 }; };
@@ -21,6 +21,11 @@ public:
 	Statement(DBConnection* connection, String sql) : Statement(connection)
 	{
 		m_query = sql;
+	}
+
+	~Statement()
+	{
+		GEngine->GetDBConnectionPool()->Push(m_connection);
 	}
 
 	bool Validate()

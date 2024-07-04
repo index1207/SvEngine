@@ -33,7 +33,7 @@ void Engine::ExecuteThread(int32 io, int32 logic, bool enableMainThrd)
 	ExecuteLogic(logic);
 	ExecuteIo(io);
 	if (enableMainThrd)
-		Polling();
+		Fetch();
 }
 
 void Engine::Initialize()
@@ -49,7 +49,7 @@ void Engine::ExecuteLogic(int32 threadCount, std::function<void()> tlsInit)
 	{
 		m_threadManager->Launch([=]()
 		{
-			Polling();
+			Fetch();
 		}, tlsInit);
 	}
 }
@@ -68,7 +68,7 @@ void Engine::ExecuteIo(int32 threadCount)
 	}
 }
 
-void Engine::Polling()
+void Engine::Fetch()
 {
 	while (true)
 	{
