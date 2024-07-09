@@ -4,7 +4,8 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>1cbc2443-d0a8-4ed5-ac39-1782d2001b4e</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>execute.py</StartupFile>
+    <StartupFile>
+    </StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>

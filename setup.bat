@@ -20,11 +20,11 @@ cmake . && cmake --build . --target netcpp --config %~1
 CD ..\oneTBB
 cmake . && cmake --build . --target tbb --config %~1
 CD ..\..\
-for /r %LIB_DIR%\netcpp\ %%i IN (*.lib, *.dll) do (
+for /r %LIB_DIR%\netcpp\ %%i IN (*.lib, *.dll, *.pdb) do (
     copy "%%i" "%BIN_DIR%\%~1\"
     del "%%i"
 )
-FOR /r %LIB_DIR%\oneTBB\ %%i IN (*.lib, *.dll) do (
+FOR /r %LIB_DIR%\oneTBB\ %%i IN (*.lib, *.dll, *.pdb) do (
     COPY "%%i" "%BIN_DIR%\%~1\"
     DEL "%%i"
 )

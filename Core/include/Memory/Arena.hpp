@@ -1,7 +1,7 @@
 #pragma once
 
 template<class T, size_t N>
-class Arena
+class DLLEXPORT Arena
 {
 	static constexpr size_t alignment = alignof(std::max_align_t);
 public:
