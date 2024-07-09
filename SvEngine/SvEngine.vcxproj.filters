@@ -17,13 +17,7 @@
       <Filter>src\util</Filter>
     </ClCompile>
     <ClCompile Include="PCH\pch.cpp" />
-    <ClCompile Include="src\Thread\JobSerializer.cpp" />
-    <ClCompile Include="src\Thread\ThreadManager.cpp" />
-    <ClCompile Include="src\Thread\TLSStorage.cpp" />
     <ClCompile Include="src\Util\File.cpp" />
-    <ClCompile Include="src\Database\DbConnection.cpp" />
-    <ClCompile Include="src\Database\DBConnectionPool.cpp" />
-    <ClCompile Include="src\Database\Statement.cpp" />
     <ClCompile Include="src\Network\Client.cpp" />
     <ClCompile Include="src\Util\Parser\Ini.cpp" />
     <ClCompile Include="src\GameFramework\Vector.cpp" />
@@ -31,6 +25,7 @@
     <ClCompile Include="src\Memory\ObjectPool.cpp" />
     <ClCompile Include="src\Util\String.cpp" />
     <ClCompile Include="src\Util\Math.cpp" />
+    <ClCompile Include="src\Util\Functor.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">
@@ -73,13 +68,7 @@
     </ClInclude>
     <ClInclude Include="PCH\pch.h" />
     <ClInclude Include="include\CoreHeader.hpp" />
-    <ClInclude Include="include\Thread\JobSerializer.hpp" />
-    <ClInclude Include="include\Thread\ThreadManager.hpp" />
-    <ClInclude Include="include\Thread\TLSStorage.hpp" />
     <ClInclude Include="include\Util\File.hpp" />
-    <ClInclude Include="include\Database\DbConnection.hpp" />
-    <ClInclude Include="include\Database\DBConnectionPool.hpp" />
-    <ClInclude Include="include\Database\Statement.hpp" />
     <ClInclude Include="include\Network\Client.hpp" />
     <ClInclude Include="include\Util\Parser\Ini.hpp" />
     <ClInclude Include="include\GameFramework\Vector.hpp" />
@@ -89,5 +78,8 @@
     <ClInclude Include="include\Util\String.hpp" />
     <ClInclude Include="include\Util\Template.hpp" />
     <ClInclude Include="include\Util\Math.hpp" />
+    <ClInclude Include="include\Util\Functor.hpp" />
+    <ClInclude Include="include\Subsystem\GameInstance.hpp" />
+    <ClInclude Include="include\Util\Macro.hpp" />
   </ItemGroup>
 </Project>

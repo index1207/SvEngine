@@ -14,7 +14,7 @@ enum PacketType : uint8
     RPC
 };
 
-class Packet {
+class DLLEXPORT Packet {
     friend Session;
     using HandlerFunc = std::function<void(std::shared_ptr<Session>)>;
 public:
@@ -80,13 +80,15 @@ public:
 public:
     void Parse(std::span<char> buffer);
 
+    static uint16 GetPacketId(std::span<char> buffer);
+
     template<class T>
-    static std::shared_ptr<T> ParseFrom(std::span<char> buffer, uint16 id)
+    DLLEXPORT static std::unique_ptr<T> ParseFrom(std::span<char> buffer)
     {
-        auto pk = MakeShared<T>();
+        auto pk = MakeUnique<T>();
         pk->Parse(buffer);
-        pk->SetId(id);
-        return pk;
+        pk->SetId(GetPacketId(buffer));
+        return std::move(pk);
     }
     Vector<char>& Data();
     

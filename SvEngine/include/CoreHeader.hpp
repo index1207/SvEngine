@@ -10,6 +10,7 @@
 #include <sql.h>
 #include <sqlext.h>
 
+#include "Util/Macro.hpp"
 #include "GameFramework/Vector.hpp"
 
 #include "Util/Console.hpp"
@@ -17,7 +18,6 @@
 #include "Util/String.hpp"
 #include "Util/Random.hpp"
 #include "util/Math.hpp"
-#include "Thread/TLSStorage.hpp"
 #include "Network/Packet.hpp"
 #include "Subsystem/Engine.hpp"
 

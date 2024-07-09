@@ -1,29 +1,31 @@
-@echo off
+@ECHO OFF
 
 @rem install python module
 pip install stringcase
 
-@rem build libraries
-mkdir .\lib\bin\Debug
-mkdir .\lib\bin\Release
+SET LIB_DIR=.\Libraries\
+SET BIN_DIR=.\Binaries\
 
-call :build Debug
-call :build Release
+@rem build libraries
+IF NOT EXIST "%BIN_DIR%\Debug" ( MKDIR %BIN_DIR%\Debug )
+IF NOT EXIST "%BIN_DIR%\Release" ( MKDIR %BIN_DIR%\Release )
+
+CALL :build Debug
+CALL :build Release
 EXIT /B %ERRORLEVEL%
 
 :build
-cd lib\netcpp   
+CD %LIB_DIR%\netcpp   
 cmake . && cmake --build . --target netcpp --config %~1
-cd ..\oneTBB
+CD ..\oneTBB
 cmake . && cmake --build . --target tbb --config %~1
-cd ..\..\
-for /r .\lib\oneTBB\ %%i in (*.lib, *.dll) do (
-    copy "%%i" "lib\bin\%~1\"
+CD ..\..\
+for /r %LIB_DIR%\netcpp\ %%i IN (*.lib, *.dll) do (
+    copy "%%i" "%BIN_DIR%\%~1\"
     del "%%i"
 )
-
-for /r .\lib\netcpp\ %%i in (*.lib) do (
-    copy "%%i" "lib\bin\%~1\"
-    del "%%i"
+FOR /r %LIB_DIR%\oneTBB\ %%i IN (*.lib, *.dll) do (
+    COPY "%%i" "%BIN_DIR%\%~1\"
+    DEL "%%i"
 )
 EXIT /B 0

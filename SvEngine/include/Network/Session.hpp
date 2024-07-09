@@ -16,11 +16,10 @@ enum class Failure
     Connect
 };
 
-class Session : public std::enable_shared_from_this<Session>
+class DLLEXPORT Session
 {
     friend class Server;
     friend class Client;
-    using ServerFactory = std::function<std::shared_ptr<Session>()>;
 
     USE_ARENA()
 public:
@@ -31,7 +30,7 @@ public:
     Socket GetSocket();
 public:
     void Disconnect();
-    void SendUnsafe(std::span<char> buffer);
+    void SendUnsafe(std::span<char> buffer) const;
     void SendAtomic(std::span<char> buffer);
     void Send(Packet* packet, bool unsafe = false);
 public:
@@ -45,11 +44,8 @@ private:
     void OnRecvCompleted(Context* context, bool isSuccess);
     void OnSendCompleted(Context* context, bool isSuccess);
 private:
-    std::shared_ptr<Session> m_ref; // TEMP
-
     std::vector<char> m_buffer;
     net::Context m_recvCtx;
     net::Context m_sendCtx;
     std::atomic<bool> m_isSending;
-    std::atomic<bool> m_isDisconnected;
 };

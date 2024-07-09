@@ -10,7 +10,8 @@
 
 CREATE_ARENA(Session, 0x1000)
 
-Session::Session() : m_buffer(0x10000, '\0'), m_isDisconnected(false), m_isSending(false) {
+Session::Session() : m_buffer(0x10000, '\0'), m_isSending(false)
+{
 }
 
 void Session::Run(std::shared_ptr<Socket> sock) {
@@ -21,10 +22,10 @@ void Session::Run(std::shared_ptr<Socket> sock) {
     m_sendCtx.completed = bind(&Session::OnSendCompleted, this, std::placeholders::_1, std::placeholders::_2);
 
     m_sock->receive(&m_recvCtx);
-    m_ref = shared_from_this();
 }
 
-void Session::OnRecvCompleted(Context *context, bool isSuccess) {
+void Session::OnRecvCompleted(Context *context, bool isSuccess)
+{
     if(!isSuccess || context->length == 0) {
         Disconnect();
         return;
@@ -40,25 +41,26 @@ void Session::OnSendCompleted(Context*, bool isSuccess)
         auto endpoint = m_sock->getRemoteEndpoint();
         if (endpoint.has_value())
             OnDisconnected(endpoint.value());
+        delete this;
     }
 }
 
-Session::~Session() {
+Session::~Session()
+{
 }
 
-void Session::Disconnect() {
-    if (!m_isDisconnected.exchange(true))
-    {
-        OnDisconnected(m_sock->getRemoteEndpoint().value());
-        m_ref = nullptr;
-    }
+void Session::Disconnect()
+{
+    OnDisconnected(m_sock->getRemoteEndpoint().value());
+    delete this;
 }
 
-Socket Session::GetSocket() {
+Socket Session::GetSocket()
+{
     return *m_sock;
 }
 
-void Session::SendUnsafe(std::span<char> buffer)
+void Session::SendUnsafe(std::span<char> buffer) const
 {
     m_sock->send(buffer);
 }

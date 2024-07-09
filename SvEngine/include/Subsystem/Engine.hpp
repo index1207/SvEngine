@@ -1,37 +1,26 @@
 #pragma once
 
-class ThreadManager;
-class JobSerializer;
-class DBConnectionPool;
-class JobTimer;
+class Functor;
 
-class Engine {
+class DLLEXPORT Engine {
     enum EngineOption
     {
-        WorkTick = 1
+        WaitTime = 10
     };
 public:
     Engine();
     ~Engine();
 public:
     void Initialize();
-    void Fetch();
 
-    void AddSerializer(JobSerializer* serializer);
-    void ExecuteThread(int32 io, int32 logic, bool enableMainThrd = true);
-public:
-    __forceinline ThreadManager* GetThreadManager() { return m_threadManager; }
-    __forceinline DBConnectionPool* GetDBConnectionPool() { return m_dbConnectionPool; }
-    __forceinline JobTimer* GetJobTimer() { return m_jobTimer; }
+    void Fetch();
+    void Run(int32 io);
+
+    void EnqueueFunctor(const std::shared_ptr<Functor>& functor);
 private:
-    void ExecuteLogic(int32 threadCount, std::function<void()> tlsInit = [] {});
     void ExecuteIo(int32 threadCount);
 private:
-    ThreadManager* m_threadManager = nullptr;
-    DBConnectionPool* m_dbConnectionPool = nullptr;
-    JobTimer* m_jobTimer = nullptr;
-
-    ConcurrencyQueue<JobSerializer*> m_serializerQue;
+    ConcurrencyPriorityQueue<std::shared_ptr<Functor>> m_functorQue;
 };
 
 extern Engine* GEngine;

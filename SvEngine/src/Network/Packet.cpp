@@ -26,6 +26,11 @@ void Packet::Parse(std::span<char> buffer) {
     Read();
 }
 
+uint16 Packet::GetPacketId(std::span<char> buffer)
+{
+    return *reinterpret_cast<uint16*>(buffer.data());
+}
+
 void Packet::Read() {
     *this >> m_id;
 }

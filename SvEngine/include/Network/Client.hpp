@@ -4,7 +4,7 @@
 
 #include "Session.hpp"
 
-class Client {
+class DLLEXPORT Client {
     using ServerFactory = std::function<std::shared_ptr<Session>()>;
 
     Client();

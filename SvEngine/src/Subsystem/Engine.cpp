@@ -4,66 +4,46 @@
 #include "pch.h"
 #include "Subsystem/Engine.hpp"
 
-#include "Thread/ThreadManager.hpp"
-#include "Thread/JobSerializer.hpp"
-#include "Database/DBConnectionPool.hpp"
+#include "Util/Functor.hpp"
 
 Engine::Engine()
 {
 	Console::Initialize();
 
 	net::Option::Autorun = false;
-	net::Option::Timeout = WorkTick;
+	net::Option::Timeout = WaitTime;
 }
 
 Engine::~Engine()
 {
-	delete m_threadManager;
-	delete m_dbConnectionPool;
-	delete m_jobTimer;
 }
 
-void Engine::AddSerializer(JobSerializer* serializer)
+void Engine::Run(int32 io)
 {
-	m_serializerQue.push(serializer);
-}
-
-void Engine::ExecuteThread(int32 io, int32 logic, bool enableMainThrd)
-{
-	ExecuteLogic(logic);
 	ExecuteIo(io);
-	if (enableMainThrd)
-		Fetch();
+	Fetch();
+}
+
+void Engine::EnqueueFunctor(const std::shared_ptr<Functor>& functor)
+{
+	m_functorQue.push(functor);
 }
 
 void Engine::Initialize()
 {
-	m_threadManager = new ThreadManager;
-	m_dbConnectionPool = new DBConnectionPool;
-	m_jobTimer = new JobTimer;
-}
-
-void Engine::ExecuteLogic(int32 threadCount, std::function<void()> tlsInit)
-{
-	for (int i = 0; i < threadCount; ++i)
-	{
-		m_threadManager->Launch([=]()
-		{
-			Fetch();
-		}, tlsInit);
-	}
 }
 
 void Engine::ExecuteIo(int32 threadCount)
 {
 	for (int i = 0; i < threadCount; ++i)
 	{
-		m_threadManager->Launch([=]()
-		{	
-			while (true)
+		new std::thread([] {
 			{
-				IoSystem::instance().worker(); // IOCP I/O Worker
-			};
+				while (true)
+				{
+					IoSystem::instance().worker(); // IOCP I/O Worker
+				}
+			}
 		});
 	}
 }
@@ -72,16 +52,21 @@ void Engine::Fetch()
 {
 	while (true)
 	{
-		m_jobTimer->Distribute(GetTickCount64());
+		if (m_functorQue.empty())
+			std::this_thread::sleep_for(std::chrono::milliseconds(EngineOption::WaitTime));
 
-		if (!m_serializerQue.empty())
+		std::shared_ptr<Functor> functor;
+		if (m_functorQue.try_pop(functor) && functor)
 		{
-			JobSerializer* jobSerializer;
-			if (m_serializerQue.try_pop(jobSerializer))
+			if (functor->GetExecuteTime() <= GetTickCount64())
 			{
-				jobSerializer->Flush();
+				(*functor)();
+				functor = nullptr;
+			}
+			else
+			{
+				m_functorQue.push(functor);
 			}
 		}
-		std::this_thread::sleep_for(std::chrono::milliseconds(WorkTick));
 	}
 }

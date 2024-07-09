@@ -1,7 +1,7 @@
 #pragma once
 
 template<class T>
-class Vector2D
+class DLLEXPORT Vector2D
 {
 public:
 	Vector2D() = default;
@@ -96,7 +96,7 @@ public:
 };
 
 template<class T>
-class Vector3D
+class DLLEXPORT Vector3D
 {
 public:
 	Vector3D() = default;

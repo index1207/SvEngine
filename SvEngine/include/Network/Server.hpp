@@ -6,9 +6,9 @@
 
 #include <Network/Session.hpp>
 
-class Server {
+class DLLEXPORT Server {
     friend class Session;
-    using ClientFactory = std::function<std::shared_ptr<Session>()>;
+    using ClientFactory = std::function<Session*()>;
     Server();
 public:
     ~Server();
@@ -21,7 +21,7 @@ public:
     {
         auto server = std::shared_ptr<Server>(new Server);
         server->m_clientFactory = [] {
-            return MakeShared<T>();
+            return new T();
         };
         return server;
     }
