@@ -26,6 +26,20 @@ void Database::CreateConnection()
 	}
 }
 
+std::shared_ptr<sql::Connection> Database::PopConnection()
+{
+	if (m_connections.empty())
+	{
+		m_maxConnectionCount *= 2;
+		CreateConnection();
+	}
+
+	std::shared_ptr<sql::Connection> conn = m_connections.front();
+	m_connections.pop_front();
+
+	return conn;
+}
+
 Database::Database()
 {
 	m_driver = nullptr;

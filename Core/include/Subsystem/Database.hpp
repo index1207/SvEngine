@@ -22,18 +22,24 @@ public:
     void CreateConnection();
 
     template<class... Args>
-    std::shared_ptr<AsyncStatement> CallProcedure(const char* procedure, Args... args)
+    std::unique_ptr<AsyncStatement> CreateStatement(const char* formattedSql, Args... args)
     {
-        if (m_connections.empty())
-        {
-            m_maxConnectionCount *= 2;
-            CreateConnection();
-        }
-
-        std::shared_ptr<sql::Connection> conn = m_connections.front();
-        m_connections.pop_front();
+        auto conn = PopConnection();
 
         auto pstmt = std::shared_ptr<AsyncStatement>(
+            static_cast<AsyncStatement*>(conn->prepareStatement(
+                std::format(formattedSql, args...)
+            ))
+        );
+        return pstmt;
+    }
+
+    template<class... Args>
+    std::unique_ptr<AsyncStatement> CallProcedure(const char* procedure, Args... args)
+    {
+        auto conn = PopConnection();
+
+        auto pstmt = std::unique_ptr<AsyncStatement>(
             static_cast<AsyncStatement*>(conn->prepareStatement(
                 std::format("CALL {}({})",
                     procedure, concatenate(args...)
@@ -42,6 +48,8 @@ public:
         );
         return pstmt;
     }
+private:
+    std::shared_ptr<sql::Connection> PopConnection();
 private:
     template <typename T>
     struct is_string
