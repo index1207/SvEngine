@@ -55,9 +55,9 @@ void Session::Disconnect()
     delete this;
 }
 
-Socket Session::GetSocket()
+std::shared_ptr<Socket> Session::GetSocket()
 {
-    return *m_sock;
+    return m_sock;
 }
 
 void Session::SendUnsafe(std::span<char> buffer) const

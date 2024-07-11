@@ -4,7 +4,7 @@ template<class T>
 class ObjectPool
 {
 public:
-	DLLEXPORT static T* Pop()
+	static T* Pop()
 	{
 		if (!m_pool.empty())
 		{
@@ -14,7 +14,7 @@ public:
 		}
 		return static_cast<T*>(malloc(sizeof(T)));
 	}
-	DLLEXPORT static void Push(T* ptr)
+	static void Push(T* ptr)
 	{
 		if (ptr)
 		{

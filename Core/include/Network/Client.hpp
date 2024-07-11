@@ -4,8 +4,8 @@
 
 #include "Session.hpp"
 
-class DLLEXPORT Client {
-    using ServerFactory = std::function<std::shared_ptr<Session>()>;
+class SVENGINE_API Client {
+    using ServerFactory = std::function<Session*()>;
 
     Client();
 public:
@@ -14,13 +14,13 @@ public:
     void Run(net::Endpoint endpoint);
 public:
     template<class T = Session>
-    static inline std::shared_ptr<Client> Open()
+    static inline std::unique_ptr<Client> Open()
     {
-        auto client = std::shared_ptr<Client>(new Client);
+        auto client = std::unique_ptr<Client>(new Client);
         client->m_serverFactory = [] {
-            return MakeShared<T>();
+            return new T();
         };
-        return client;
+        return std::move(client);
     }
 private:
     void OnConnectCompleted(Context* context, bool isSuccess);

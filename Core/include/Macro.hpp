@@ -1,6 +1,10 @@
 #pragma once
 
-#define DLLEXPORT __declspec(dllexport)
+#ifdef EXPORT_DLL
+	#define SVENGINE_API __declspec(dllexport)
+#else
+	#define SVENGINE_API __declspec(dllimport)
+#endif
 
 #define CRASH() \
 { \

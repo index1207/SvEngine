@@ -25,12 +25,8 @@
     <ClCompile Include="src\Memory\ObjectPool.cpp" />
     <ClCompile Include="src\Util\String.cpp" />
     <ClCompile Include="src\Util\Math.cpp" />
-    <ClCompile Include="src\Database\DbConnection.cpp" />
-    <ClCompile Include="src\Database\DBConnectionPool.cpp" />
-    <ClCompile Include="src\Database\Statement.cpp" />
-    <ClCompile Include="src\Thread\JobSerializer.cpp" />
-    <ClCompile Include="src\Thread\TLSStorage.cpp" />
-    <ClCompile Include="src\Thread\ThreadManager.cpp" />
+    <ClCompile Include="src\Functor.cpp" />
+    <ClCompile Include="src\Subsystem\Database.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">
@@ -68,7 +64,7 @@
     <ClInclude Include="include\Network\Session.hpp">
       <Filter>include\core</Filter>
     </ClInclude>
-    <ClInclude Include="include\Util\Types.hpp">
+    <ClInclude Include="include\Types.hpp">
       <Filter>include\util</Filter>
     </ClInclude>
     <ClInclude Include="PCH\pch.h" />
@@ -83,12 +79,9 @@
     <ClInclude Include="include\Util\String.hpp" />
     <ClInclude Include="include\Util\Template.hpp" />
     <ClInclude Include="include\Util\Math.hpp" />
-    <ClInclude Include="include\Database\DbConnection.hpp" />
-    <ClInclude Include="include\Database\DBConnectionPool.hpp" />
-    <ClInclude Include="include\Database\Statement.hpp" />
-    <ClInclude Include="include\Thread\TLSStorage.hpp" />
-    <ClInclude Include="include\Thread\JobSerializer.hpp" />
-    <ClInclude Include="include\Thread\ThreadManager.hpp" />
     <ClInclude Include="include\Subsystem\GameInstance.hpp" />
+    <ClInclude Include="include\Macro.hpp" />
+    <ClInclude Include="include\Functor.hpp" />
+    <ClInclude Include="include\Subsystem\Database.hpp" />
   </ItemGroup>
 </Project>

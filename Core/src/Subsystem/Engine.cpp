@@ -3,8 +3,7 @@
 //
 #include "pch.h"
 #include "Subsystem/Engine.hpp"
-
-#include "Util/Functor.hpp"
+#include "Functor.hpp"
 
 Engine::Engine()
 {
@@ -29,13 +28,18 @@ void Engine::EnqueueFunctor(const std::shared_ptr<Functor>& functor)
 	m_functorQue.push(functor);
 }
 
+void Engine::EnqueueDbFunctor(const std::shared_ptr<Functor>& functor)
+{
+	m_dbFunctorQue.push(functor);
+}
+
 void Engine::Initialize()
 {
 }
 
-void Engine::ExecuteIo(int32 threadCount)
+void Engine::ExecuteIo(int32 count)
 {
-	for (int i = 0; i < threadCount; ++i)
+	for (int32 i = 0; i < count; ++i)
 	{
 		new std::thread([] {
 			{
@@ -46,6 +50,25 @@ void Engine::ExecuteIo(int32 threadCount)
 			}
 		});
 	}
+	new std::thread([this] {
+		while (true)
+		{
+			if (m_dbFunctorQue.empty())
+				std::this_thread::sleep_for(std::chrono::milliseconds(EngineOption::WaitTime));
+			else
+			{
+				while (!m_dbFunctorQue.empty())
+				{
+					std::shared_ptr<Functor> functor;
+					if (m_dbFunctorQue.try_pop(functor) && functor)
+					{
+						(*functor)();
+						functor = nullptr;
+					}
+				}
+			}
+		}
+	});
 }
 
 void Engine::Fetch()
@@ -54,18 +77,23 @@ void Engine::Fetch()
 	{
 		if (m_functorQue.empty())
 			std::this_thread::sleep_for(std::chrono::milliseconds(EngineOption::WaitTime));
-
-		std::shared_ptr<Functor> functor;
-		if (m_functorQue.try_pop(functor) && functor)
+		else
 		{
-			if (functor->GetExecuteTime() <= GetTickCount64())
+			while (!m_functorQue.empty())
 			{
-				(*functor)();
-				functor = nullptr;
-			}
-			else
-			{
-				m_functorQue.push(functor);
+				std::shared_ptr<Functor> functor;
+				if (m_functorQue.try_pop(functor) && functor)
+				{
+					if (functor->GetExecuteTime() <= GetTickCount64())
+					{
+						(*functor)();
+						functor = nullptr;
+					}
+					else
+					{
+						m_functorQue.push(functor);
+					}
+				}
 			}
 		}
 	}

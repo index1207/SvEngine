@@ -16,7 +16,7 @@ enum class Failure
     Connect
 };
 
-class DLLEXPORT Session
+class SVENGINE_API Session
 {
     friend class Server;
     friend class Client;
@@ -27,7 +27,7 @@ public:
     virtual ~Session();
 public:
     void Run(std::shared_ptr<Socket> sock);
-    Socket GetSocket();
+    std::shared_ptr<Socket> GetSocket();
 public:
     void Disconnect();
     void SendUnsafe(std::span<char> buffer) const;

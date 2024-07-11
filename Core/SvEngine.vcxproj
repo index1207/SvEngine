@@ -65,20 +65,21 @@
     <ClCompile>
       <WarningLevel>Level4</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions);_HAS_STD_BYTE=0</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions);_HAS_STD_BYTE=0;EXPORT_DLL</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(ProjectDir)include;$(ProjectDir)PCH;$(SolutionDir)Libraries\netcpp\include;$(SolutionDir)Libraries\oneTBB\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)include;$(ProjectDir)PCH;$(SolutionDir)Libraries\netcpp\include;$(SolutionDir)Libraries\oneTBB\include;$(SolutionDir)Libraries\mysql-connector\include\jdbc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <DisableSpecificWarnings>4251</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(SolutionDir)Binaries\$(Configuration)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>ws2_32.lib;netcpp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>ws2_32.lib;netcpp.lib;mysqlcppconn.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <Lib>
       <AdditionalLibraryDirectories>$(SolutionDir)Binaries\$(Configuration)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -91,15 +92,16 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions);_HAS_STD_BYTE=0</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions);_HAS_STD_BYTE=0;EXPORT_DLL</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(ProjectDir)include;$(ProjectDir)PCH;$(SolutionDir)Libraries\netcpp\include;$(SolutionDir)Libraries\oneTBB\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)include;$(ProjectDir)PCH;$(SolutionDir)Libraries\netcpp\include;$(SolutionDir)Libraries\oneTBB\include;$(SolutionDir)Libraries\mysql-connector\include\jdbc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <DebugInformationFormat>None</DebugInformationFormat>
+      <DisableSpecificWarnings>4251</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -107,7 +109,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(SolutionDir)Binaries\$(Configuration)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>ws2_32.lib;netcpp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>ws2_32.lib;netcpp.lib;mysqlcppconn.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <Lib>
       <AdditionalLibraryDirectories>$(SolutionDir)Binaries\$(Configuration)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -115,6 +117,8 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Subsystem\Database.cpp" />
+    <ClCompile Include="src\Functor.cpp" />
     <ClCompile Include="src\Util\Math.cpp" />
     <ClCompile Include="src\Memory\ObjectPool.cpp" />
     <ClCompile Include="src\Memory\Arena.cpp" />
@@ -134,6 +138,7 @@
     <ClCompile Include="src\Util\String.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\Subsystem\Database.hpp" />
     <ClInclude Include="include\Memory\Arena.hpp" />
     <ClInclude Include="include\Network\Client.hpp" />
     <ClInclude Include="include\Subsystem\GameInstance.hpp" />
@@ -144,10 +149,12 @@
     <ClInclude Include="include\Network\Server.hpp" />
     <ClInclude Include="include\Network\Session.hpp" />
     <ClInclude Include="include\Util\Console.hpp" />
+    <ClInclude Include="include\Functor.hpp" />
+    <ClInclude Include="include\Macro.hpp" />
     <ClInclude Include="include\Util\Parser\Ini.hpp" />
     <ClInclude Include="include\Util\Random.hpp" />
     <ClInclude Include="include\Util\Template.hpp" />
-    <ClInclude Include="include\Util\Types.hpp" />
+    <ClInclude Include="include\Types.hpp" />
     <ClInclude Include="include\Memory\ObjectPool.hpp" />
     <ClInclude Include="include\Util\Math.hpp" />
     <ClInclude Include="PCH\pch.h" />

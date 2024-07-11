@@ -6,7 +6,7 @@
 
 #include <Network/Session.hpp>
 
-class DLLEXPORT Server {
+class SVENGINE_API Server {
     friend class Session;
     using ClientFactory = std::function<Session*()>;
     Server();
@@ -17,13 +17,13 @@ public:
     void Cancel();
 public:
     template<class T>
-    static inline std::shared_ptr<Server> Open()
+    static inline std::unique_ptr<Server> Open()
     {
-        auto server = std::shared_ptr<Server>(new Server);
+        auto server = std::unique_ptr<Server>(new Server);
         server->m_clientFactory = [] {
             return new T();
         };
-        return server;
+        return std::move(server);
     }
 private:
     void OnAcceptCompleted(net::Context* acceptContext, bool isSuccess);

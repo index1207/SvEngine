@@ -26,7 +26,7 @@ cppFormat.file = '''#pragma once
 #include "Network/Packet.h"
 #elif __SERVER__
 #include "Network/Packet.hpp"
-#include "Util/Types.hpp"
+#include "Types.hpp"
 #endif
 
 #include <vector>
@@ -56,7 +56,7 @@ using Session = class FSession;
 #else
 
 template<typename T>
-using TUniquePtr = std::unique_ptr<T>;
+using TSharedPtr = std::shared_ptr<T>;
 template<typename T>
 using TFunction = std::function<T>;
 
@@ -69,9 +69,9 @@ namespace {1}
 {{
     class PacketHandler
 	{{
-    	using Handler = TFunction<bool(Session* const)>;
+    	using Handler = TFunction<bool(Session*)>;
 	public:
-		static Handler HandlePacket(Session* const session, std::span<char> buffer)
+		static Handler HandlePacket(Session* session, std::span<char> buffer)
         {{
             switch (Packet::GetPacketId(buffer))
             {{
@@ -404,7 +404,7 @@ if args.lang == 'cpp':
             '\n'.join(f'#include "generated/{args.namespace}/{(value.rstrip(".json"))}.gen.hpp"' for value in defList),
             args.namespace,
             '\n'.join(f'\t\t\tcase {stringcase.constcase(value)}:\n\t\t\t\t{value}PacketHandler(session, Packet::ParseFrom<{value}>(buffer));\n\t\t\t\tbreak;' for value in messageNameList[i]),
-            '\n'.join(str('\t\tstatic bool '+value+f'(Session* const session, TUniquePtr<{(messageNameList[i][handlerList[i].index(value)])}> packet);') for value in handlerList[i]) #handlers
+            '\n'.join(str('\t\tstatic bool '+value+f'(Session* session, TSharedPtr<{(messageNameList[i][handlerList[i].index(value)])}> packet);') for value in handlerList[i]) #handlers
         )
     
 

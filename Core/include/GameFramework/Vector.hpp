@@ -1,7 +1,7 @@
 #pragma once
 
 template<class T>
-class DLLEXPORT Vector2D
+class SVENGINE_API Vector2D
 {
 public:
 	Vector2D() = default;
@@ -96,7 +96,7 @@ public:
 };
 
 template<class T>
-class DLLEXPORT Vector3D
+class SVENGINE_API Vector3D
 {
 public:
 	Vector3D() = default;

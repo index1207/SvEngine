@@ -14,7 +14,7 @@ enum PacketType : uint8
     RPC
 };
 
-class DLLEXPORT Packet {
+class SVENGINE_API Packet {
     friend Session;
     using HandlerFunc = std::function<void(std::shared_ptr<Session>)>;
 public:
@@ -83,12 +83,12 @@ public:
     static uint16 GetPacketId(std::span<char> buffer);
 
     template<class T>
-    DLLEXPORT static std::unique_ptr<T> ParseFrom(std::span<char> buffer)
+    static std::shared_ptr<T> ParseFrom(std::span<char> buffer)
     {
-        auto pk = MakeUnique<T>();
+        auto pk = MakeShared<T>();
         pk->Parse(buffer);
         pk->SetId(GetPacketId(buffer));
-        return std::move(pk);
+        return pk;
     }
     Vector<char>& Data();
     
