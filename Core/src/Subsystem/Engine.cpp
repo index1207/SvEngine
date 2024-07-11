@@ -28,11 +28,6 @@ void Engine::EnqueueFunctor(const std::shared_ptr<Functor>& functor)
 	m_functorQue.push(functor);
 }
 
-void Engine::EnqueueDbFunctor(const std::shared_ptr<Functor>& functor)
-{
-	m_dbFunctorQue.push(functor);
-}
-
 void Engine::Initialize()
 {
 }
@@ -50,25 +45,6 @@ void Engine::ExecuteIo(int32 count)
 			}
 		});
 	}
-	new std::thread([this] {
-		while (true)
-		{
-			if (m_dbFunctorQue.empty())
-				std::this_thread::sleep_for(std::chrono::milliseconds(EngineOption::WaitTime));
-			else
-			{
-				while (!m_dbFunctorQue.empty())
-				{
-					std::shared_ptr<Functor> functor;
-					if (m_dbFunctorQue.try_pop(functor) && functor)
-					{
-						(*functor)();
-						functor = nullptr;
-					}
-				}
-			}
-		}
-	});
 }
 
 void Engine::Fetch()

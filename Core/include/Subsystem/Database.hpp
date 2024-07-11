@@ -8,44 +8,11 @@
 
 #include "Functor.hpp"
 
-class  AsyncStatement :
-    public std::enable_shared_from_this<AsyncStatement>,
-    public sql::PreparedStatement
-{
-public:
-    void AsyncExecute(std::function<void(bool)> callback)
-    {
-        auto sharedThis = shared_from_this();
-        GEngine->EnqueueDbFunctor(MakeShared<Functor>([sharedThis, callback] {
-            auto ret = sharedThis->execute();
-            callback(ret);
-        }));
-    }
-
-    void AsyncUpdate(std::function<void(int)> callback)
-    {
-        m_sharedThis = shared_from_this();
-        GEngine->EnqueueDbFunctor(MakeShared<Functor>([=, this] {
-            auto ret = m_sharedThis->executeUpdate();
-            callback(ret);
-            m_sharedThis = nullptr;
-        }));
-    }
-
-    void AsyncQuery(std::function<void(std::unique_ptr<sql::ResultSet>)> callback)
-    {
-        auto sharedThis = shared_from_this();
-        GEngine->EnqueueDbFunctor(MakeShared<Functor>([sharedThis, callback] {
-            auto ret = std::unique_ptr<sql::ResultSet>(sharedThis->executeQuery());
-            callback(std::move(ret));
-        }));
-    }
-private:
-    std::shared_ptr<AsyncStatement> m_sharedThis;
-};
+class AsyncStatement;
 
 class SVENGINE_API Database
 {
+    friend AsyncStatement;
 public:
     Database();
 public:
@@ -113,3 +80,56 @@ private:
 };
 
 extern Database* GDatabase;
+
+class AsyncStatement : public sql::PreparedStatement
+{
+public:
+    std::future<bool> AsyncExecute(std::function<void(bool)> callback = [](bool) {})
+    {
+        return std::async([this, callback] {
+            try
+            {
+                auto res = this->execute();
+                callback(res);
+                return res;
+            }
+            catch (std::exception& e)
+            {
+                Console::Error(Category::Database, ToUnicodeString(e.what()));
+            }
+        });
+    }
+
+    std::future<int> AsyncUpdate(std::function<void(int)> callback = [](int) {})
+    {
+        return std::async([this, callback] {
+            try
+            {
+                auto res = this->executeUpdate();
+                callback(res);
+                return res;
+            }
+            catch (std::exception& e)
+            {
+                Console::Error(Category::Database, ToUnicodeString(e.what()));
+            }
+        });
+    }
+
+    std::future<std::shared_ptr<sql::ResultSet>> AsyncQuery(std::function<void(std::shared_ptr<sql::ResultSet>)> callback =
+        [](std::shared_ptr<sql::ResultSet>) {})
+    {
+        return std::async([this, callback] {
+            try
+            {
+                auto res = std::shared_ptr<sql::ResultSet>(this->executeQuery());
+                callback(res);
+                return res;
+            }
+            catch (std::exception& e)
+            {
+                Console::Error(Category::Database, ToUnicodeString(e.what()));
+            }
+        });
+    }
+};
