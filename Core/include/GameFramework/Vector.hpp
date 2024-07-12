@@ -1,7 +1,7 @@
 #pragma once
 
 template<class T>
-class SVENGINE_API Vector2D
+class Vector2D
 {
 public:
 	Vector2D() = default;
@@ -96,7 +96,7 @@ public:
 };
 
 template<class T>
-class SVENGINE_API Vector3D
+class Vector3D
 {
 public:
 	Vector3D() = default;
