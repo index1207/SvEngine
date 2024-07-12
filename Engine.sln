@@ -2,8 +2,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.8.34309.116
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SvEngine", "SvEngine\SvEngine.vcxproj", "{0E19D820-B6BE-4D23-805B-AAD9EF0EEA69}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{D38E0D41-FFF8-4938-AD80-3AB93233CB2B}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Engine", "Engine", "{87A20E2A-BD72-441B-AE36-81CB51748EBB}"
@@ -13,11 +11,14 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.gitignore = .gitignore
 		.gitmodules = .gitmodules
 		README.md = README.md
+		setup.bat = setup.bat
 	EndProjectSection
 EndProject
 Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "PacketGenerator", "tools\PacketGenerator\PacketGenerator.pyproj", "{1CBC2443-D0A8-4ED5-AC39-1782D2001B4E}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Server", "Server", "{796B2721-0044-4FB0-9296-9D2ABA42E3F6}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SvEngine", "Core\SvEngine.vcxproj", "{0E19D820-B6BE-4D23-805B-AAD9EF0EEA69}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,6 +30,12 @@ Global
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1CBC2443-D0A8-4ED5-AC39-1782D2001B4E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1CBC2443-D0A8-4ED5-AC39-1782D2001B4E}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{1CBC2443-D0A8-4ED5-AC39-1782D2001B4E}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{1CBC2443-D0A8-4ED5-AC39-1782D2001B4E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1CBC2443-D0A8-4ED5-AC39-1782D2001B4E}.Release|x64.ActiveCfg = Release|Any CPU
+		{1CBC2443-D0A8-4ED5-AC39-1782D2001B4E}.Release|x86.ActiveCfg = Release|Any CPU
 		{0E19D820-B6BE-4D23-805B-AAD9EF0EEA69}.Debug|Any CPU.ActiveCfg = Debug|x64
 		{0E19D820-B6BE-4D23-805B-AAD9EF0EEA69}.Debug|Any CPU.Build.0 = Debug|x64
 		{0E19D820-B6BE-4D23-805B-AAD9EF0EEA69}.Debug|x64.ActiveCfg = Debug|x64
@@ -41,18 +48,12 @@ Global
 		{0E19D820-B6BE-4D23-805B-AAD9EF0EEA69}.Release|x64.Build.0 = Release|x64
 		{0E19D820-B6BE-4D23-805B-AAD9EF0EEA69}.Release|x86.ActiveCfg = Release|Win32
 		{0E19D820-B6BE-4D23-805B-AAD9EF0EEA69}.Release|x86.Build.0 = Release|Win32
-		{1CBC2443-D0A8-4ED5-AC39-1782D2001B4E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1CBC2443-D0A8-4ED5-AC39-1782D2001B4E}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{1CBC2443-D0A8-4ED5-AC39-1782D2001B4E}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{1CBC2443-D0A8-4ED5-AC39-1782D2001B4E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1CBC2443-D0A8-4ED5-AC39-1782D2001B4E}.Release|x64.ActiveCfg = Release|Any CPU
-		{1CBC2443-D0A8-4ED5-AC39-1782D2001B4E}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{0E19D820-B6BE-4D23-805B-AAD9EF0EEA69} = {87A20E2A-BD72-441B-AE36-81CB51748EBB}
 		{1CBC2443-D0A8-4ED5-AC39-1782D2001B4E} = {D38E0D41-FFF8-4938-AD80-3AB93233CB2B}
+		{0E19D820-B6BE-4D23-805B-AAD9EF0EEA69} = {87A20E2A-BD72-441B-AE36-81CB51748EBB}
 	EndGlobalSection
 EndGlobal

@@ -1,6 +1,5 @@
-.vs/
-
-bin/
+.vs/*
+.idea/*
 
 */x64
 */obj
@@ -9,15 +8,11 @@ bin/
 *.lib
 *.dll
 *.pdb
+*.obj
 
-*/Debug
-*/Release
-
-*/*/obj/*
-
-tools/PacketGenerator/generated
+[Bb]inaries/*
+[Tt]ools/PacketGenerator/generated
 
 *Server
 *Client
-*.sln
 *.sln
