@@ -20,7 +20,8 @@ Engine::~Engine()
 void Engine::Run(int32 io)
 {
 	ExecuteIo(io);
-	Fetch();
+	auto logic = new std::thread(&Engine::Fetch, this);
+	logic->join();
 }
 
 void Engine::EnqueueFunctor(const std::shared_ptr<Functor>& functor)
@@ -55,20 +56,17 @@ void Engine::Fetch()
 			std::this_thread::sleep_for(std::chrono::milliseconds(EngineOption::WaitTime));
 		else
 		{
-			while (!m_functorQue.empty())
+			std::shared_ptr<Functor> functor;
+			if (m_functorQue.try_pop(functor) && functor)
 			{
-				std::shared_ptr<Functor> functor;
-				if (m_functorQue.try_pop(functor) && functor)
+				if (functor->GetExecuteTime() <= GetTickCount64())
 				{
-					if (functor->GetExecuteTime() <= GetTickCount64())
-					{
-						(*functor)();
-						functor = nullptr;
-					}
-					else
-					{
-						m_functorQue.push(functor);
-					}
+					(*functor)();
+					functor = nullptr;
+				} 
+				else
+				{
+					m_functorQue.push(functor);
 				}
 			}
 		}

@@ -7,7 +7,7 @@ class SVENGINE_API Engine {
     {
         WaitTime = 10,
     };
-    using FunctorQueue = ConcurrencyPriorityQueue<std::shared_ptr<Functor>>;
+    using FunctorQueue = ConcurrencyPriorityQueue<std::shared_ptr<Functor>, std::greater<std::shared_ptr<Functor>>>;
 public:
     Engine();
     ~Engine();

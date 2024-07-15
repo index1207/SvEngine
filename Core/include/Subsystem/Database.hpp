@@ -15,6 +15,7 @@ class SVENGINE_API Database
     friend AsyncStatement;
 public:
     Database();
+    ~Database();
 public:
     void Initialize();
 public:
@@ -50,6 +51,7 @@ public:
     }
 private:
     std::shared_ptr<sql::Connection> PopConnection();
+    void ReturnConnection(sql::Connection* conn);
 private:
     template <typename T>
     struct is_string
@@ -85,6 +87,7 @@ private:
     uint32 m_maxConnectionCount = 10;
     sql::Driver* m_driver;
     List<std::shared_ptr<sql::Connection>> m_connections;
+    bool m_destroyed;
 };
 
 extern Database* GDatabase;
@@ -94,7 +97,7 @@ class AsyncStatement : public sql::PreparedStatement
 public:
     std::future<bool> AsyncExecute(std::function<void(bool)> callback = [](bool) {})
     {
-        return std::async([this, callback] {
+        return std::async(std::launch::async, [this, callback] {
             try
             {
                 auto res = this->execute();
@@ -104,13 +107,15 @@ public:
             catch (std::exception& e)
             {
                 Console::Error(Category::Database, ToUnicodeString(e.what()));
+                ASSERT_CRASH(false);
+                return false;
             }
         });
     }
 
     std::future<int> AsyncUpdate(std::function<void(int)> callback = [](int) {})
     {
-        return std::async([this, callback] {
+        return std::async(std::launch::async, [this, callback] {
             try
             {
                 auto res = this->executeUpdate();
@@ -120,6 +125,8 @@ public:
             catch (std::exception& e)
             {
                 Console::Error(Category::Database, ToUnicodeString(e.what()));
+                ASSERT_CRASH(false);
+                return 0;
             }
         });
     }
@@ -127,7 +134,7 @@ public:
     std::future<std::shared_ptr<sql::ResultSet>> AsyncQuery(std::function<void(std::shared_ptr<sql::ResultSet>)> callback =
         [](std::shared_ptr<sql::ResultSet>) {})
     {
-        return std::async([this, callback] {
+        return std::async(std::launch::async, [this, callback] {
             try
             {
                 auto res = std::shared_ptr<sql::ResultSet>(this->executeQuery());
@@ -137,6 +144,8 @@ public:
             catch (std::exception& e)
             {
                 Console::Error(Category::Database, ToUnicodeString(e.what()));
+                ASSERT_CRASH(false);
+                return static_cast<std::shared_ptr<sql::ResultSet>>(nullptr);
             }
         });
     }
