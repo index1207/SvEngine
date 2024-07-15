@@ -1,6 +1,6 @@
-[submodule "lib/netcpp"]
-	path = lib/netcpp
+[submodule "Libraries/netcpp"]
+	path = Libraries/netcpp
 	url = https://github.com/index1207/netcpp
-[submodule "lib/oneTBB"]
-	path = lib/oneTBB
+[submodule "Libraries/oneTBB"]
+	path = Libraries/oneTBB
 	url = https://github.com/oneapi-src/oneTBB
