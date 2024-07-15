@@ -1,5 +1,9 @@
 #pragma once
 
+#include "Subsystem/Engine.hpp"
+
+using CallbackType = std::function<void()>;
+
 class SVENGINE_API Functor
 {
 	USE_POOL(Functor)
@@ -7,59 +11,43 @@ public:
 	Functor() = default;
 	~Functor() noexcept;
 
-	template<class T, class... Args>
-	Functor(uint64 reserve, T* ptr, void(T::*method)(Args...), Args... args)
-	{
-		m_executeTime = GetTickCount64() + reserve;
-		m_functor = std::bind(method, ptr, args...);
-	}
+	Functor(CallbackType functor);
 
 	template<class T, class... Args>
-	Functor(T* ptr, void(T::*method)(Args...), Args... args)
-		: Functor(0, ptr, method, args...)
+	Functor(void(T::*method)(Args...), T* ptr, Args... args)
 	{
+		functor = std::bind(method, ptr, args...);
 	}
-
-	Functor(uint64 reserve, std::function<void()> func);
-
-	Functor(std::function<void()> func);
 public:
-	inline void operator()() const { m_functor(); }
-	bool operator<(const Functor& functor) const { return m_executeTime < functor.m_executeTime; }
-	inline uint64 GetExecuteTime() const { return m_executeTime; }
+	inline void operator()() const { functor(); }
 private:
-	std::function<void()> m_functor;
-	uint64 m_executeTime;
+	CallbackType functor;
+};	
+
+class SVENGINE_API DelayedFunctor
+{
+public:
+	DelayedFunctor() = default;
+	DelayedFunctor(uint64 execTime, std::shared_ptr<Functor> functor);
+public:
+	bool operator<(const DelayedFunctor& other) const;
+	bool operator>(const DelayedFunctor& other) const;
+public:
+	uint64 execTime;
+	std::shared_ptr<Functor> functor;
 };
 
-template<class T>
-struct Runnable
+class SVENGINE_API FunctorProcessor
 {
-	template<class... Args>
-	void Run(void(T:: * method)(Args...), Args... args)
-	{
-		auto functor = MakeShared<Functor>(static_cast<T*>(this), method, args...);
-		GEngine->EnqueueFunctor(functor);
-	}
-
-	template<class... Args>
-	void Run(uint64 reserve, void(T::* method)(Args...), Args... args)
-	{
-		auto functor = MakeShared<Functor>(reserve, static_cast<T*>(this), method, args...);
-		GEngine->EnqueueFunctor(functor);
-	}
-
-	template<class... Args>
-	void Run(std::function<void()> func, Args... args)
-	{
-		auto functor = MakeShared<Functor>(func, args...);
-		GEngine->EnqueueFunctor(functor);
-	}
-
-	template<class... Args>
-	void Run(uint64 reserve, std::function<void()> func, Args... args)
-	{
-		auto functor = MakeShared<Functor>(reserve, func, args...);
-		GEngine->EnqueueFunctor(functor);
-	}
+public:
+	FunctorProcessor() = default;
+public:
+	void Push(std::shared_ptr<Functor> functor);
+	void Push(uint64 delay, std::shared_ptr<Functor> functor);
+public:
+	void Flush();
+	void Fetch();
+private:
+	ConcurrencyQueue<std::shared_ptr<Functor>> m_functorQue;
+	ConcurrencyPriorityQueue<DelayedFunctor, std::greater<DelayedFunctor>> m_delayedFuncQue;
 };

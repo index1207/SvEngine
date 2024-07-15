@@ -40,14 +40,21 @@ public:
     {
         auto conn = PopConnection();
 
-        auto pstmt = std::unique_ptr<AsyncStatement>(
-            static_cast<AsyncStatement*>(conn->prepareStatement(
-                std::format("CALL {}({})",
-                    procedure, concatenate(args...)
-                )
-            ))
-        );
-        return pstmt;
+        try {
+            auto pstmt = std::unique_ptr<AsyncStatement>(
+                static_cast<AsyncStatement*>(conn->prepareStatement(
+                    std::format("CALL {}({})",
+                        procedure, concatenate(args...)
+                    )
+                ))
+            );
+            return pstmt;
+        }
+        catch (std::exception& e)
+        {
+            Console::Error(Category::Database, ToUnicodeString(e.what()));
+            return nullptr;
+        }
     }
 private:
     std::shared_ptr<sql::Connection> PopConnection();
@@ -140,7 +147,7 @@ public:
                 auto res = std::shared_ptr<sql::ResultSet>(this->executeQuery());
                 callback(res);
                 return res;
-            }
+            }   
             catch (std::exception& e)
             {
                 Console::Error(Category::Database, ToUnicodeString(e.what()));

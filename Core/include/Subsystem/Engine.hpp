@@ -1,27 +1,55 @@
 #pragma once
 
-class Functor;
+#include "Functor.hpp"
 
 class SVENGINE_API Engine {
     enum EngineOption
     {
-        WaitTime = 10,
+        WorkTick = 10,
     };
-    using FunctorQueue = ConcurrencyPriorityQueue<std::shared_ptr<Functor>, std::greater<std::shared_ptr<Functor>>>;
 public:
     Engine();
     ~Engine();
 public:
     void Initialize();
 
-    void Fetch();
     void Run(int32 io);
 
-    void EnqueueFunctor(const std::shared_ptr<Functor>& functor);
+
+	template<class T, class... Args>
+	void Launch(void(T::* method)(Args...), T* ptr, Args... args)
+	{
+		auto functor = MakeShared<Functor>(method, ptr, args...);
+		m_funcProc->Push(functor);
+	}
+
+	template<class T, class... Args>
+	void Launch(uint64 delay, void(T::* method)(Args...), T* ptr, Args... args)
+	{
+		auto functor = MakeShared<Functor>(method, ptr, args...);
+		m_funcProc->Push(delay, functor);
+	}
 private:
-    void ExecuteIo(int32 count);
+    void ProcessIo(int32 count);
+    void ProcessLogic();
 private:
-    FunctorQueue m_functorQue;
+    std::unique_ptr<FunctorProcessor> m_funcProc;
 };
 
 extern Engine* GEngine;
+
+template<class T>
+struct Runnable
+{
+	template<class... Args>
+	void Run(void(T::* method)(Args...), Args... args)
+	{
+		GEngine->Launch(method, static_cast<T*>(this), args...);
+	}
+
+	template<class... Args>
+	void Run(uint64 delay, void(T::* method)(Args...), Args... args)
+	{
+		GEngine->Launch(delay, method, static_cast<T*>(this), args...);
+	}
+};

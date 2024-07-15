@@ -5,13 +5,62 @@ Functor::~Functor() noexcept
 {
 }
 
-Functor::Functor(uint64 reserve, std::function<void()> func)
+Functor::Functor(CallbackType functor)
 {
-	m_executeTime = GetTickCount64() + reserve;
-	m_functor = func;
+	functor = functor;
 }
 
-Functor::Functor(std::function<void()> func)
-	: Functor(0, func)
+DelayedFunctor::DelayedFunctor(uint64 execTime, std::shared_ptr<Functor> functor)
+	: execTime(execTime), functor(functor)
 {
+}
+
+bool DelayedFunctor::operator<(const DelayedFunctor& other) const
+{
+	return execTime < other.execTime;
+}
+
+bool DelayedFunctor::operator>(const DelayedFunctor& other) const
+{
+	return execTime > other.execTime;
+}
+
+void FunctorProcessor::Push(std::shared_ptr<Functor> functor)
+{
+	m_functorQue.push(functor);
+}
+
+void FunctorProcessor::Push(uint64 delay, std::shared_ptr<Functor> functor)
+{
+	m_delayedFuncQue.push(DelayedFunctor(GetTickCount64() + delay, functor));
+}
+
+void FunctorProcessor::Flush()
+{
+	while (!m_functorQue.empty())
+	{
+		std::shared_ptr<Functor> functor;
+		if (m_functorQue.try_pop(functor))
+			(*functor)();
+	}
+}
+
+void FunctorProcessor::Fetch()
+{
+	while (!m_delayedFuncQue.empty())
+	{
+		DelayedFunctor delayedFunc;
+		if (m_delayedFuncQue.try_pop(delayedFunc))
+		{
+			if (GetTickCount64() < delayedFunc.execTime)
+			{
+				m_delayedFuncQue.push(delayedFunc);
+				break;
+			}
+			else
+			{
+				m_functorQue.push(delayedFunc.functor);
+			}
+		}
+	}
 }

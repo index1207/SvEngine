@@ -1,16 +1,12 @@
-//
-// Created by han93 on 2023-12-20.
-//
 #include "pch.h"
 #include "Subsystem/Engine.hpp"
-#include "Functor.hpp"
 
 Engine::Engine()
+	: m_funcProc(std::make_unique<FunctorProcessor>())
 {
 	Console::Initialize();
 
 	net::Option::Autorun = false;
-	net::Option::Timeout = WaitTime;
 }
 
 Engine::~Engine()
@@ -19,21 +15,16 @@ Engine::~Engine()
 
 void Engine::Run(int32 io)
 {
-	ExecuteIo(io);
-	auto logic = new std::thread(&Engine::Fetch, this);
+	ProcessIo(io);
+	auto logic = new std::thread(&Engine::ProcessLogic, this);
 	logic->join();
-}
-
-void Engine::EnqueueFunctor(const std::shared_ptr<Functor>& functor)
-{
-	m_functorQue.push(functor);
 }
 
 void Engine::Initialize()
 {
 }
 
-void Engine::ExecuteIo(int32 count)
+void Engine::ProcessIo(int32 count)
 {
 	for (int32 i = 0; i < count; ++i)
 	{
@@ -48,27 +39,12 @@ void Engine::ExecuteIo(int32 count)
 	}
 }
 
-void Engine::Fetch()
+void Engine::ProcessLogic()
 {
 	while (true)
 	{
-		if (m_functorQue.empty())
-			std::this_thread::sleep_for(std::chrono::milliseconds(EngineOption::WaitTime));
-		else
-		{
-			std::shared_ptr<Functor> functor;
-			if (m_functorQue.try_pop(functor) && functor)
-			{
-				if (functor->GetExecuteTime() <= GetTickCount64())
-				{
-					(*functor)();
-					functor = nullptr;
-				} 
-				else
-				{
-					m_functorQue.push(functor);
-				}
-			}
-		}
+		m_funcProc->Fetch();
+		m_funcProc->Flush();
+		std::this_thread::sleep_for(std::chrono::milliseconds(WorkTick));
 	}
 }
