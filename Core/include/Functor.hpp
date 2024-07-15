@@ -25,7 +25,7 @@ public:
 	Functor(std::function<void()> func);
 public:
 	inline void operator()() const { m_functor(); }
-	bool operator<(const Functor& functor) const { return m_executeTime > functor.m_executeTime; }
+	bool operator<(const Functor& functor) const { return m_executeTime < functor.m_executeTime; }
 	inline uint64 GetExecuteTime() const { return m_executeTime; }
 private:
 	std::function<void()> m_functor;

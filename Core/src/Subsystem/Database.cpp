@@ -3,10 +3,6 @@
 
 void Database::CreateConnection()
 {
-	auto deleter = [this](sql::Connection* conn) {
-		m_connections.emplace_back(std::shared_ptr<sql::Connection>(conn));
-	};
-
 	for (uint32 i = 0; i < m_maxConnectionCount; ++i)
 	{
 		try {
@@ -15,7 +11,7 @@ void Database::CreateConnection()
 					ToAnsiString(m_dbUserName),
 					ToAnsiString(m_dbPwd)
 				),
-				deleter
+				std::bind(&Database::ReturnConnection, this, std::placeholders::_1)
 			);
 			conn->setSchema(ToAnsiString(m_dbName));
 			m_connections.emplace_back(conn);
@@ -40,12 +36,29 @@ std::shared_ptr<sql::Connection> Database::PopConnection()
 	return conn;
 }
 
-Database::Database()
+void Database::ReturnConnection(sql::Connection* conn)
+{
+	if (m_destroyed)
+		delete conn;
+	else {
+		m_connections.emplace_back(conn, [this](sql::Connection* conn) {
+			ReturnConnection(conn);
+		});
+	}
+}
+
+Database::Database() : m_destroyed(false)
 {
 	m_driver = nullptr;
 	m_dbUserName = TEXT("");
 	m_dbPwd = TEXT("");
 	m_dbName = TEXT("");
+}
+
+Database::~Database()
+{
+	m_destroyed = true;
+	m_connections.clear();
 }
 
 void Database::Initialize()
